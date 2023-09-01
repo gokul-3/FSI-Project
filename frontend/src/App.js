@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SuperAdminDashboard from "./userTypes/superAdmin/dashboard/SuperAdminDashboard";
+import SuperAdminDashboard from "./userTypes/superAdmin/SuperAdminDashboard";
 import RootLayout from "./layouts/rootLayout/RootLayout";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
-import CustomerAdminDashboard from "./userTypes/customerAdmin/dashboard/CustomerAdminDashboard";
-import SupervisorDashboard from "./userTypes/supervisor/dashboard/SupervisorDashboard";
-import UserDashboard from "./userTypes/user/dashboard/UserDashboard";
+import CustomerAdminDashboard from "./userTypes/customerAdmin/CustomerAdminDashboard";
+import SupervisorDashboard from "./userTypes/supervisor/SupervisorDashboard";
+import UserDashboard from "./userTypes/user/UserDashboard";
 
 const superAdminRouter = createBrowserRouter([
   {

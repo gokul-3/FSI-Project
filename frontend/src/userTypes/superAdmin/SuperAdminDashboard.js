@@ -1,6 +1,6 @@
 import React from "react";
-import FirstCard from '../cards/CountCard';
-import TierCard from '../cards/ListCard';
+import FirstCard from './cards/CountCard';
+import TierCard from './cards/ListCard';
 
 const SuperAdminDashboard = () => {
   return (
