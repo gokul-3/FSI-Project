@@ -97,14 +97,14 @@ const userSideMenu = {
 };
 
 const sideMenu = {
-  "super-admin": superAdminSideMenu,
-  "customer-admin": customerAdminSideMenu,
+  superAdmin: superAdminSideMenu,
+  customerAdmin: customerAdminSideMenu,
   supervisor: supervisorSideMenu,
   user: userSideMenu,
 };
 
 const DrawerContent = () => {
-  const userType = "super-admin";
+  const userType = "superAdmin";
   return (
     <Box>
       <Toolbar />

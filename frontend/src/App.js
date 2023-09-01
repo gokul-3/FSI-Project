@@ -10,55 +10,51 @@ import SupervisorDashboard from "./userTypes/supervisor/SupervisorDashboard";
 import UserDashboard from "./userTypes/user/UserDashboard";
 import CustomersList from "./userTypes/superAdmin/CustomersList";
 
-const superAdminRouter = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
-      { index: true, element: <SuperAdminDashboard /> },
-      { path: "customers", element: <CustomersList /> },
+      {
+        path: "superAdmin",
+        children: [
+          { index: true, element: <SuperAdminDashboard /> },
+          { path: "customerList", element: <CustomersList /> },
+        ],
+      },
+      {
+        path: "customer",
+        children: [
+          { index: true, element: <CustomerAdminDashboard /> },
+          { path: "customerAdminList", element: <></> },
+          { path: "userList", element: <></> },
+          { path: "supervisorList", element: <></> },
+        ],
+      },
+      {
+        path: "user",
+        children: [{ index: true, element: <UserDashboard /> }],
+      },
+      {
+        path: "supervisor",
+        children: [
+          { index: true, element: <SupervisorDashboard /> },
+          { path: "userList", element: <></> },
+        ],
+      },
     ],
   },
 ]);
-const customerAdminRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <RootLayout />,
-    children: [{ index: true, element: <CustomerAdminDashboard /> }],
-  },
-]);
-const supervisorRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <RootLayout />,
-    children: [{ index: true, element: <SupervisorDashboard /> }],
-  },
-]);
-const userRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <RootLayout />,
-    children: [{ index: true, element: <UserDashboard /> }],
-  },
-]);
+
 const theme = createTheme({
   typography: {
     fontFamily: "'Montserrat', sans-serif",
   },
 });
-
-const routers = {
-  "super-admin": superAdminRouter,
-  "customer-admin": customerAdminRouter,
-  user: userRouter,
-  supervisor: supervisorRouter,
-};
-
 const App = () => {
-  const userType = "super-admin";
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={routers[userType]} />
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 };
