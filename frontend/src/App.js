@@ -1,35 +1,60 @@
 import React from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SuperAdminDashboard from "./userTypes/superAdmin/dashboard/SuperAdminDashboard";
+import SuperAdminDashboard from "./userTypes/superAdmin/SuperAdminDashboard";
 import RootLayout from "./layouts/rootLayout/RootLayout";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
+import CustomerAdminDashboard from "./userTypes/customerAdmin/CustomerAdminDashboard";
+import SupervisorDashboard from "./userTypes/supervisor/SupervisorDashboard";
+import UserDashboard from "./userTypes/user/UserDashboard";
+import CustomersList from "./userTypes/superAdmin/CustomersList";
 
-const superAdminRouter = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    children: [{ index: true, element: <SuperAdminDashboard /> }],
+    children: [
+      {
+        path: "superAdmin",
+        children: [
+          { index: true, element: <SuperAdminDashboard /> },
+          { path: "customerList", element: <CustomersList /> },
+        ],
+      },
+      {
+        path: "customer",
+        children: [
+          { index: true, element: <CustomerAdminDashboard /> },
+          { path: "customerAdminList", element: <></> },
+          { path: "userList", element: <></> },
+          { path: "supervisorList", element: <></> },
+        ],
+      },
+      {
+        path: "user",
+        children: [{ index: true, element: <UserDashboard /> }],
+      },
+      {
+        path: "supervisor",
+        children: [
+          { index: true, element: <SupervisorDashboard /> },
+          { path: "userList", element: <></> },
+        ],
+      },
+    ],
   },
 ]);
-// const customerAdminRouter = createBrowserRouter([{ path: "/" }]);
-// const supervisorRouter = createBrowserRouter([{ path: "/" }]);
-// const userRouter = createBrowserRouter([{ path: "/" }]);
+
 const theme = createTheme({
   typography: {
-    // In Chinese and Japanese the characters are usually larger,
-    // so a smaller fontsize may be appropriate.
     fontFamily: "'Montserrat', sans-serif",
   },
 });
-
 const App = () => {
-  // return <SuperAdminDashboard />;
-
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={superAdminRouter} />
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 };
