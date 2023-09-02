@@ -4,8 +4,8 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 export default function BasicCard() {
   const NumberBox = (props) => {
     return (
-      <Box sx={{ width: "50%", padding: "2.5%" }}>
-        <Typography variant="h4" sx={{ paddingBottom: "12px" }}>
+      <Box sx={{ width: "50%", padding: "1%" }}>
+        <Typography variant="h4" sx={{ paddingBottom: "12px",fontFamily:'Roboto,Poppins',color:'#3871cb;',fontWeight:500 }}>
           {props.count}
         </Typography>
         <Typography>{props.head}</Typography>
@@ -19,8 +19,8 @@ export default function BasicCard() {
       elevation={4}
     >
       <CardContent>
-        <Typography variant="h5" sx={{ textAlign: "center", margin: "1rem 0" }}>
-          Customer Statistics
+        <Typography variant="h5" sx={{ textAlign: "center", margin: "0.7rem 0" }}>
+          Customer <br/>Statistics
         </Typography>
 
         <CardContent style={{ display: "flex", textAlign: "center" }}>
