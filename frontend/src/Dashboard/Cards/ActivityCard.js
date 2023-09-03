@@ -4,7 +4,7 @@ import { Avatar, Card, CardContent, Divider, List,ListItem, ListItemText, ListIt
 
 
 export default function BasicCard(props) {
-    const CustomerData = ({ customers }) => {
+    const CustomerData = ({ customers,users }) => {
         return customers.map((element, index) =>
             <>
                 <ListItem alignItems="center">
@@ -26,7 +26,7 @@ export default function BasicCard(props) {
                             <Typography
                                 fontSize="14px"
                                 sx={{ display: 'inline-block',float:'right' }} >
-                                {element.length}
+                                {users[index]}
                             </Typography>
                         }
                     />
@@ -35,15 +35,13 @@ export default function BasicCard(props) {
             </>
         )
     }
-
-    const names = ['Emma', "Vika", 'Alexa'];
     return (
         <Card sx={{minWidth: 300, maxWidth: 450,margin:'1rem', borderRadius: "6px" }} variant="elevation" elevation={4}>
             <CardContent>
                 <Typography variant='h5' sx={{ textAlign: "center", margin: '1rem 0' }}>
-                    {props.title} Activity
+                    {props.title}
                 </Typography>
-                <CustomerData customers={names} />
+                <CustomerData customers={props.names} users={props.count} />
             </CardContent>
         </Card>
     );

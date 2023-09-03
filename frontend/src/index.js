@@ -4,10 +4,10 @@ import App from "./App";
 import "./index.css";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import superAdminReducer from "./store/superAdmin-slice";
-import customerAdminReducer from "./store/customerAdmin-slice";
-import supervisorReducer from "./store/supervisor-slice";
-import userReducer from "./store/user-slice";
+import superAdminReducer from "./Store/superAdmin-slice";
+import customerAdminReducer from "./Store/customerAdmin-slice";
+import supervisorReducer from "./Store/supervisor-slice";
+import userReducer from "./Store/user-slice";
 
 const store = configureStore({
   reducer: {

@@ -1,14 +1,15 @@
 import React from "react";
-import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SuperAdminDashboard from "./userTypes/superAdmin/SuperAdminDashboard";
-import RootLayout from "./layouts/rootLayout/RootLayout";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
-import CustomerAdminDashboard from "./userTypes/customerAdmin/CustomerAdminDashboard";
-import SupervisorDashboard from "./userTypes/supervisor/SupervisorDashboard";
-import UserDashboard from "./userTypes/user/UserDashboard";
-import CustomersList from "./userTypes/superAdmin/CustomersList";
+import "./App.css";
+
+import SuperAdminDashboard from "./Dashboard/superAdmin/SuperAdminDashboard";
+import RootLayout from "./Layouts/Root/RootLayout";
+import CustomerAdminDashboard from "./Dashboard/customerAdmin/CustomerAdminDashboard";
+import SupervisorDashboard from "./Dashboard/supervisor/SupervisorDashboard";
+import UserDashboard from "./Dashboard/user/UserDashboard";
+import CustomersList from "./Dashboard/superAdmin/CustomersList";
 
 const router = createBrowserRouter([
   {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 
-export default function BasicCard() {
+export default function BasicCard(props) {
   const NumberBox = (props) => {
     return (
       <Box sx={{ width: "50%", padding: "1%" }}>
@@ -14,7 +14,7 @@ export default function BasicCard() {
   };
   return (
     <Card
-      sx={{ minWidth: 300, maxWidth: 450, margin: "1rem", borderRadius: "6px" }}
+      sx={{ minWidth: 300, maxWidth: 450, margin: "1rem", borderRadius: "6px"}}
       variant="elevation"
       elevation={4}
     >
