@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import "./App.css";
 
+// import axios from "./axios";
 import SuperAdminDashboard from "./Dashboard/superAdmin/SuperAdminDashboard";
 import RootLayout from "./Layouts/Root/RootLayout";
 import CustomerAdminDashboard from "./Dashboard/customerAdmin/CustomerAdminDashboard";
 import SupervisorDashboard from "./Dashboard/supervisor/SupervisorDashboard";
 import UserDashboard from "./Dashboard/user/UserDashboard";
 import CustomersList from "./Dashboard/superAdmin/CustomersList";
+import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
+import { useDispatch } from "react-redux";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <URLNotFoundError />,
     children: [
       {
         path: "superAdmin",
@@ -53,6 +57,15 @@ const theme = createTheme({
   },
 });
 const App = () => {
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     const response = await axios.get("getUserData");
+  //     // fetch logic
+  //     // dispatch(profileActions.setProfileInfo({userType, email, name}))
+  //   };
+  //   fetchProfile();
+  // }, []);
   return (
     <ThemeProvider theme={theme}>
       <RouterProvider router={router} />

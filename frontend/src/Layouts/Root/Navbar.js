@@ -12,8 +12,9 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  AccountCircle as ProfileIcon,
+  AccountCircle,
   Logout as LogoutIcon,
+  Person2 as ProfileIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -61,7 +62,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
         </Typography>
         <IconButton onClick={handleMenuClick}>
           <Avatar sx={{ bgcolor: "transparent" }}>
-            <ProfileIcon fontSize="large" />
+            <AccountCircle fontSize="large" />
           </Avatar>
         </IconButton>
         <Menu

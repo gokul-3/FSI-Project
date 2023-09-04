@@ -4,14 +4,13 @@ import { Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
-import Navbar from './Navbar'
-import { MobileDrawer, PermanentDrawer } from "./Drawer"
+import Navbar from "./Navbar";
+import { MobileDrawer, PermanentDrawer } from "./Drawer";
 
 const drawerWidth = 240;
 
 const RootLayout = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };

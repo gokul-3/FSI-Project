@@ -13,6 +13,7 @@ import {
   Logout as LogoutIcon,
   Dashboard as DashboardIcon,
 } from "@mui/icons-material";
+import { useSelector } from "react-redux";
 
 export const MobileDrawer = ({
   mobileOpen = false,
@@ -80,7 +81,8 @@ const sideMenu = {
 };
 
 const DrawerContent = () => {
-  const userType = "superAdmin";
+  const { userType } = useSelector((state) => state.profile);
+
   return (
     <Box>
       <Toolbar />
