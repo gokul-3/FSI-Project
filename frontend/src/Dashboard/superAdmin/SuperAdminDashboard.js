@@ -24,7 +24,7 @@ const SuperAdminDashboard = () => {
       >
         <SuperAdminCountCard
           totalCustomers={{ header: "Total Customers", count: "12" }}
-          recentlyActive={{ header: "Recently Active (7 days)", count: "4" }}
+          recentlyActive={{ header: `Activity last 7 days`, count: "4" }}
         />
         <Box
           display="flex"

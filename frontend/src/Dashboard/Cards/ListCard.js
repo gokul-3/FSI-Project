@@ -11,7 +11,7 @@ import {
 const UserData = ({ users }) => {
   return users.map((element, index) => (
     <>
-      <ListItem alignItems="center">
+      <ListItem alignItems="center" key={index}>
         <ListItemText
           primary={
             <Typography fontSize="14px" sx={{ display: "inline-block" }}>
@@ -35,7 +35,7 @@ const UserData = ({ users }) => {
   ));
 };
 const ListCard = () => {
-  const names = ["Emma", "Vik", "Alexa", "San", "Goku", "Sow", "Thai", "Go"];
+  const names = ["Emma", "Vik", "Alexa", "San", "Goku", "So", "Thai", "Go"];
   return (
     <Card
       sx={{
