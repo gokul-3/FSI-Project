@@ -1,5 +1,9 @@
 import React, { useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import "./App.css";
@@ -19,6 +23,7 @@ const router = createBrowserRouter([
     errorElement: <URLNotFoundError />,
     element: <RootLayout />,
     children: [
+      { index: true, element: <Navigate to="/login" /> },
       { path: "profile", element: <UserProfile /> },
       {
         path: "superAdmin",

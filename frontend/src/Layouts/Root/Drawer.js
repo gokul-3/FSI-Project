@@ -15,6 +15,7 @@ import {
 } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { Fragment } from "react";
+import { useNavigate } from "react-router";
 
 export const MobileDrawer = ({
   mobileOpen = false,
@@ -60,19 +61,21 @@ export const PermanentDrawer = ({ drawerWidth }) => {
 };
 
 const superAdminSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon /> },
-  { itemName: "Customers", icon: <CustomersIcon /> },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/superAdmin" },
+  { itemName: "Customers", icon: <CustomersIcon />, link: "customerList" },
 ];
 const customerAdminSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon /> },
-  { itemName: "Users", icon: <CustomersIcon /> },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customer" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/userList" },
 ];
 const supervisorSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon /> },
-  { itemName: "Users", icon: <CustomersIcon /> },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/userList" },
 ];
 
-const userSideMenu = [{ itemName: "Dashboard", icon: <DashboardIcon /> }];
+const userSideMenu = [
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/user" },
+];
 
 const sideMenu = {
   superAdmin: superAdminSideMenu,
@@ -83,16 +86,21 @@ const sideMenu = {
 
 const DrawerContent = () => {
   const { userType } = useSelector((state) => state.profile);
-
+  const navigate = useNavigate();
   return (
     <Box>
       <Toolbar />
       <Divider />
       <List>
-        {sideMenu[userType].map(({ itemName, icon }, index) => (
+        {sideMenu[userType].map(({ itemName, icon, link }, index) => (
           <Fragment key={index}>
             <ListItem key={itemName} disablePadding>
-              <ListItemButton sx={{ py: 1.5 }}>
+              <ListItemButton
+                onClick={() => {
+                  navigate(link);
+                }}
+                sx={{ py: 1.5 }}
+              >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={itemName} />
               </ListItemButton>

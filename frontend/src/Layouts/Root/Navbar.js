@@ -72,6 +72,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
         >
           <MenuItem
             onClick={() => {
+              handleMenuClose();
               navigate("/profile");
             }}
           >
