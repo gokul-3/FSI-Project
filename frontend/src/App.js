@@ -11,6 +11,7 @@ import SupervisorDashboard from "./Dashboard/supervisor/SupervisorDashboard";
 import UserDashboard from "./Dashboard/user/UserDashboard";
 import CustomersList from "./Dashboard/superAdmin/CustomersList";
 import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
+import UserProfile from "./Dashboard/profile/userProfile";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     errorElement: <URLNotFoundError />,
     element: <RootLayout />,
     children: [
+      { path: "profile", element: <UserProfile /> },
       {
         path: "superAdmin",
         children: [

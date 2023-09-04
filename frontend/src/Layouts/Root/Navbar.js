@@ -17,11 +17,9 @@ import {
   Person2 as ProfileIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   const navigate = useNavigate();
-  const { userType } = useSelector((state) => state.profile);
   const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
   const openAccountMenu = Boolean(accountMenuAnchor);
   const handleMenuClick = (event) => {
@@ -74,7 +72,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
         >
           <MenuItem
             onClick={() => {
-              navigate(`/${userType}/profile`);
+              navigate("/profile");
             }}
           >
             <ProfileIcon fontSize="medium" color="action" sx={{ mr: 2 }} />
