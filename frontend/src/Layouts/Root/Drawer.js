@@ -57,44 +57,20 @@ export const PermanentDrawer = ({ drawerWidth }) => {
   );
 };
 
-const superAdminSideMenu = {
-  primary: [
-    { itemName: "Dashboard", icon: <DashboardIcon /> },
-    { itemName: "Customers", icon: <CustomersIcon /> },
-  ],
-  secondary: [
-    { itemName: "Profile", icon: <ProfileIcon /> },
-    { itemName: "Logout", icon: <LogoutIcon /> },
-  ],
-};
-const customerAdminSideMenu = {
-  primary: [
-    { itemName: "Dashboard", icon: <DashboardIcon /> },
-    { itemName: "Users", icon: <CustomersIcon /> },
-  ],
-  secondary: [
-    { itemName: "Profile", icon: <ProfileIcon /> },
-    { itemName: "Logout", icon: <LogoutIcon /> },
-  ],
-};
-const supervisorSideMenu = {
-  primary: [
-    { itemName: "Dashboard", icon: <DashboardIcon /> },
-    { itemName: "Users", icon: <CustomersIcon /> },
-  ],
-  secondary: [
-    { itemName: "Profile", icon: <ProfileIcon /> },
-    { itemName: "Logout", icon: <LogoutIcon /> },
-  ],
-};
+const superAdminSideMenu = [
+  { itemName: "Dashboard", icon: <DashboardIcon /> },
+  { itemName: "Customers", icon: <CustomersIcon /> },
+];
+const customerAdminSideMenu = [
+  { itemName: "Dashboard", icon: <DashboardIcon /> },
+  { itemName: "Users", icon: <CustomersIcon /> },
+];
+const supervisorSideMenu = [
+  { itemName: "Dashboard", icon: <DashboardIcon /> },
+  { itemName: "Users", icon: <CustomersIcon /> },
+];
 
-const userSideMenu = {
-  primary: [{ itemName: "Dashboard", icon: <DashboardIcon /> }],
-  secondary: [
-    { itemName: "Profile", icon: <ProfileIcon /> },
-    { itemName: "Logout", icon: <LogoutIcon /> },
-  ],
-};
+const userSideMenu = [{ itemName: "Dashboard", icon: <DashboardIcon /> }];
 
 const sideMenu = {
   superAdmin: superAdminSideMenu,
@@ -110,24 +86,16 @@ const DrawerContent = () => {
       <Toolbar />
       <Divider />
       <List>
-        {sideMenu[userType].primary.map(({ itemName, icon }, index) => (
-          <ListItem key={itemName} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText primary={itemName} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {sideMenu[userType].secondary.map(({ itemName, icon }, index) => (
-          <ListItem key={itemName} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText primary={itemName} />
-            </ListItemButton>
-          </ListItem>
+        {sideMenu[userType].map(({ itemName, icon }, index) => (
+          <>
+            <ListItem key={itemName} disablePadding>
+              <ListItemButton sx={{ py: 1.5 }}>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={itemName} />
+              </ListItemButton>
+            </ListItem>
+            {/* <Divider /> */}
+          </>
         ))}
       </List>
     </Box>

@@ -1,10 +1,32 @@
 import React from "react";
 import CodeIcon from "@mui/icons-material/Code";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AppBar, Avatar, IconButton, Toolbar, Typography } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
+import {
+  AppBar,
+  Avatar,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import {
+  AccountCircle as ProfileIcon,
+  Logout as LogoutIcon,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
+  const navigate = useNavigate();
+  const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
+  const openAccountMenu = Boolean(accountMenuAnchor);
+  const handleMenuClick = (event) => {
+    setAccountMenuAnchor(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAccountMenuAnchor(null);
+  };
   return (
     <AppBar
       position="fixed"
@@ -37,11 +59,30 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
           <CodeIcon fontSize="large" />
           FSI
         </Typography>
-        <IconButton>
+        <IconButton onClick={handleMenuClick}>
           <Avatar sx={{ bgcolor: "transparent" }}>
-            <AccountCircle fontSize="large" />
+            <ProfileIcon fontSize="large" />
           </Avatar>
         </IconButton>
+        <Menu
+          anchorEl={accountMenuAnchor}
+          open={openAccountMenu}
+          onClose={handleMenuClose}
+        >
+          <MenuItem
+            onClick={() => {
+              navigate('/profile');
+            }}
+          >
+            <ProfileIcon fontSize="medium" color="action" sx={{ mr: 2 }} />
+            Profile
+          </MenuItem>
+          <Divider />
+          <MenuItem>
+            <LogoutIcon fontSize="medium" color="action" sx={{ mr: 2 }} />
+            Logout
+          </MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );
