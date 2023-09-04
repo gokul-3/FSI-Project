@@ -2,10 +2,13 @@ import React from "react";
 import SuperAdminCountCard from "../Cards/CountCard";
 import TierCard from "../Cards/ActivityCard";
 import { Box, Typography } from "@mui/material";
-
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 const SuperAdminDashboard = () => {
   const names = ["Emma", "Alexa", "Vika"];
   const count = ["2", "2", "2"];
+  const { userType } = useSelector((state) => state.profile);
+  if (userType !== "superAdmin") return <Navigate to="/login"/>;
   return (
     <>
       <Typography

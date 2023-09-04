@@ -14,6 +14,7 @@ import {
   Dashboard as DashboardIcon,
 } from "@mui/icons-material";
 import { useSelector } from "react-redux";
+import { Fragment } from "react";
 
 export const MobileDrawer = ({
   mobileOpen = false,
@@ -89,7 +90,7 @@ const DrawerContent = () => {
       <Divider />
       <List>
         {sideMenu[userType].map(({ itemName, icon }, index) => (
-          <>
+          <Fragment key={index}>
             <ListItem key={itemName} disablePadding>
               <ListItemButton sx={{ py: 1.5 }}>
                 <ListItemIcon>{icon}</ListItemIcon>
@@ -97,7 +98,7 @@ const DrawerContent = () => {
               </ListItemButton>
             </ListItem>
             {/* <Divider /> */}
-          </>
+          </Fragment>
         ))}
       </List>
     </Box>

@@ -14,7 +14,7 @@
     </linearGradient>
     <linearGradient id="prefix__paint1_linear" x1="135.297" y1="97.623" x2="182.109" y2="144.436" gradientUnits="userSpaceOnUse">
       <stop stop-color="#FFE16A"/>
-      <stop offset="1" stop-color="#B78103"/>
+      <stop offset="1" stop-color="#B78103"/> 
     </linearGradient>
     <filter id="prefix__filter0_d" x="51" y="49" width="394.621" height="277.611" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feFlood flood-opacity="0" result="BackgroundImageFix"/>

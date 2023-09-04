@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    userType: "customerAdmin",
+    userType: "superAdmin",
   },
   reducers: {
     setProfileInfo(state, action) {

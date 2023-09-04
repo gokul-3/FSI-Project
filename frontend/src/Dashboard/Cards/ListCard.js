@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
 
 const UserData = ({ users }) => {
   return users.map((element, index) => (
-    <>
+    <Fragment key={index}>
       <ListItem alignItems="center" key={index}>
         <ListItemText
           primary={
@@ -31,7 +31,7 @@ const UserData = ({ users }) => {
         />
       </ListItem>
       {index !== users.length - 1 && <Divider variant="" />}
-    </>
+    </Fragment>
   ));
 };
 const ListCard = () => {

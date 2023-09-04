@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   Avatar,
   Card,
@@ -12,7 +12,7 @@ import {
 
 const CustomerData = ({ customers, users }) => {
   return customers.map((element, index) => (
-    <>
+    <Fragment key={index}>
       <ListItem alignItems="center">
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
@@ -39,7 +39,7 @@ const CustomerData = ({ customers, users }) => {
         />
       </ListItem>
       {index !== customers.length - 1 && <Divider variant="inset" />}
-    </>
+    </Fragment>
   ));
 };
 export default function BasicCard(props) {
