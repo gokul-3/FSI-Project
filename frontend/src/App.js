@@ -8,14 +8,14 @@ import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import "./App.css";
 
-import SuperAdminDashboard from "./Dashboard/superAdmin/SuperAdminDashboard";
+import SuperAdminDashboard from "./pages/Dashboard/superAdmin/SuperAdminDashboard";
 import RootLayout from "./Layouts/Root/RootLayout";
-import CustomerAdminDashboard from "./Dashboard/customerAdmin/CustomerAdminDashboard";
-import SupervisorDashboard from "./Dashboard/supervisor/SupervisorDashboard";
-import UserDashboard from "./Dashboard/user/UserDashboard";
-import CustomersList from "./Dashboard/superAdmin/CustomersList";
+import CustomerAdminDashboard from "./pages/Dashboard/customerAdmin/CustomerAdminDashboard";
+import SupervisorDashboard from "./pages/Dashboard/supervisor/SupervisorDashboard";
+import UserDashboard from "./pages/Dashboard/user/UserDashboard";
+import CustomersList from "./pages/Dashboard/superAdmin/CustomersList";
 import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
-import UserProfile from "./Dashboard/profile/userProfile";
+import UserProfile from "./pages/Dashboard/profile/userProfile";
 
 const router = createBrowserRouter([
   {
