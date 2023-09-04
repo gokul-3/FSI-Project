@@ -37,9 +37,11 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
           <CodeIcon fontSize="large" />
           FSI
         </Typography>
-        <Avatar sx={{ bgcolor: "transparent" }}>
-          <AccountCircle fontSize="large" />
-        </Avatar>
+        <IconButton>
+          <Avatar sx={{ bgcolor: "transparent" }}>
+            <AccountCircle fontSize="large" />
+          </Avatar>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
