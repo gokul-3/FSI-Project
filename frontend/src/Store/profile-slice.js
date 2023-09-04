@@ -3,7 +3,7 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: {
     userType: "superAdmin",
-    isLoggedIn: "",
+    isLoggedIn: false,
     name: "",
     email: "",
   },
@@ -13,6 +13,12 @@ const profileSlice = createSlice({
       state.isLoggedIn = action.payload.isLoggedIn;
       state.name = action.payload.name;
       state.email = action.payload.email;
+    },
+    logout(state, action) {
+      state.userType = "";
+      state.isLoggedIn = "";
+      state.name = "";
+      state.email = "";
     },
   },
 });
