@@ -7,18 +7,14 @@ import { Provider } from "react-redux";
 import superAdminReducer from "./Store/superAdmin-slice";
 import customerAdminReducer from "./Store/customerAdmin-slice";
 import userReducer from "./Store/user-slice";
-import profileReducer from "./Store/profile-slice";
 
 const store = configureStore({
   reducer: {
     superAdmin: superAdminReducer,
     customerAdmin: customerAdminReducer,
-    profile: profileReducer,
     user: userReducer,
   },
 });
-
-
 const root = createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
