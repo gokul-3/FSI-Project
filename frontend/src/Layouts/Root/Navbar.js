@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   const navigate = useNavigate();
   const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
-  const { userType } = useSelector((state) => state.profile);
+  const { userRole } = useSelector((state) => state.profile);
   const openAccountMenu = Boolean(accountMenuAnchor);
   const handleMenuClick = (event) => {
     setAccountMenuAnchor(event.currentTarget);
@@ -63,7 +63,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
           fontSize="26px"
           sx={{ cursor: "pointer" }}
           onClick={() => {
-            navigate(`/${userType}`);
+            navigate(`/${userRole}`);
           }}
         >
           <CodeIcon fontSize="large" />

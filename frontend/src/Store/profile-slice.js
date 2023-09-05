@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    userType: "superAdmin",
+    userRole: "superAdmin",
     isLoggedIn: false,
     name: "",
     email: "",
@@ -10,14 +10,14 @@ const profileSlice = createSlice({
   },
   reducers: {
     setProfileInfo(state, action) {
-      state.userType = action.payload.userType;
-      state.isLoggedIn = action.payload.isLoggedIn;
+      state.userRole = action.payload.userRole;
+      state.isLoggedIn = true;
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.userId = action.payload.userId;
     },
     logout(state, action) {
-      state.userType = "";
+      state.userRole = "";
       state.isLoggedIn = false;
       state.name = "";
       state.email = "";

@@ -10,7 +10,7 @@ import "./App.css";
 
 import axios from "./axios";
 import SuperAdminDashboard from "./pages/Dashboard/superAdmin/SuperAdminDashboard";
-import RootLayout from "./Layouts/Root/RootLayout";
+import RootLayout, { profileLoader } from "./Layouts/Root/RootLayout";
 import CustomerAdminDashboard from "./pages/Dashboard/customerAdmin/CustomerAdminDashboard";
 import SupervisorDashboard from "./pages/Dashboard/supervisor/SupervisorDashboard";
 import UserDashboard from "./pages/Dashboard/user/UserDashboard";
@@ -25,6 +25,7 @@ const router = createBrowserRouter([
     path: "/",
     errorElement: <URLNotFoundError />,
     element: <RootLayout />,
+    loader: profileLoader,
     children: [
       { index: true, element: <Navigate to="/login" /> },
       { path: "profile", element: <UserProfile /> },
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
     ],
   },
   { path: "login", element: <Login /> },
-  { path: "forgetpassword", element: <ForgetPassword /> }
+  { path: "forgetpassword", element: <ForgetPassword /> },
 ]);
 
 const theme = createTheme({

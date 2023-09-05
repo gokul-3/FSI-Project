@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  json,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,20 +15,17 @@ import { MobileDrawer, PermanentDrawer } from "./Drawer";
 import axios from "../../axios";
 import { useDispatch } from "react-redux";
 import { profileActions } from "../../Store/profile-slice";
+import store from "../../Store";
 
 const UNAUTHORISED_ERROR = 400;
 const drawerWidth = 240;
 
 const RootLayout = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const dispatch = useDispatch();
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   const navigate = useNavigate();
-  useEffect(() => {
-    profileLoader();
-  }, []);
   return (
     <div>
       <Box sx={{ display: "flex" }}>
@@ -53,28 +56,22 @@ const RootLayout = () => {
 
 export default RootLayout;
 
-const profileLoader = async () => {
+export const profileLoader = async () => {
   try {
-    const profile = await axios.get("auth/getUserData").catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        const statusCode = error.response.status;
-        if (statusCode === UNAUTHORISED_ERROR) {
-          // navigate("/login");
-        }
-      }
-    });
-
-    dispatch(
+    const profile = await axios.get("auth/getUserData");
+    store.dispatch(
       profileActions.setProfileInfo({
-        userType: profile.data.role,
-        email: profile.data.email,
+        userRole: profile.data.role,
         name: profile.data.name,
-        id: profile.data.id,
+        email: profile.data.email,
+        userId: profile.data.id,
       })
     );
-    navigate(`/${profile.data.role}`);
   } catch (error) {
-    console.log(error);
+    const statusCode = error.response.status;
+    if (statusCode === UNAUTHORISED_ERROR) {
+      return redirect("/login");
+    }
   }
+  return profile.data;
 };

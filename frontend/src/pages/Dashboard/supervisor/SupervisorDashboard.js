@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const SupervisorDashboard = () => {
-  const { userType } = useSelector((state) => state.profile);
-  if (userType !== "supervisor") return <Navigate to="/login" />;
+  const { userRole } = useSelector((state) => state.profile);
+  if (userRole !== "supervisor") return <Navigate to="/login" />;
 
   return <div>SupervisorDashboard</div>;
 };
