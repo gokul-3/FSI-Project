@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -12,13 +12,20 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 // import Axios from 'axios';
 import * as Yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from 'axios';
+import MessageModel from './MessageModel';
 
 
 const defaultTheme = createTheme();
 
 
-export default function ForgetPassword() {
-
+export default function ForgotPassword() {
+	const [sending, setSending] = useState(false)
+	const [model, setModel] = useState({
+		open:false,
+		message:'',
+		navigate:''
+	})
 
 	const form = useForm({
 		defaultValues: {
@@ -28,10 +35,29 @@ export default function ForgetPassword() {
 	const { register, handleSubmit, formState } = form
 	const { errors } = formState
 
-	const onSubmit = async (data) => {
-		try {
-			console.log(data);
-		} catch (err) { }
+	const onSubmit = (data) => {
+			const encodedEmail = window.btoa(data.email+":")
+			console.log(data.email);
+			console.log(encodedEmail);
+			const headers = {
+				'Content-Type': 'application/json',
+				'Authorization': "Basic "+encodedEmail
+			}
+			setSending(true)
+			axios.post('http://192.168.53.116:5000/auth/sendResetPasswordEmail',{}, {headers}
+			)
+			.then(res=>{
+				console.log(res.data.message);
+				setModel(
+					{
+						open:true,
+						message:res.data.message,
+						navigate:'/'
+					},
+					setSending(false)
+				)
+			})
+			.catch(err=>console.log(err.response.data.message))
 	};
 
 	return (
@@ -54,7 +80,7 @@ export default function ForgetPassword() {
 						}}
 					>
 						<Typography component="h1" color='primary' variant="h5" sx={{ m: 5, fontWeight: '800', fontSize: '30px' }}>
-							Forget password
+							Forgot password
 						</Typography>
 						<Typography sx={{ mb: 2 }}>
 							Enter your registered email to reset the password
@@ -79,14 +105,17 @@ export default function ForgetPassword() {
 							<Button
 								type="submit"
 								variant="contained"
+								disabled={sending}
 								sx={{ mt: 3, mb: 2, width: 1, height: '3rem', background: 'linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))' }}
 							>
-								Send email
+								{sending?'Sending...':'Send email'}
 							</Button>
 						</form>
 					</Box>
 				</Grid>
 			</Grid>
+			
+			{model.open && <MessageModel {...model}/>}
 		</ThemeProvider>
 	)
 }
