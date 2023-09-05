@@ -17,10 +17,12 @@ import {
   Person2 as ProfileIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   const navigate = useNavigate();
   const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
+  const { userType } = useSelector((state) => state.profile);
   const openAccountMenu = Boolean(accountMenuAnchor);
   const handleMenuClick = (event) => {
     setAccountMenuAnchor(event.currentTarget);
@@ -50,12 +52,19 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
         >
           <MenuIcon />
         </IconButton>
+
         <Typography
-          sx={{ display: "flex", alignItems: "center", gap: "9px" }}
           noWrap
+          display="flex"
+          alignItems="center"
+          gap="9px"
           component="div"
           fontWeight="500"
           fontSize="26px"
+          sx={{ cursor: "pointer" }}
+          onClick={() => {
+            navigate(`/${userType}`);
+          }}
         >
           <CodeIcon fontSize="large" />
           FSI

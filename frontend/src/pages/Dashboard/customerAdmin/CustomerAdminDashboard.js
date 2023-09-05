@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 const CustomerAdminDashboard = () => {
   const { userType } = useSelector((state) => state.profile);
-  if (userType !== "customerAdmin") return <Navigate to="/login" />;
+  if (userType !== "customer") return <Navigate to="/login" />;
 
   return (
     <>
