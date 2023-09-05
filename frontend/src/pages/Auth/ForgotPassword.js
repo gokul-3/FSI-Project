@@ -57,7 +57,7 @@ export default function ForgotPassword() {
 					setSending(false)
 				)
 			})
-			.catch(err=>console.log(err.response.data.message))
+			.catch(err=>console.log(err.message))
 	};
 
 	return (
@@ -85,9 +85,10 @@ export default function ForgotPassword() {
 						<Typography sx={{ mb: 2 }}>
 							Enter your registered email to reset the password
 						</Typography>
-						<form onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+						<form onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, }}>
 							<TextField
 								margin="normal"
+								// sx={{margin:'0 10px 0 10px'}}
 								fullWidth
 								label="Email"
 								autoComplete='off'

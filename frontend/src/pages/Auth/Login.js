@@ -11,7 +11,7 @@ import {
   FormControlLabel,
   Switch
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { VisibilityOff, Visibility, Cookie } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -19,11 +19,13 @@ import img from '../../assets/bg.jpg'
 import { profileActions } from '../../Store/profile-slice';
 import { useDispatch } from 'react-redux';
 
+
 export default function Login() {
 
   const [showPass, setshowPass] = useState(false)
   const [rememberStatus, setrememberStatus] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
 
   const form = useForm({
     defaultValues: {
@@ -44,19 +46,21 @@ export default function Login() {
     )
       .then(res => {
         setErrorMessage('')
-        console.log(res);
         const {email, name, role, refreshToken, id, accessToken} = res.data
-        if(rememberStatus){
-          dispatch(profileActions.setProfileInfo({email, name, userType:role, refreshToken, userId:id,accessToken}))
+        if(!rememberStatus){
+          dispatch(profileActions.setProfileInfo({email, name, userType:role, refreshToken:'', userId:id,accessToken}))
         }
         else{
-          dispatch(profileActions.setProfileInfo({email, name, userType:role, refreshToken:'', userId:id,accessToken}))
+          dispatch(profileActions.setProfileInfo({email, name, userType:role, refreshToken, userId:id,accessToken}))
 
-        }
+        } 
+          navigate(`../${role}`)
       })
       .catch(err => {
-        setErrorMessage(err.response.data.message)
-        console.log(err.message);
+        if(err.response){
+          setErrorMessage(err.response.data.message)
+        }
+        console.log(err);
       })
   };
 
@@ -95,7 +99,7 @@ export default function Login() {
               margin="normal"
               fullWidth
               label="Email"
-              autoComplete='off'
+              autoComplete='on'
               autoFocus
               {...register('email_userId', {
                 required: 'Email is required',
