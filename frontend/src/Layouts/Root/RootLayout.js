@@ -65,6 +65,7 @@ export const profileLoader = async () => {
         name: profile.data.name,
         email: profile.data.email,
         userId: profile.data.id,
+        
       })
     );
   } catch (error) {

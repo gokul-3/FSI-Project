@@ -9,7 +9,7 @@ import {
   Modal,
 } from "@mui/material";
 import React from "react";
-const Modal = ({
+const ShowInfoModal = ({
   openModal = false,
   onCloseModal = () => {},
   title = "",
@@ -31,4 +31,4 @@ const Modal = ({
     </Dialog>
   );
 };
-export default Modal;
+export default ShowInfoModal;
