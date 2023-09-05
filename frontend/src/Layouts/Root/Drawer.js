@@ -62,19 +62,19 @@ export const PermanentDrawer = ({ drawerWidth }) => {
 
 const superAdminSideMenu = [
   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/superAdmin" },
-  { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customerList" },
+  { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customers" },
 ];
 const customerAdminSideMenu = [
   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customerAdmin" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/userList" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/users" },
 ];
 const supervisorSideMenu = [
   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor/userList" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor/users" },
 ];
 
 const userSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/user" },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/users" },
 ];
 
 const sideMenu = {

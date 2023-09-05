@@ -38,7 +38,7 @@ const oldcolumns = [
 
 const DEBOUNCE_DELAY = 500;
 
-const MyTable = ({ customer_id }) => {
+const UserTable = ({ customer_id }) => {
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -205,7 +205,7 @@ const MyTable = ({ customer_id }) => {
   );
 };
 
-export default MyTable;
+export default UserTable;
 
 
 

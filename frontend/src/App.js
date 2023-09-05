@@ -25,6 +25,7 @@ import Login from "./pages/Auth/Login";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import RedirectToDashboard from "./pages/Auth/RedirectToDashboard";
+import UserTable from "./pages/Dashboard/UserList/Table";
 const UNAUTHORISED_ERROR = 400;
 
 const router = createBrowserRouter([
@@ -55,9 +56,9 @@ const router = createBrowserRouter([
             loader: customerAdminDashboardLoader,
             element: <CustomerAdminDashboard />,
           },
-          { path: "customerAdminList", element: <></> },
-          { path: "userList", element: <></> },
-          { path: "supervisorList", element: <></> },
+          { path: "users",
+          
+           element: <UserTable/> },
         ],
       },
       {
