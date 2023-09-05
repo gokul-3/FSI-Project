@@ -24,11 +24,8 @@ import UserProfile from "./pages/profile/userProfile";
 import Login from "./pages/Auth/Login";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
-<<<<<<< HEAD
 import Users from "./pages/Dashboard/UserList/Table"
-=======
 import RedirectToDashboard from "./pages/Auth/RedirectToDashboard";
->>>>>>> 12aad76a5f9cdd5777736cfb0d54d52cdbc84170
 const UNAUTHORISED_ERROR = 400;
 
 const router = createBrowserRouter([
