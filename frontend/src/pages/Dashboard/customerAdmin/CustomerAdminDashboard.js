@@ -4,6 +4,8 @@ import CustomerCountCard from "../Cards/CountCard";
 import { Box, Typography } from "@mui/material";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import store from "../../../Store/index";
+
 const CustomerAdminDashboard = () => {
   const { userType } = useSelector((state) => state.profile);
   if (userType !== "customer") return <Navigate to="/login" />;
@@ -14,7 +16,7 @@ const CustomerAdminDashboard = () => {
         sx={{ textAlign: { xs: "center", sm: "start" } }}
         variant="h6"
         margin="1rem"
-      > 
+      >
         Hello, Customer
       </Typography>
       <Box
@@ -36,3 +38,18 @@ const CustomerAdminDashboard = () => {
 };
 
 export default CustomerAdminDashboard;
+
+const customerAdminDashboardLoader = async () => {
+  try {
+    const customerAdminDashboardData = await axios(
+      "dashboard/getCustomerData/"
+    );
+    const data= store.getState()
+    console.log(data);
+  } catch (error) {
+    const statusCode = error.response.status;
+    if (statusCode === UNAUTHORISED_ERROR) {
+      return redirect("/login");
+    }
+  }
+};

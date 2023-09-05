@@ -1,7 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 const superAdminSlice = createSlice({
   name: "superAdmin",
-  initialState: {},
+  initialState: {
+    customerCount: 0,
+    activeCustomers: 0,
+    mpstUsers : {},
+    leastUsers : {}
+
+  },
   reducers: {},
 });
 

@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 const customerAdminSlice = createSlice({
   name: "customerAdmin",
-  initialState: {},
+  initialState: {
+    userCount : 0,
+    activeUsers : 0,
+    newUsers : []
+  },
   reducers: {},
 });
 

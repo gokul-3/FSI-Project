@@ -3,12 +3,15 @@ import SuperAdminCountCard from "../Cards/CountCard";
 import TierCard from "../Cards/ActivityCard";
 import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, redirect } from "react-router-dom";
+import axios from "axios";
+const UNAUTHORISED_ERROR = 400;
 const SuperAdminDashboard = () => {
-  const names = ["Emma", "Alexa", "Vika"];
-  const count = ["2", "2", "2"];
+  // const names = ["Emma", "Alexa", "Vika"];
+  // const count = ["2", "2", "2"];
+
   const { userType } = useSelector((state) => state.profile);
-  if (userType !== "superAdmin") return <Navigate to="/login"/>;
+  if (userType !== "superAdmin") return <Navigate to="/login" />;
   return (
     <>
       <Typography
@@ -36,12 +39,22 @@ const SuperAdminDashboard = () => {
           justifyContent="center"
           marginBottom="5rem"
         >
-          <TierCard title="Most Activity" names={names} count={count} />
-          <TierCard title="Least Activity" names={names} count={count} />
+          <TierCard title="Top Customers" names={names} count={count} />
+          <TierCard title="Emerging Customers" names={names} count={count} />
         </Box>
       </Box>
     </>
   );
 };
-
+const superAdminDashboardLoader = async () => {
+  try {
+    const superAdminDashboardData = await axios("dashboard/getSuperAdminData");
+    
+  } catch (error) {
+    const statusCode = error.response.status;
+    if(statusCode === UNAUTHORISED_ERROR) {
+      return redirect("/login");
+    }
+  }
+};
 export default SuperAdminDashboard;
