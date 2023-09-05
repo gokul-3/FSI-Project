@@ -18,7 +18,8 @@ import CustomersList from "./pages/Dashboard/superAdmin/CustomersList";
 import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
 import UserProfile from "./pages/profile/userProfile";
 import Login from "./pages/Auth/Login";
-import ForgetPassword from "./pages/Auth/ForgetPassword";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
 
 const router = createBrowserRouter([
   {
@@ -59,7 +60,8 @@ const router = createBrowserRouter([
     ],
   },
   { path: "login", element: <Login /> },
-  { path: "forgetpassword", element: <ForgetPassword /> },
+  { path: "forgotpassword", element: <ForgotPassword /> },
+  { path: 'resetpassword/:token', element: <ResetPassword /> }
 ]);
 
 const theme = createTheme({
