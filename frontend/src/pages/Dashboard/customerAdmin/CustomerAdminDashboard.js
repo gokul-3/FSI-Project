@@ -6,6 +6,8 @@ import { Navigate, useLoaderData } from "react-router-dom";
 import { useSelector } from "react-redux";
 import store from "../../../Store/index";
 import axios from "../../../axios";
+import { profileLoader } from "../../../Layouts/Root/RootLayout";
+import { profileActions } from "../../../Store/profile-slice";
 const UNAUTHORISED_ERROR = 400;
 
 const CustomerAdminDashboard = () => {
@@ -53,15 +55,31 @@ export default CustomerAdminDashboard;
 export const customerAdminDashboardLoader = async () => {
   try {
     const { profile } = store.getState();
-    console.log("CustomerId",profile)
-    const customerAdminDashboardData = await axios(
-      `dashboard/getCustomerData/${profile.userId}`
+    const isLoggedIn = profile.isLoggedIn;
+    let profileDataId = profile.userId;
+    if (!isLoggedIn) {
+      const profileData = (await axios.get("http://192.168.53.116:5000/auth/getUserData")).data;
+      store.dispatch(
+        profileActions.setProfileInfo({
+          userRole: profileData.role,
+          name: profileData.name,
+          email: profileData.email,
+          userId: profileData.id,
+        })
+      );
+      profileDataId = profileData.id;
+    }
+    const customerAdminDashboardData = await axios.get(
+      `http://192.168.53.116:5000/dashboard/getCustomerData/${profileDataId}`
     );
+    console.log(customerAdminDashboardData.data);
     return customerAdminDashboardData.data;
   } catch (error) {
+    console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
       return redirect("/login");
     }
   }
+  return null;
 };
