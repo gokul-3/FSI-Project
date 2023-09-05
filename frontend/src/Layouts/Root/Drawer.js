@@ -85,14 +85,14 @@ const sideMenu = {
 };
 
 const DrawerContent = () => {
-  const { userType } = useSelector((state) => state.profile);
+  const { userRole } = useSelector((state) => state.profile);
   const navigate = useNavigate();
   return (
     <Box>
       <Toolbar />
       <Divider />
       <List>
-        {sideMenu[userType].map(({ itemName, icon, link }, index) => (
+        {sideMenu[userRole].map(({ itemName, icon, link }, index) => (
           <Fragment key={index}>
             <ListItem key={itemName} disablePadding>
               <ListItemButton

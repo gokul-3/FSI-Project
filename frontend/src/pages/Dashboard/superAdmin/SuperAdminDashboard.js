@@ -7,11 +7,10 @@ import { Navigate, redirect } from "react-router-dom";
 import axios from "axios";
 const UNAUTHORISED_ERROR = 400;
 const SuperAdminDashboard = () => {
-  // const names = ["Emma", "Alexa", "Vika"];
-  // const count = ["2", "2", "2"];
-
-  const { userType } = useSelector((state) => state.profile);
-  if (userType !== "superAdmin") return <Navigate to="/login" />;
+  const names = ["Emma", "Alexa", "Vika"];
+  const count = ["2", "2", "2"];
+  const { userRole } = useSelector((state) => state.profile);
+  if (userRole !== "superAdmin") return <Navigate to="/login" />;
   return (
     <>
       <Typography

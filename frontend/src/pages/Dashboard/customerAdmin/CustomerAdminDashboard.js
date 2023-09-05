@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 import store from "../../../Store/index";
 
 const CustomerAdminDashboard = () => {
-  const { userType } = useSelector((state) => state.profile);
-  if (userType !== "customer") return <Navigate to="/login" />;
+  const { userRole } = useSelector((state) => state.profile);
+  if (userRole !== "customer") return <Navigate to="/login" />;
 
   return (
     <>
