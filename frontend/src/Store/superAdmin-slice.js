@@ -6,8 +6,7 @@ const superAdminSlice = createSlice({
       data:{},
       editedName:"",
       editedImg:""
-    }
-  
+    },
     customerCount: 0,
     activeCustomers: 0,
     mostUsers: {},
@@ -22,8 +21,7 @@ const superAdminSlice = createSlice({
     },
     setCustomerEditedImg: (state, action) => {
       state.Customers.editedImg = action.payload;
-    }
-  
+    },
     setSuperAdminDashboardData(state, action) {
       state.customerCount = action.payload.customerCount;
       state.activeCustomer = action.payload.activeStatus;
@@ -34,5 +32,5 @@ const superAdminSlice = createSlice({
   },
 });
 
-export const {setCustomerEditedImg,setCustomerEditedName,setCustomersData} = superAdminSlice.actions;
+export const {setCustomerEditedImg,setCustomerEditedName,setCustomersData,setSuperAdminDashboardData} = superAdminSlice.actions;
 export default superAdminSlice.reducer;
