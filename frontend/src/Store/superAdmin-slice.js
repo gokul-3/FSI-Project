@@ -7,6 +7,11 @@ const superAdminSlice = createSlice({
       editedName:"",
       editedImg:""
     }
+  
+    customerCount: 0,
+    activeCustomers: 0,
+    mostUsers: {},
+    leastUsers: {},
   },
   reducers: {
     setCustomersData: (state, action) => {
@@ -18,6 +23,14 @@ const superAdminSlice = createSlice({
     setCustomerEditedImg: (state, action) => {
       state.Customers.editedImg = action.payload;
     }
+  
+    setSuperAdminDashboardData(state, action) {
+      state.customerCount = action.payload.customerCount;
+      state.activeCustomer = action.payload.activeStatus;
+      state.mostUsers = action.payload.mostUsers;
+      state.leastUsers = action.payload.leastUsers;
+    },
+
   },
 });
 
