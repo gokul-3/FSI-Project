@@ -12,6 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import axios from "../../axios";
 
 export const ChangePassword = ({ setShowChangePassword }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -44,8 +45,11 @@ export const ChangePassword = ({ setShowChangePassword }) => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-    } catch (err) {}
+      const response = await axios.put("auth/changePassword", data);
+      //handle success
+    } catch (err) {
+      //handle error
+    }
   };
   return (
     <Box m={3} mt={5}>
