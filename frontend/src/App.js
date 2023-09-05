@@ -17,6 +17,8 @@ import UserDashboard from "./pages/Dashboard/user/UserDashboard";
 import CustomersList from "./pages/Dashboard/superAdmin/CustomersList";
 import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
 import UserProfile from "./pages/Dashboard/profile/userProfile";
+import Login from "./pages/Auth/Login";
+import ForgetPassword from "./pages/Auth/ForgetPassword";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +57,8 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "login", element: <Login /> },
+  { path: "forgetpassword", element: <ForgetPassword /> }
 ]);
 
 const theme = createTheme({
@@ -63,7 +67,6 @@ const theme = createTheme({
   },
 });
 const App = () => {
-
   return (
     <ThemeProvider theme={theme}>
       <RouterProvider router={router} />

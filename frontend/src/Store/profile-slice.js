@@ -6,6 +6,7 @@ const profileSlice = createSlice({
     isLoggedIn: false,
     name: "",
     email: "",
+    userId:null
   },
   reducers: {
     setProfileInfo(state, action) {
@@ -13,12 +14,14 @@ const profileSlice = createSlice({
       state.isLoggedIn = action.payload.isLoggedIn;
       state.name = action.payload.name;
       state.email = action.payload.email;
+      state.userId = action.payload.userId;
     },
     logout(state, action) {
       state.userType = "";
-      state.isLoggedIn = "";
+      state.isLoggedIn = false;
       state.name = "";
       state.email = "";
+      state.userId = null
     },
   },
 });
