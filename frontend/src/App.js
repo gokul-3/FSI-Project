@@ -85,12 +85,9 @@ const theme = createTheme({
 const App = () => {
   console.log(process.env.REACT_APP_BACKEND_URL);
   return (
-    // <ThemeProvider theme={theme}>
-    //   <RouterProvider router={router} />
-    // </ThemeProvider>
-    <>
-    <Button onClick={()=> setOpen(!open)}>model</Button>
-    <FormModal openModal={open} setOpenModal={setOpen} firmName="amazon"/></>
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   );
 };
 
