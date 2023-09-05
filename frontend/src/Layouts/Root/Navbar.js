@@ -27,27 +27,26 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
   const { userRole } = useSelector((state) => state.profile);
   const openAccountMenu = Boolean(accountMenuAnchor);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleMenuClick = (event) => {
     setAccountMenuAnchor(event.currentTarget);
   };
   const handleMenuClose = () => {
     setAccountMenuAnchor(null);
   };
-  const logoutUser = async ()=>{
+  const logoutUser = async () => {
     try {
-      
       const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
-      }
-      await axios.get('http://192.168.53.116:5000/auth/logout', {headers})
-      navigate('/login')
-      dispatch( profileActions.logout())
-    }catch(error) {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      };
+      await axios.get("http://localhost:5000/auth/logout", { headers });
+      navigate("/login");
+      dispatch(profileActions.logout());
+    } catch (error) {
       console.log(error.response);
     }
-  }
+  };
   return (
     <AppBar
       position="fixed"

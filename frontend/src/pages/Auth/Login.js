@@ -42,12 +42,12 @@ export default function Login() {
       'Content-Type': 'application/json',
       'Authorization': "Basic " + encodedEmail
     }
-    axios.post('http://192.168.53.116:5000/auth/login', { withCredentials: true }, { headers }
+    axios.post('http://localhost:5000/auth/login', { withCredentials: true }, { headers }
     )
       .then(res => {
         setErrorMessage('')
-        const { email, name, role, refreshToken, id, accessToken } = res.data
-        dispatch(profileActions.setProfileInfo({ email, name, userRole: role, userId: id }))
+        const { email, name, role, refreshToken, id, accessToken, customerId } = res.data
+        dispatch(profileActions.setProfileInfo({ email, name, userRole: role, userId: id, customerId}))
         let refreshTokenToBeSaved = "";
         if (rememberStatus) {
           refreshTokenToBeSaved = refreshToken

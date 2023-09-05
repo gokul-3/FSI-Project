@@ -14,6 +14,7 @@ import CustomerCard from "./CustomerCard";
 import EditDialog from "./EditDialog";
 import { DeletedMsg } from "./DeletedMsg";
 import axiosInstance from "../../../../axios";
+import axios from "axios";
 export default function Customers() {
   const pageLimit = 9;
 
@@ -56,8 +57,8 @@ export default function Customers() {
       formData.append("Image", editedImg);
     }
     try {
-      const updatedCustomer = await axiosInstance.patch(
-        `customer/${customers.data[editIndex].id}`,
+      const updatedCustomer = await axios.patch(
+        `http://localhost:5000/customer/${customers.data[editIndex].id}`,
         formData
       );
       const updatedDataArray = [...customers.data];
@@ -77,7 +78,7 @@ export default function Customers() {
 
   const confirmDelete = async () => {
     try {
-      await axiosInstance.delete(`customer/${customers.data[deleteIndex].id}`);
+      await axios.delete(`http://localhost:5000/customer/${customers.data[deleteIndex].id}`);
       setIsDeletedMsgOpen(true);
       setDeleteIndex(null);
       setIsConfirmationDialogOpen(false);
@@ -94,9 +95,13 @@ export default function Customers() {
 
   const fetchData = async () => {
     try {
-      const response = await axiosInstance.get(
-        `customers?page=${page}&search=${searchQuery}`
-      );
+      const refreshToken = localStorage.getItem('refreshtoken')
+      const refreshEncoded = window.btoa(refreshToken)
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer " + refreshEncoded
+      }
+      const response = await axios.get(`http://localhost:5000/customer?page=${page}&search=${searchQuery}`,{headers});
       setIsLoading(false);
       dispatch(setCustomersData(response.data));
       console.log(response.data);

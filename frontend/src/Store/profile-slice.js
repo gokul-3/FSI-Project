@@ -6,7 +6,8 @@ const profileSlice = createSlice({
     isLoggedIn: false,
     name: "",
     email: "",
-    userId:null
+    userId:null,
+    customerId : null
   },
   reducers: {
     setProfileInfo(state, action) {
@@ -14,6 +15,7 @@ const profileSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.userId = action.payload.userId;
+      state.customerId = action.payload.customerId
     },
 
     login(state, action) {
@@ -28,6 +30,7 @@ const profileSlice = createSlice({
       state.name = "";
       state.email = "";
       state.userId = null
+      state.customerId = null
       localStorage.removeItem('refreshtoken')
       localStorage.removeItem('accesstoken')
     },

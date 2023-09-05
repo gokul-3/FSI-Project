@@ -20,12 +20,15 @@ import ClearIcon from '@mui/icons-material/Clear';
 import Tooltip from '@mui/material/Tooltip';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
+import { useSelector } from 'react-redux';
 import MuiAlert from '@mui/material/Alert';
-
+import { Navigate } from "react-router-dom";
+import {
+  useParams
+} from "react-router-dom";
 import Action from './Action';
 
-const { userType, isLoggedIn } = useSelector((state) => state.profile);
-if (!isLoggedIn) return <Navigate to="/login" />;
+
 
 const oldcolumns = [
   { id: 'id', label: 'User ID', minWidth: 170 },
@@ -38,23 +41,24 @@ const oldcolumns = [
 
 const DEBOUNCE_DELAY = 500;
 
-const UserTable = ({ customer_id }) => {
+const UserTable = () => {
+
+  const {customerId,userRole} = useSelector((state)=>state.profile);
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  const columns = oldcolumns.map((column) => { return userType !== 'supervisor' ? column : column.id !== 'action' && column })
-
+  const columns = oldcolumns.map((column) => { return userRole !== 'supervisor' ? column : column.id !== 'action' && column })
   //Worker Funciton
   const fetchData = async () => {
     const queryParams = {
-      customer_id: customer_id,
+      customer_id: customerId,
       name: name,
       role: roleFilter,
     };
 
-    const response = await axios.get(`http://localhost:4000/api/users`, {
+    const response = await axios.get(`http://localhost:5000/user`, {
       params: queryParams,
     });
 
@@ -94,7 +98,7 @@ const UserTable = ({ customer_id }) => {
       clearTimeout(typingTimeout);
     };
 
-  }, [roleFilter, name, customer_id, actionType, actionDone]);
+  }, [roleFilter, name, customerId, actionType, actionDone]);
 
   //Handler functions 
   const  handleCloseAlert= () => {
@@ -122,7 +126,7 @@ const UserTable = ({ customer_id }) => {
 
   return (
     <div className="responsive-table">
-      <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', verticalAlign: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', verticalAlign: 'center', margin: '2em' }}>
         <TextField id="standard-basic" value={name} label="Search by Name" variant="standard" onChange={handleNameChange} sx={{ minWidth: 120, marginRight: 2 }} />
         <FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
           <InputLabel id="demo-simple-select-standard-label">Designation</InputLabel>

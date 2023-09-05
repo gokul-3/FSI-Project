@@ -58,7 +58,9 @@ export const customerAdminDashboardLoader = async () => {
     const isLoggedIn = profile.isLoggedIn;
     let profileDataId = profile.userId;
     if (!isLoggedIn) {
-      const profileData = (await axios.get("http://192.168.53.116:5000/auth/getUserData")).data;
+      const profileData = (
+        await axios.get("http://localhost:5000/auth/getUserData")
+      ).data;
       store.dispatch(
         profileActions.setProfileInfo({
           userRole: profileData.role,
@@ -70,7 +72,7 @@ export const customerAdminDashboardLoader = async () => {
       profileDataId = profileData.id;
     }
     const customerAdminDashboardData = await axios.get(
-      `http://192.168.53.116:5000/dashboard/getCustomerData/${profileDataId}`
+      `http://localhost:5000/dashboard/getCustomerData/${profileDataId}`
     );
     console.log(customerAdminDashboardData.data);
     return customerAdminDashboardData.data;

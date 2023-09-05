@@ -45,7 +45,7 @@ const router = createBrowserRouter([
             loader: superAdminDashboardLoader,
             element: <SuperAdminDashboard />,
           },
-          { path: "customerList", element: <CustomersList /> },
+          { path: "customers", element: <CustomersList /> },
         ],
       },
       {
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
         path: "supervisor",
         children: [
           { index: true, element: <SupervisorDashboard /> },
-          { path: "userList", element: <></> },
+          { path: "user", element: <></> },
         ],
       },
     ],

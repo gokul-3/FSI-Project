@@ -30,8 +30,14 @@ const SuperAdminDashboard = () => {
         gap="3rem"
       >
         <SuperAdminCountCard
-          totalCustomers={{ header: "Total Customers", count: superDashboardData.customerCount }}
-          recentlyActive={{ header: `Activity last 7 days`, count: superDashboardData.activeStatus }}
+          totalCustomers={{
+            header: "Total Customers",
+            count: superDashboardData.customerCount,
+          }}
+          recentlyActive={{
+            header: `Activity last 7 days`,
+            count: superDashboardData.activeStatus,
+          }}
         />
         <Box
           display="flex"
@@ -40,8 +46,14 @@ const SuperAdminDashboard = () => {
           justifyContent="center"
           marginBottom="5rem"
         >
-          <TierCard title="Top Customers" customerData={superDashboardData.mostUsers} />
-          <TierCard title="Emerging Customers" customerData={superDashboardData.leastUsers} />
+          <TierCard
+            title="Top Customers"
+            customerData={superDashboardData.mostUsers}
+          />
+          <TierCard
+            title="Emerging Customers"
+            customerData={superDashboardData.leastUsers}
+          />
         </Box>
       </Box>
     </>
@@ -49,16 +61,18 @@ const SuperAdminDashboard = () => {
 };
 export const superAdminDashboardLoader = async () => {
   try {
-    const superAdminDashboardData = await axios.get("http://192.168.53.116:5000/dashboard/getSuperAdminData");
+    
+    const superAdminDashboardData = await axios.get(
+      "http://localhost:5000/dashboard/getSuperAdminData"
+    );
     console.log(superAdminDashboardData);
     return superAdminDashboardData.data;
   } catch (error) {
+    console.log(error);  
     const statusCode = error.response.status;
-    if(statusCode === UNAUTHORISED_ERROR) {
+    if (statusCode === UNAUTHORISED_ERROR) {
       return redirect("/login");
     }
   }
-  
-  
 };
 export default SuperAdminDashboard;
