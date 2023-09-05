@@ -42,25 +42,22 @@ export default function Login() {
       'Content-Type': 'application/json',
       'Authorization': "Basic " + encodedEmail
     }
-    axios.post('http://192.168.53.116:5000/auth/login', {withCredentials:true}, { headers}
+    axios.post('http://192.168.53.116:5000/auth/login', { withCredentials: true }, { headers }
     )
       .then(res => {
         setErrorMessage('')
-        const {email, name, role, refreshToken, id, accessToken} = res.data
-        if(!rememberStatus){
-          dispatch(profileActions.setProfileInfo({email, name, userRole:role, userId:id}))
-          dispatch(profileActions.login({refreshToken:'',accessToken}))
+        const { email, name, role, refreshToken, id, accessToken } = res.data
+        dispatch(profileActions.setProfileInfo({ email, name, userRole: role, userId: id }))
+        let refreshTokenToBeSaved = "";
+        if (rememberStatus) {
+          refreshTokenToBeSaved = refreshToken
         }
-        else{
-          dispatch(profileActions.setProfileInfo({email, name, userRole:role, userId:id}))
-          dispatch(profileActions.login({refreshToken,accessToken}))
-
-        } 
+        dispatch(profileActions.login({ refreshToken: refreshTokenToBeSaved, accessToken }))
         console.log(role);
-          navigate(`/${role}`)
+        navigate(`/${role}`)
       })
       .catch(err => {
-        if(err.response){
+        if (err.response) {
           setErrorMessage(err.response.data.message)
         }
         console.log(err);

@@ -65,8 +65,8 @@ const superAdminSideMenu = [
   { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customerList" },
 ];
 const customerAdminSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customer" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/customer/userList" },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customerAdmin" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/userList" },
 ];
 const supervisorSideMenu = [
   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
@@ -86,7 +86,9 @@ const sideMenu = {
 
 const DrawerContent = () => {
   const { userRole } = useSelector((state) => state.profile);
+  console.log(userRole);
   const navigate = useNavigate();
+  if(!userRole){return navigate('/login')};
   return (
     <Box>
       <Toolbar />

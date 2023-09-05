@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "customer",
+        path: "customerAdmin",
         children: [
           { index: true, element: <CustomerAdminDashboard /> },
           { path: "customerAdminList", element: <></> },
