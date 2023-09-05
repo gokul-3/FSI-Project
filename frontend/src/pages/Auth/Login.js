@@ -48,15 +48,16 @@ export default function Login() {
         setErrorMessage('')
         const {email, name, role, refreshToken, id, accessToken} = res.data
         if(!rememberStatus){
-          dispatch(profileActions.setProfileInfo({email, name, userType:role, userId:id}))
+          dispatch(profileActions.setProfileInfo({email, name, userRole:role, userId:id}))
           dispatch(profileActions.login({refreshToken:'',accessToken}))
         }
         else{
-          dispatch(profileActions.setProfileInfo({email, name, userType:role, userId:id}))
+          dispatch(profileActions.setProfileInfo({email, name, userRole:role, userId:id}))
           dispatch(profileActions.login({refreshToken,accessToken}))
 
         } 
-          navigate(`../${role}`)
+        console.log(role);
+          navigate(`/${role}`)
       })
       .catch(err => {
         if(err.response){
@@ -149,7 +150,7 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs textAlign='center'>
-                <Link to='../forgotpassword'>
+                <Link to='/forgotpassword'>
                   Forgot password?
                 </Link>
               </Grid>
