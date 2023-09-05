@@ -19,7 +19,7 @@ const profileSlice = createSlice({
     login(state, action) {
       state.isLoggedIn = true;
       localStorage.setItem('refreshtoken', action.payload.refreshToken);
-      document.cookie = `accessToken=${action.payload.accessToken}; max-age=900000`
+      localStorage.setItem('accesstoken', action.payload.accessToken);
 
     },
     logout(state, action) {
@@ -29,7 +29,7 @@ const profileSlice = createSlice({
       state.email = "";
       state.userId = null
       localStorage.removeItem('refreshtoken')
-      document.cookie = `accessToken=''; max-age=100`
+      localStorage.removeItem('accesstoken')
     },
   },
 });

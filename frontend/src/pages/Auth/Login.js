@@ -56,7 +56,8 @@ export default function Login() {
           dispatch(profileActions.login({refreshToken,accessToken}))
 
         } 
-          navigate(`../${role}`)
+        console.log(role);
+          navigate(`/${role}`)
       })
       .catch(err => {
         if(err.response){
@@ -149,7 +150,7 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs textAlign='center'>
-                <Link to='../forgotpassword'>
+                <Link to='/forgotpassword'>
                   Forgot password?
                 </Link>
               </Grid>

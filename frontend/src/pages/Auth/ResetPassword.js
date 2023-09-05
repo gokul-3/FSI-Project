@@ -69,15 +69,20 @@ export default function ResetPassword() {
             {
               open: true,
               message: res.data.message,
-              navigate: '/'
+              navigate: '/login'
             },
             setSending(false)
           )
         })
-        .catch(err => { 
-          console.log(err) 
+        .catch(err => {
           setSending(false)
-
+          setModel(
+            {
+              open: true,
+              message: err.message,
+              navigate: '/login'
+            },
+          )
         }
         )
     } catch (err) {
@@ -106,7 +111,7 @@ export default function ResetPassword() {
             <Typography component="h1" color="primary" variant="h5" sx={{ m: 5, fontWeight: '800', fontSize: '27px' }}>
               Reset account password
             </Typography>
-            <form onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1,}}>
+            <form onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, }}>
               <TextField
                 margin="normal"
                 fullWidth

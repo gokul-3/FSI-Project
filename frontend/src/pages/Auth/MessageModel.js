@@ -8,34 +8,34 @@ import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 
 export default function MessageModel(props) {
-    const [open, setOpen] = React.useState(props.open);
-    console.log(props);
-    const theme = useTheme();
-    const navigate = useNavigate()
+  const [open, setOpen] = React.useState(props.open);
+  console.log(props);
+  const theme = useTheme();
+  const navigate = useNavigate()
 
-    const handleClose = () => {
-        navigate(props.navigate)
-        setOpen(false);
-    };
+  const handleClose = () => {
+    navigate(props.navigate)
+    setOpen(false);
+  };
 
-    return (
-        <div>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogContent>
-                    <DialogContentText>
-                        {props.message}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} autoFocus>
-                        Ok
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    );
+  return (
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogContent>
+          <DialogContentText>
+            {props.message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 }
