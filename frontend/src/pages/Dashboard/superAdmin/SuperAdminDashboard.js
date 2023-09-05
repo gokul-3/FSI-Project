@@ -7,8 +7,8 @@ import { Navigate } from "react-router-dom";
 const SuperAdminDashboard = () => {
   const names = ["Emma", "Alexa", "Vika"];
   const count = ["2", "2", "2"];
-  const { userType } = useSelector((state) => state.profile);
-  if (userType !== "superAdmin") return <Navigate to="/login"/>;
+  const { userRole } = useSelector((state) => state.profile);
+  if (userRole !== "superAdmin") return <Navigate to="/login" />;
   return (
     <>
       <Typography
@@ -45,3 +45,7 @@ const SuperAdminDashboard = () => {
 };
 
 export default SuperAdminDashboard;
+
+export const superAdminDashboardLoader = async () => {
+  
+};

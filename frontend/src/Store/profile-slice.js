@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    userType: "superAdmin",
+    userRole: "superAdmin",
     isLoggedIn: false,
     name: "",
     email: "",
@@ -17,12 +17,15 @@ const profileSlice = createSlice({
     },
     login(state, action){
       state.isLoggedIn = true;
+    },
+    login(state, action) {
+      state.isLoggedIn = true;
       localStorage.setItem('refreshtoken', action.payload.refreshToken);
       document.cookie = `accessToken=${action.payload.accessToken}; max-age=900000`
 
     },
     logout(state, action) {
-      state.userType = "";
+      state.userRole = "";
       state.isLoggedIn = false;
       state.name = "";
       state.email = "";

@@ -5,8 +5,8 @@ import { Box, Typography } from "@mui/material";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 const CustomerAdminDashboard = () => {
-  const { userType } = useSelector((state) => state.profile);
-  if (userType !== "customer") return <Navigate to="/login" />;
+  const { userRole } = useSelector((state) => state.profile);
+  if (userRole !== "customer") return <Navigate to="/login" />;
 
   return (
     <>
