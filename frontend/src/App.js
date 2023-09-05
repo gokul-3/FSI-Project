@@ -8,6 +8,7 @@ import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import "./App.css";
 
+import axios from "./axios";
 import SuperAdminDashboard from "./pages/Dashboard/superAdmin/SuperAdminDashboard";
 import RootLayout from "./Layouts/Root/RootLayout";
 import CustomerAdminDashboard from "./pages/Dashboard/customerAdmin/CustomerAdminDashboard";
@@ -62,7 +63,7 @@ const theme = createTheme({
   },
 });
 const App = () => {
-  useEffect(() => {});
+
   return (
     <ThemeProvider theme={theme}>
       <RouterProvider router={router} />
