@@ -15,12 +15,12 @@ const CustomerData = ({ customers }) => {
     <Fragment key={index}>
       <ListItem alignItems="center">
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt={element.CustomerName} src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
 
         <ListItemText
           primary={
-            <Typography fontSize="16px" fontWeight={500} display="inline-block">
+            <Typography fontSize="16px" fontWeight={400} display="inline-block">
               {element.CustomerName}
             </Typography>
           }
@@ -30,10 +30,10 @@ const CustomerData = ({ customers }) => {
             <Typography
               fontSize="16px"
               display="inline-block"
-              fontWeight={500}
+              fontWeight={400}
               sx={{ float: "right" }}
             >
-              {element.UserCount}
+              {element.UserCount} user{element.UserCount>1?'s':''}
             </Typography>
           }
         />
