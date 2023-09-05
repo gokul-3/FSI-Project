@@ -53,7 +53,7 @@ const RootLayout = () => {
 
 export default RootLayout;
 
-const profileLoader = async ({ params, request }) => {
+const profileLoader = async () => {
   try {
     const profile = await axios.get("auth/getUserData").catch(function (error) {
       if (error.response) {
