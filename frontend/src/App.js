@@ -14,7 +14,7 @@ import RootLayout from "./Layouts/Root/RootLayout";
 import CustomerAdminDashboard from "./pages/Dashboard/customerAdmin/CustomerAdminDashboard";
 import SupervisorDashboard from "./pages/Dashboard/supervisor/SupervisorDashboard";
 import UserDashboard from "./pages/Dashboard/user/UserDashboard";
-import CustomersList from "./pages/Dashboard/superAdmin/CustomersList";
+import CustomersList from "./pages/Dashboard/superAdmin/Customers/CustomersList";
 import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
 import UserProfile from "./pages/profile/userProfile";
 import Login from "./pages/Auth/Login";
