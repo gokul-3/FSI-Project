@@ -10,16 +10,16 @@ import {
   Box,
   IconButton,
   Paper,
+  Snackbar,
+  Modal,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "../../axios";
-import ShowInfoModal from "../../Layouts/Modal/Modal";
 
-export const ChangePassword = ({ setShowChangePassword }) => {
+export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [modalInfo, setModalInfo] = useState(false);
 
   const schema = Yup.object().shape({
     old_password: Yup.string().required("Old password is required"),
@@ -27,11 +27,14 @@ export const ChangePassword = ({ setShowChangePassword }) => {
       .required("Password is required")
       .min(8)
       .max(15)
+      .notOneOf(
+        [Yup.ref("old_password")],
+        "New password must be different from the old password"
+      )
       .matches(/[0-9]/, "Must include digit")
       .matches(/[a-z]/, "Must include one lowercase")
       .matches(/[A-Z]/, "Must include one uppercase")
       .matches(/[^\w\s]/, "Must include one special character"),
-
     confirm_password: Yup.string()
       .required("Confirm password is required")
       .oneOf([Yup.ref("new_password"), null], "Passwords must match"),
@@ -50,23 +53,18 @@ export const ChangePassword = ({ setShowChangePassword }) => {
     try {
       const response = await axios.put("auth/changePassword", data);
       reset();
-      //handle success
-      setModalInfo({ title: "Success", content: "Password set successfully!!" });
+      setModalInfo({
+        title: "Success",
+        content: response.data?.message,
+      });
+      setShowChangePassword(false);
+      console.log(response);
     } catch (err) {
-      //handle error
-      setModalInfo({ title: "Error", content: err.message });
+      setModalInfo({ title: "Error", content: err.response.data?.message });
     }
   };
   return (
     <>
-      <ShowInfoModal
-        title={modalInfo && modalInfo.title}
-        content={modalInfo && modalInfo.title}
-        openModal={modalInfo}
-        onCloseModal={() => {
-          setModalInfo(false);
-        }}
-      />
       <Box m={3} mt={5}>
         <Paper elevation={4} sx={{ borderRadius: 2 }}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
