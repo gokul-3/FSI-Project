@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { profileActions } from "../../Store/profile-slice";
 import store from "../../Store";
 
-const UNAUTHORISED_ERROR = 400;
+const UNAUTHORISED_ERROR = 401;
 const drawerWidth = 240;
 
 const RootLayout = () => {
@@ -25,7 +25,6 @@ const RootLayout = () => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const navigate = useNavigate();
   return (
     <div>
       <Box sx={{ display: "flex" }}>
@@ -58,20 +57,25 @@ export default RootLayout;
 
 export const profileLoader = async () => {
   try {
-    const profile = await axios.get("http://192.168.53.116:5000/auth/getUserData");
-    store.dispatch(
-      profileActions.setProfileInfo({
-        userRole: profile.data.role,
-        name: profile.data.name,
-        email: profile.data.email,
-        userId: profile.data.id,
-      })
-    );
+    const state = store.getState();
+    const isLoggedIn = state.profile.isLoggedIn;
+    if (!isLoggedIn) {
+      const profile = await axios.get("http://192.168.53.116:5000/auth/getUserData");
+      store.dispatch(
+        profileActions.setProfileInfo({
+          userRole: profile.data.role,
+          name: profile.data.name,
+          email: profile.data.email,
+          userId: profile.data.id,
+        })
+      );
+      return profile.data;
+    }
   } catch (error) {
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
       // return redirect("/login");
     }
   }
-  return profile.data;
+  return null;
 };

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    userRole: "customerAdmin",
+    userRole: "",
     isLoggedIn: false,
     name: "",
     email: "",
@@ -22,7 +22,7 @@ const profileSlice = createSlice({
       localStorage.setItem('accesstoken', action.payload.accessToken);
 
     },
-    logout(state, action) {
+    logout(state) {
       state.userRole = "";
       state.isLoggedIn = false;
       state.name = "";
