@@ -16,7 +16,7 @@ import SupervisorDashboard from "./pages/Dashboard/supervisor/SupervisorDashboar
 import UserDashboard from "./pages/Dashboard/user/UserDashboard";
 import CustomersList from "./pages/Dashboard/superAdmin/CustomersList";
 import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
-import UserProfile from "./pages/Dashboard/profile/userProfile";
+import UserProfile from "./pages/profile/userProfile";
 import Login from "./pages/Auth/Login";
 import ForgetPassword from "./pages/Auth/ForgetPassword";
 
