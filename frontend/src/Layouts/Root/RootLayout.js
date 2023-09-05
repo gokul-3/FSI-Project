@@ -68,13 +68,16 @@ export const profileLoader = async () => {
           email: profile.data.email,
           userId: profile.data.id,
         })
-      );
+      ); 
+      console.log(profile);
       return profile.data;
     }
   } catch (error) {
-    const statusCode = error.response.status;
+    const statusCode = error?.response?.status;
+    
+
     if (statusCode === UNAUTHORISED_ERROR) {
-      // return redirect("/login");
+      return redirect("/login");
     }
   }
   return null;
