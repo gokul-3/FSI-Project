@@ -17,19 +17,37 @@ import {
   Person2 as ProfileIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { profileActions } from "../../Store/profile-slice";
+import axios from "axios";
+const INTERNAL_SERVER_ERROR = 500;
 
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   const navigate = useNavigate();
   const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
   const { userRole } = useSelector((state) => state.profile);
   const openAccountMenu = Boolean(accountMenuAnchor);
+  const dispatch = useDispatch()
   const handleMenuClick = (event) => {
     setAccountMenuAnchor(event.currentTarget);
   };
   const handleMenuClose = () => {
     setAccountMenuAnchor(null);
   };
+  const logoutUser = async ()=>{
+    try {
+      
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accesstoken')}`
+      }
+      await axios.get('http://192.168.53.116:5000/auth/logout', {headers})
+      navigate('/login')
+      dispatch( profileActions.logout())
+    }catch(error) {
+      console.log(error.response);
+    }
+  }
   return (
     <AppBar
       position="fixed"
@@ -89,7 +107,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
             Profile
           </MenuItem>
           <Divider />
-          <MenuItem>
+          <MenuItem onClick={logoutUser}>
             <LogoutIcon fontSize="medium" color="action" sx={{ mr: 2 }} />
             Logout
           </MenuItem>

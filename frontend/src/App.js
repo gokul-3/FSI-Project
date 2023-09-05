@@ -24,7 +24,11 @@ import UserProfile from "./pages/profile/userProfile";
 import Login from "./pages/Auth/Login";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
+<<<<<<< HEAD
 import Users from "./pages/Dashboard/UserList/Table"
+=======
+import RedirectToDashboard from "./pages/Auth/RedirectToDashboard";
+>>>>>>> 12aad76a5f9cdd5777736cfb0d54d52cdbc84170
 const UNAUTHORISED_ERROR = 400;
 
 const router = createBrowserRouter([
@@ -32,9 +36,9 @@ const router = createBrowserRouter([
     path: "/",
     // errorElement: <URLNotFoundError />,
     element: <RootLayout />,
-    // loader: profileLoader,
+    loader: profileLoader,
     children: [
-      { index: true, element: <Navigate to="/login" /> },
+      { index: true, element: <RedirectToDashboard /> },
       { path: "profile", element: <UserProfile /> },
       {
         path: "superAdmin",
@@ -79,7 +83,7 @@ const router = createBrowserRouter([
   { path: "login", element: <Login /> },
   { path: "forgotpassword", element: <ForgotPassword /> },
   { path: "resetpassword/:token", element: <ResetPassword /> },
-]);
+]); 
 
 const theme = createTheme({
   typography: {
@@ -92,7 +96,6 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <RouterProvider router={router} />
     </ThemeProvider>
-    
   );
 };
 
