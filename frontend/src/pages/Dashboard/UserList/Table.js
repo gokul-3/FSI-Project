@@ -20,12 +20,15 @@ import ClearIcon from '@mui/icons-material/Clear';
 import Tooltip from '@mui/material/Tooltip';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
+import { useSelector } from 'react-redux';
 import MuiAlert from '@mui/material/Alert';
-
+import { Navigate } from "react-router-dom";
+import {
+  useParams
+} from "react-router-dom";
 import Action from './Action';
 
-const { userType, isLoggedIn } = useSelector((state) => state.profile);
-if (!isLoggedIn) return <Navigate to="/login" />;
+
 
 const oldcolumns = [
   { id: 'id', label: 'User ID', minWidth: 170 },
@@ -38,18 +41,19 @@ const oldcolumns = [
 
 const DEBOUNCE_DELAY = 500;
 
-const MyTable = ({ customer_id }) => {
-
+const MyTable = () => {
+  const { userType, isLoggedIn } = useSelector((state) => state.profile);
+// if (!isLoggedIn) return <Navigate to="/login" />;
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
   const columns = oldcolumns.map((column) => { return userType !== 'supervisor' ? column : column.id !== 'action' && column })
-
+  const {customerId} = useParams();
   //Worker Funciton
   const fetchData = async () => {
     const queryParams = {
-      customer_id: customer_id,
+      customer_id: customerId,
       name: name,
       role: roleFilter,
     };
@@ -94,7 +98,7 @@ const MyTable = ({ customer_id }) => {
       clearTimeout(typingTimeout);
     };
 
-  }, [roleFilter, name, customer_id, actionType, actionDone]);
+  }, [roleFilter, name, customerId, actionType, actionDone]);
 
   //Handler functions 
   const  handleCloseAlert= () => {

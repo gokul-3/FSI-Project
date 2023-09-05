@@ -24,6 +24,7 @@ import UserProfile from "./pages/profile/userProfile";
 import Login from "./pages/Auth/Login";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
+import Users from "./pages/Dashboard/UserList/Table"
 const UNAUTHORISED_ERROR = 400;
 
 const router = createBrowserRouter([
@@ -44,6 +45,9 @@ const router = createBrowserRouter([
             element: <SuperAdminDashboard />,
           },
           { path: "customerList", element: <CustomersList /> },
+          { path: "customerList/:customerId", element: <Users /> },
+          
+
         ],
       },
       {
@@ -85,12 +89,10 @@ const theme = createTheme({
 const App = () => {
   console.log(process.env.REACT_APP_BACKEND_URL);
   return (
-    // <ThemeProvider theme={theme}>
-    //   <RouterProvider router={router} />
-    // </ThemeProvider>
-    <>
-    <Button onClick={()=> setOpen(!open)}>model</Button>
-    <FormModal openModal={open} setOpenModal={setOpen} firmName="amazon"/></>
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+    
   );
 };
 
