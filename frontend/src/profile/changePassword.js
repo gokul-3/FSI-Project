@@ -15,12 +15,12 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export const ChangePassword = ({ setShowChangePassword }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    
+
   const schema = Yup.object().shape({
     old_password: Yup.string().required("Old password is required"),
-    password: Yup.string()
+    new_password: Yup.string()
       .required("Password is required")
       .min(8)
       .max(15)
@@ -28,10 +28,10 @@ export const ChangePassword = ({ setShowChangePassword }) => {
       .matches(/[a-z]/, "Must include one lowercase")
       .matches(/[A-Z]/, "Must include one uppercase")
       .matches(/[^\w\s]/, "Must include one special character"),
-      
+
     confirm_password: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), null], "Passwords must match"),
+      .oneOf([Yup.ref("new_password"), null], "Passwords must match"),
   });
 
   const {
@@ -77,22 +77,22 @@ export const ChangePassword = ({ setShowChangePassword }) => {
             />
             <TextField
               required
-              type={showPassword ? "text" : "password"}
+              type={showNewPassword ? "text" : "password"}
               variant="outlined"
               label="New Password"
-              name="password"
+              name="new_password"
               fullWidth
-              {...register("password")}
-              error={errors.password ? true : false}
-              helperText={errors.password?.message}
+              {...register("new_password")}
+              error={errors.new_password ? true : false}
+              helperText={errors.new_password?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => setShowNewPassword(!showNewPassword)}
                       edge="end"
                     >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                      {showNewPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 ),
