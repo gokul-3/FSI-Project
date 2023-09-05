@@ -57,7 +57,7 @@ export default function Search({onSearch}) {
 
   return (
     <Grid container alignItems="center">
-      <Grid item>
+      <Grid item >
         <SearchStyle>
           <StyledInputBase
             placeholder="Search…"

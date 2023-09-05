@@ -8,15 +8,22 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setCustomerEditedImg, setCustomerEditedName } from  "../../../../Store/superAdmin-slice";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import {
+  setCustomerEditedImg,
+  setCustomerEditedName,
+} from "../../../../Store/superAdmin-slice";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
 
-export default function EditDialog({ open, handleClose, handleSaveName }) {
-  const maxlen=50;
+export default function EditDialog({ open, handleClose, handleEditCustomer }) {
+  const maxlen = 50;
   const dispatch = useDispatch();
-  const editedImg = useSelector((state) => state.superAdmin.Customers.editedImg);
-  const editedName = useSelector((state) => state.superAdmin.Customers.editedName);
+  const editedImg = useSelector(
+    (state) => state.superAdmin.Customers.editedImg
+  );
+  const editedName = useSelector(
+    (state) => state.superAdmin.Customers.editedName
+  );
   const [nameError, setNameError] = useState("");
   const [fileError, setFileError] = useState("");
   const [selectedFileName, setSelectedFileName] = React.useState("");
@@ -26,7 +33,7 @@ export default function EditDialog({ open, handleClose, handleSaveName }) {
     if (!newName.trim()) {
       setNameError("Customer name cannot be empty");
     } else {
-      setNameError(""); 
+      setNameError("");
     }
   };
 
@@ -40,7 +47,7 @@ export default function EditDialog({ open, handleClose, handleSaveName }) {
       setFileError("Please select a valid image file");
       dispatch(setCustomerEditedImg(null));
     } else {
-      const maxSize = 50 * 1024; 
+      const maxSize = 50 * 1024;
       const fileSize = selectedFile.size;
 
       if (fileSize > maxSize) {
@@ -89,16 +96,15 @@ export default function EditDialog({ open, handleClose, handleSaveName }) {
               Choose Logo
             </Button>
           </label>
-          {selectedFileName && (
-            <p>Selected File: {selectedFileName}</p>
-          )}
-          {fileError && (
-            <div style={{ color: "red" }}>{fileError}</div>
-          )}
+          {selectedFileName && <p>Selected Image: {selectedFileName}</p>}
+          {fileError && <div style={{ color: "red" }}>{fileError}</div>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSaveName} disabled={nameError || fileError}>
+          <Button
+            onClick={handleEditCustomer}
+            disabled={nameError || fileError}
+          >
             Save
           </Button>
         </DialogActions>

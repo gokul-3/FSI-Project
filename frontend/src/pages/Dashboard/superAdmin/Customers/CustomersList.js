@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Grid, Pagination, Typography } from "@mui/material";
-import { setCustomersData,setCustomerEditedImg,setCustomerEditedName } from "../../../../Store/superAdmin-slice";
+import {
+  setCustomersData,
+  setCustomerEditedImg,
+  setCustomerEditedName,
+} from "../../../../Store/superAdmin-slice";
 import { useSelector, useDispatch } from "react-redux";
 import SkeletonCard from "./SkeletonCard";
 import Search from "./Search";
@@ -9,14 +13,12 @@ import ConfirmationDialog from "./ConfirmationDialog";
 import CustomerCard from "./CustomerCard";
 import EditDialog from "./EditDialog";
 import { DeletedMsg } from "./DeletedMsg";
-import axiosInstance from "../../../../axios"
+import axiosInstance from "../../../../axios";
 export default function Customers() {
-
-  const pageLimit = 2;
-
+  const pageLimit = 9;
 
   const dispatch = useDispatch();
- const customers = useSelector((state) => state.superAdmin.Customers.data);
+  const customers = useSelector((state) => state.superAdmin.Customers.data);
 
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,11 +30,15 @@ export default function Customers() {
   const [error, setError] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [deleteIndex, setDeleteIndex] = useState(null);
-  const editedName = useSelector((state) => state.superAdmin.Customers.editedName);
-  const editedImg = useSelector((state) => state.superAdmin.Customers.editedImg);
+  const editedName = useSelector(
+    (state) => state.superAdmin.Customers.editedName
+  );
+  const editedImg = useSelector(
+    (state) => state.superAdmin.Customers.editedImg
+  );
   const [iseditDialogOpen, setIsEditDialogOpen] = useState(false);
   const pageLength = Math.ceil(customers.totalRecords / pageLimit);
-  const [createCustomer,setCreateCustomer]=useState(false);
+  const [createCustomer, setCreateCustomer] = useState(false);
 
   const showSkeletonLoading = (count) => {
     const skeletons = [];
@@ -42,8 +48,7 @@ export default function Customers() {
     return skeletons;
   };
 
-
-  const handleSaveName = async () => {
+  const handleEditCustomer = async () => {
     const formData = new FormData();
     formData.append("name", editedName);
 
@@ -55,8 +60,6 @@ export default function Customers() {
         `customer/${customers.data[editIndex].id}`,
         formData
       );
-      console.log(updatedCustomer);
-      console.log(customers.data);
       const updatedDataArray = [...customers.data];
       updatedDataArray[editIndex] = {
         ...updatedDataArray[editIndex],
@@ -64,25 +67,21 @@ export default function Customers() {
         icon: updatedCustomer.data.data.icon,
       };
       dispatch(setCustomersData({ ...customers, data: updatedDataArray }));
-      console.log(customers);
       setEditIndex(null);
       setIsEditDialogOpen(false);
       dispatch(setCustomerEditedImg(null));
     } catch (error) {
-      console.log(error);
       handleError(error);
     }
   };
 
-
   const confirmDelete = async () => {
     try {
-      await axiosInstance.delete(
-        `customer/${customers.data[deleteIndex].id}`
-      );
+      await axiosInstance.delete(`customer/${customers.data[deleteIndex].id}`);
       setIsDeletedMsgOpen(true);
       setDeleteIndex(null);
       setIsConfirmationDialogOpen(false);
+      console.log(customers.totalRecords);
       if (customers.totalRecords % 2 != 0) {
         setPage(page - 1);
       } else {
@@ -92,7 +91,6 @@ export default function Customers() {
       handleError(error);
     }
   };
-
 
   const fetchData = async () => {
     try {
@@ -107,20 +105,13 @@ export default function Customers() {
     }
   };
 
-
-
   const handleError = (error) => {
-    console.log("error",error);
     if (error.response && error.response.status === 404) {
-      console.error("Customer not found.");
       setError("notFound");
     } else {
-      console.error("An error occurred while deleting the customer.");
       setError("somethingWentWrong");
     }
   };
-
-
 
   const renderCustomerList = () => {
     return customers.data.map((d, index) => (
@@ -141,7 +132,6 @@ export default function Customers() {
   };
 
   useEffect(() => {
-    
     setIsLoading(true);
     fetchData();
   }, [page, searchQuery, Deleted]);
@@ -171,7 +161,7 @@ export default function Customers() {
                 variant="contained"
                 color="primary"
                 sx={{ position: "absolute", top: 70, right: 10 }}
-                onClick={()=>setCreateCustomer(!createCustomer)}
+                onClick={() => setCreateCustomer(!createCustomer)}
               >
                 + Add Customer
               </Button>
@@ -193,25 +183,16 @@ export default function Customers() {
                 }}
               />
             </Grid>
+            {/* {searchQuery && <Grid item xs={3}>
+              <Typography variant="h6" color="textSecondary">
+                Search Results for `{searchQuery}`
+              </Typography>
+            </Grid>} */}
           </Grid>
           <Grid item xs={12}>
             <Grid container justifyContent="center" spacing={3}>
               {isLoading ? (
-                showSkeletonLoading(2)
-              ) : searchQuery && customers.totalRecords > 0 ? (
-                <>
-                  <Grid
-                    container
-                    display="flex"
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    sx={{ minHeight: "5vh", textAlign: "center" }}
-                  >
-                    <Typography variant="h6" color="textSecondary">Search Results for `{searchQuery}`</Typography>
-                  </Grid>
-                  {renderCustomerList()}
-                </>
+                showSkeletonLoading(pageLimit)
               ) : customers.totalRecords > 0 ? (
                 <>
                   {renderCustomerList()}
@@ -256,7 +237,7 @@ export default function Customers() {
                 setIsEditDialogOpen(false);
                 setEditIndex(null);
               }}
-              handleSaveName={handleSaveName}
+              handleEditCustomer={handleEditCustomer}
             />
           )}
           <DeletedMsg
