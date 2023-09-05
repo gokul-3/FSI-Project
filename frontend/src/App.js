@@ -1,32 +1,59 @@
-import React, { useState } from "react";
-import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SuperAdminDashboard from "./userTypes/superAdmin/SuperAdminDashboard";
-import RootLayout from "./layouts/rootLayout/RootLayout";
+import React, { useEffect } from "react";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
-import { Button, createTheme } from "@mui/material";
-import CustomerAdminDashboard from "./userTypes/customerAdmin/CustomerAdminDashboard";
-import SupervisorDashboard from "./userTypes/supervisor/SupervisorDashboard";
-import UserDashboard from "./userTypes/user/UserDashboard";
-import CustomersList from "./userTypes/superAdmin/CustomersList";
-import { FormModal } from "./components/addUserForm/addUserForm";
+import { createTheme } from "@mui/material";
+import "./App.css";
+
+import axios from "./axios";
+import SuperAdminDashboard, {
+  superAdminDashboardLoader,
+} from "./pages/Dashboard/superAdmin/SuperAdminDashboard";
+import RootLayout, { profileLoader } from "./Layouts/Root/RootLayout";
+import CustomerAdminDashboard, {
+  customerAdminDashboardLoader,
+} from "./pages/Dashboard/customerAdmin/CustomerAdminDashboard";
+import SupervisorDashboard from "./pages/Dashboard/supervisor/SupervisorDashboard";
+import UserDashboard from "./pages/Dashboard/user/UserDashboard";
+import CustomersList from "./pages/Dashboard/superAdmin/Customers/CustomersList";
+import URLNotFoundError from "./Layouts/ErrorPages/URLNotFoundError";
+import UserProfile from "./pages/profile/userProfile";
+import Login from "./pages/Auth/Login";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
+const UNAUTHORISED_ERROR = 400;
 
 const router = createBrowserRouter([
   {
     path: "/",
+    // errorElement: <URLNotFoundError />,
     element: <RootLayout />,
+    // loader: profileLoader,
     children: [
+      { index: true, element: <Navigate to="/login" /> },
+      { path: "profile", element: <UserProfile /> },
       {
         path: "superAdmin",
         children: [
-          { index: true, element: <SuperAdminDashboard /> },
+          {
+            index: true,
+            loader: superAdminDashboardLoader,
+            element: <SuperAdminDashboard />,
+          },
           { path: "customerList", element: <CustomersList /> },
         ],
       },
       {
-        path: "customer",
+        path: "customerAdmin",
         children: [
-          { index: true, element: <CustomerAdminDashboard /> },
+          {
+            index: true,
+            loader: customerAdminDashboardLoader,
+            element: <CustomerAdminDashboard />,
+          },
           { path: "customerAdminList", element: <></> },
           { path: "userList", element: <></> },
           { path: "supervisorList", element: <></> },
@@ -45,6 +72,9 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "login", element: <Login /> },
+  { path: "forgotpassword", element: <ForgotPassword /> },
+  { path: "resetpassword/:token", element: <ResetPassword /> },
 ]);
 
 const theme = createTheme({
@@ -53,7 +83,7 @@ const theme = createTheme({
   },
 });
 const App = () => {
-  const [open, setOpen] = useState(false);
+  console.log(process.env.REACT_APP_BACKEND_URL);
   return (
     // <ThemeProvider theme={theme}>
     //   <RouterProvider router={router} />

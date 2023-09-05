@@ -9,63 +9,72 @@ import Axios from 'axios';
 import * as Yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from 'react-hook-form';
-import SnackbarNotify from '../snackbar/Snackbar';
 
 export const FormModal = ({ openModal, setOpenModal, firmName = '' }) => {
+    const [age, setAge] = useState('')
     const schema = Yup.object().shape({
         name: Yup.string().trim().required('Name is required'),
         email: Yup.string().matches(/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/, "Invalid Email").required('Email Required'),
         firm: Yup.string().trim().required('Firm name required'),
         role: Yup.string().required('Select Role'),
+        // icon: Yup
+        //     .mixed()
+        //     .required("Required")
+        //     .test("is-valid-type", "Not a valid image type",
+        //         value => isValidFileType(value && value.name.toLowerCase(), "image"))
+        //     .test("is-valid-size", "Max allowed size is 100KB",
+        //         value => value && value.size <= MAX_FILE_SIZE)
     });
 
-    const { register, handleSubmit, formState: { errors }, getValues, reset } = useForm({ resolver: yupResolver(schema) });
+const { register, handleSubmit, formState:{errors}, getValues } = useForm({ resolver: yupResolver(schema) });
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [userAlreadyExists, setUserAlreadyExists] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState({
         status: 'info',
         message: 'Request sent successfully'
-    })
+    });
+
+    const MAX_FILE_SIZE = 102400; //100KB
+
+    const validFileExtensions = { image: ['jpg', 'gif', 'png', 'jpeg', 'svg', 'webp'] };
+
+    function isValidFileType(fileName, fileType) {
+        return fileName && validFileExtensions[fileType].indexOf(fileName.split('.').pop()) > -1;
+    }
 
     const onSubmit = async (data) => {
 
         try {
-            const response = await Axios.post('http://localhost:4000/adduser', data);
+            console.log(data);
+            const formData = new FormData();
+            formData.append()
+            console.log(formData);
+            const response = await Axios.post('http://localhost:4000/adduser', formData);
             console.log('Response from server', response);
-            const encodedEmail = window.btoa(data.email + ":")
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': "Basic " + encodedEmail
-            }
-            const res = await Axios.post('http://192.168.53.116:5000/auth/createPassword', {}, { headers });
-            reset();
-            setOpenSnackbar(!openSnackbar);
+            // setOpenSnackbar(!openSnackbar);
         } catch (error) {
-            if (error.response.status == 409) {
-                errors.email = true;
-                setUserAlreadyExists("User already exists")
-            }
-            else {
-                setSnackbarMessage({
-                    status: 'error',
-                    message: 'Failed to send request!'
-                });
-                setOpenSnackbar(true);
-            }
-        }
+            console.error('Error sending POST request:', error.response);
 
+            // if (error.response.status == 409) {
+            //     setErrorText((prev) => ({ ...prev, email: 'user already exists' }));
+            // }
+            // else {
+            //     setSnackbarMessage({
+            //         status: 'error',
+            //         message: 'Failed to send request!'
+            //     });
+            //     setOpenSnackbar(true);
+            // }
+        }
     }
 
     const handleAddUserCancel = () => {
-        reset();
-        setUserAlreadyExists('');
         setOpenModal(false);
     }
 
     const disableSubmit = () => {
-        if (!!errors.email || !!errors.name || !!errors.firm || !!errors.role) {
-            if (!(!!getValues('email') && !!getValues('name') && !!getValues('firm') && !!getValues('role'))) {
+        if(!!errors.email || !!errors.name || !!errors.firm || !!errors.role){
+            if(!(!!getValues('email') && !!getValues('name') && !!getValues('firm') && !!getValues('role'))){
                 return true;
             }
         }
@@ -73,14 +82,11 @@ export const FormModal = ({ openModal, setOpenModal, firmName = '' }) => {
     }
 
     const handleSnackbarClose = () => {
-        reset();
         setOpenSnackbar(!openSnackbar);
         setOpenModal(false);
-        setUserAlreadyExists('');
     }
 
     return (
-
         <>
             <Dialog open={openModal} fullWidth>
                 <DialogTitle>Want to add new user?</DialogTitle>
@@ -107,8 +113,8 @@ export const FormModal = ({ openModal, setOpenModal, firmName = '' }) => {
                                 type='email'
                                 id="emailid"
                                 {...register("email")}
-                                error={Boolean(userAlreadyExists) || (errors.email ? true : false)}
-                                helperText={userAlreadyExists || errors.email?.message}
+                                error={errors.email ? true : false}
+                                helperText={errors.email?.message}
                             />
 
                             <TextField
@@ -136,7 +142,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = '' }) => {
                                     error={errors.role ? true : false}
                                     defaultValue=''
                                 >
-                                    <MenuItem value='customerAdmin'>Customer Admin</MenuItem>
+                                    <MenuItem value='customer admin'>Customer Admin</MenuItem>
                                     <MenuItem value='supervisor'>Supervisor</MenuItem>
                                     <MenuItem value='operator'>Operator</MenuItem>
                                 </Select>
@@ -146,6 +152,14 @@ export const FormModal = ({ openModal, setOpenModal, firmName = '' }) => {
                             ) : (
                                 null
                             )}
+
+                            <Input
+                                type='file'
+                                id='customer_icon'
+                                label='Firm Logo'
+                                {...register('icon')}
+                            />
+
                             <Box sx={{ display: 'flex', justifyContent: 'space-evenly', mt: '2em' }}>
                                 <Button variant='outlined'
                                     disabled={disableSubmit()}
@@ -162,18 +176,13 @@ export const FormModal = ({ openModal, setOpenModal, firmName = '' }) => {
                     </form>
                 </DialogContent>
             </Dialog>
-            <SnackbarNotify
-                openSnackbar={openSnackbar}
-                handleSnackbarClose={handleSnackbarClose}
-                snackbarMessage = {snackbarMessage}
-            />
+            <Snackbar open={openSnackbar} autoHideDuration={2000} onClose={handleSnackbarClose}>
+                <Alert onClose={handleSnackbarClose} severity={snackbarMessage.status} sx={{ width: '100%' }}>
+                    {snackbarMessage.message}
+                </Alert>
+            </Snackbar>
 
         </>
 
     );
 }
-
-
-
-
-
