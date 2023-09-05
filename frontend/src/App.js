@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SuperAdminDashboard from "./userTypes/superAdmin/SuperAdminDashboard";
 import RootLayout from "./layouts/rootLayout/RootLayout";
 import { ThemeProvider } from "@emotion/react";
-import { createTheme } from "@mui/material";
+import { Button, createTheme } from "@mui/material";
 import CustomerAdminDashboard from "./userTypes/customerAdmin/CustomerAdminDashboard";
 import SupervisorDashboard from "./userTypes/supervisor/SupervisorDashboard";
 import UserDashboard from "./userTypes/user/UserDashboard";
 import CustomersList from "./userTypes/superAdmin/CustomersList";
+import { FormModal } from "./components/addUserForm/addUserForm";
 
 const router = createBrowserRouter([
   {
@@ -52,10 +53,14 @@ const theme = createTheme({
   },
 });
 const App = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    // <ThemeProvider theme={theme}>
+    //   <RouterProvider router={router} />
+    // </ThemeProvider>
+    <>
+    <Button onClick={()=> setOpen(!open)}>model</Button>
+    <FormModal openModal={open} setOpenModal={setOpen} firmName="amazon"/></>
   );
 };
 
