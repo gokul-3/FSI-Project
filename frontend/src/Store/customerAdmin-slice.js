@@ -6,7 +6,14 @@ const customerAdminSlice = createSlice({
     activeUsers : 0,
     newUsers : []
   },
-  reducers: {},
+  reducers: {
+    setCustomerDashboardData(state, action) {
+        state.userCount = action.payload.userCount;
+        state.activeUsers = action.payload.activeUsers;
+        state.newUsers = action.payload.newUsers;
+
+    }
+  },
 });
 
 export const customerAdminActions = customerAdminSlice.actions;

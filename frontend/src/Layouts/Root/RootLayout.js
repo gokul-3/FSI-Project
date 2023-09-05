@@ -71,7 +71,7 @@ export const profileLoader = async () => {
   } catch (error) {
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
-      return redirect("/login");
+      // return redirect("/login");
     }
   }
   return profile.data;

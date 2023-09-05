@@ -4,11 +4,18 @@ const superAdminSlice = createSlice({
   initialState: {
     customerCount: 0,
     activeCustomers: 0,
-    mpstUsers : {},
-    leastUsers : {}
+    mostUsers: {},
+    leastUsers: {},
+  },
+  reducers: {
+    setSuperAdminDashboardData(state, action) {
+      state.customerCount = action.payload.customerCount;
+      state.activeCustomer = action.payload.activeStatus;
+      state.mostUsers = action.payload.mostUsers;
+      state.leastUsers = action.payload.leastUsers;
+    },
 
   },
-  reducers: {},
 });
 
 export const superAdminActions = superAdminSlice.actions;

@@ -3,14 +3,15 @@ import SuperAdminCountCard from "../Cards/CountCard";
 import TierCard from "../Cards/ActivityCard";
 import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { Navigate, redirect } from "react-router-dom";
-import axios from "axios";
+import { Navigate, redirect, useLoaderData } from "react-router-dom";
+import axios from "../../../axios";
+import store from "../../../Store/index";
+
 const UNAUTHORISED_ERROR = 400;
 const SuperAdminDashboard = () => {
-  const names = ["Emma", "Alexa", "Vika"];
-  const count = ["2", "2", "2"];
-  const { userRole } = useSelector((state) => state.profile);
-  if (userRole !== "superAdmin") return <Navigate to="/login" />;
+  // const { userRole } = useSelector((state) => state.profile);
+  const superDashboardData = useLoaderData();
+  // if (userRole !== "superAdmin") return <Navigate to="/login" />;
   return (
     <>
       <Typography
@@ -28,8 +29,8 @@ const SuperAdminDashboard = () => {
         gap="3rem"
       >
         <SuperAdminCountCard
-          totalCustomers={{ header: "Total Customers", count: "12" }}
-          recentlyActive={{ header: `Activity last 7 days`, count: "4" }}
+          totalCustomers={{ header: "Total Customers", count: superDashboardData.customerCount }}
+          recentlyActive={{ header: `Activity last 7 days`, count: superDashboardData.activeStatus }}
         />
         <Box
           display="flex"
@@ -38,22 +39,26 @@ const SuperAdminDashboard = () => {
           justifyContent="center"
           marginBottom="5rem"
         >
-          <TierCard title="Top Customers" names={names} count={count} />
-          <TierCard title="Emerging Customers" names={names} count={count} />
+          <TierCard title="Top Customers" customerData={superDashboardData.mostUsers} />
+          <TierCard title="Emerging Customers" customerData={superDashboardData.leastUsers} />
         </Box>
       </Box>
     </>
   );
 };
-const superAdminDashboardLoader = async () => {
+export const superAdminDashboardLoader = async () => {
   try {
+    console.log("hello");
     const superAdminDashboardData = await axios("dashboard/getSuperAdminData");
-    
+    console.log(superAdminDashboardData);
+    return superAdminDashboardData.data;
   } catch (error) {
     const statusCode = error.response.status;
     if(statusCode === UNAUTHORISED_ERROR) {
       return redirect("/login");
     }
   }
+  
+  
 };
 export default SuperAdminDashboard;

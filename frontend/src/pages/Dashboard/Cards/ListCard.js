@@ -10,16 +10,16 @@ import {
 
 const UserData = ({ users }) => {
   return users.map((element, index) => (
-    <Fragment key={index}>
-      <ListItem alignItems="center" key={index}>
-        <ListItemText
+    <Fragment key={index} >
+      <ListItem alignItems="center" key={index} sx={{textAlign:"center"}} >
+        <ListItemText 
           primary={
-            <Typography fontSize="14px" sx={{ display: "inline-block" }}>
-              {element}
+            <Typography fontSize="14px" sx={{ display: "inline-block"}}>
+              {element.UserName}
             </Typography>
           }
         />
-        <ListItemText
+        {/* <ListItemText
           primary={
             <Typography
               fontSize="14px"
@@ -28,14 +28,15 @@ const UserData = ({ users }) => {
               {element.length} days ago
             </Typography>
           }
-        />
+        /> */}
       </ListItem>
       {index !== users.length - 1 && <Divider variant="" />}
     </Fragment>
   ));
 };
-const ListCard = () => {
-  const names = ["Emma", "Vik", "Alexa", "San", "Goku", "So", "Thai", "Go"];
+const ListCard = (props) => {
+  const userNames = props.userData;
+
   return (
     <Card
       sx={{
@@ -56,7 +57,7 @@ const ListCard = () => {
         >
           (Created within last 30 days)
         </Typography>
-        <UserData users={names} />
+        <UserData users={userNames} />
       </CardContent>
     </Card>
   );
