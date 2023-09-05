@@ -3,7 +3,7 @@ import {
   Avatar,
   Button,
   CssBaseline,
-  TextField,  
+  TextField,
   Paper,
   Box,
   Grid,
@@ -12,44 +12,51 @@ import {
   Switch
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { VisibilityOff, Visibility, Cookie } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import img from '../../assets/bg.jpg'
+import { profileActions } from '../../Store/profile-slice';
+import { useDispatch } from 'react-redux';
 
 export default function Login() {
 
   const [showPass, setshowPass] = useState(false)
   const [rememberStatus, setrememberStatus] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const form = useForm({
     defaultValues: {
-      email_username: '',
+      email_userId: '',
       password: ''
     }
   })
   const { register, handleSubmit, formState } = form
   const { errors } = formState
-
-  const onSubmit = async (data) => {
-    console.log(data);
-    await axios.post('localhost', {}, {
-      auth: {
-        data
-      },
-    })
+  const dispatch = useDispatch()
+  const onSubmit = (data) => {
+    const encodedEmail = window.btoa(data.email_userId + ":" + data.password)
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': "Basic " + encodedEmail
+    }
+    axios.post('http://192.168.53.116:5000/auth/login', {withCredentials:true}, { headers}
+    )
       .then(res => {
-        if (rememberStatus) {
-          // add tokens
-          if (res.authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7, authHeader.length);
-            localStorage.setItem('refreshToken', token)
-            return
-          }
+        setErrorMessage('')
+        console.log(res);
+        const {email, name, role, refreshToken, id, accessToken} = res.data
+        if(rememberStatus){
+          dispatch(profileActions.setProfileInfo({email, name, userType:role, refreshToken, userId:id,accessToken}))
+        }
+        else{
+          dispatch(profileActions.setProfileInfo({email, name, userType:role, refreshToken:'', userId:id,accessToken}))
+
         }
       })
-      .catch(error => {
-        console.log(error.message);
+      .catch(err => {
+        setErrorMessage(err.response.data.message)
+        console.log(err.message);
       })
   };
 
@@ -90,15 +97,15 @@ export default function Login() {
               label="Email"
               autoComplete='off'
               autoFocus
-              {...register('email_username', {
+              {...register('email_userId', {
                 required: 'Email is required',
                 pattern: {
                   value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/,
                   message: 'Enter a valid email'
                 }
               })}
-              error={!!errors.email_username}
-              helperText={errors.email_username?.message}
+              error={!!errors.email_userId}
+              helperText={errors.email_userId?.message}
             />
             <TextField
               margin="normal"
@@ -123,6 +130,9 @@ export default function Login() {
               helperText={errors.password?.message}
             />
             <FormControlLabel control={<Switch checked={rememberStatus} onClick={() => setrememberStatus(!rememberStatus)} />} label="Remember me" />
+            <Typography color='red' textAlign='center'>
+              {errorMessage}
+            </Typography>
             <Button
               type="submit"
               fullWidth
@@ -133,7 +143,7 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs textAlign='center'>
-                <Link to='forgetpassword'>
+                <Link to='../forgotpassword'>
                   Forgot password?
                 </Link>
               </Grid>

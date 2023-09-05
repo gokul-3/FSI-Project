@@ -11,10 +11,12 @@ const profileSlice = createSlice({
   reducers: {
     setProfileInfo(state, action) {
       state.userType = action.payload.userType;
-      state.isLoggedIn = action.payload.isLoggedIn;
+      state.isLoggedIn = true;
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.userId = action.payload.userId;
+      localStorage.setItem('refreshtoken', action.payload.refreshToken);
+      document.cookie = `accessToken=${action.payload.accessToken}; max-age=900000`
     },
     logout(state, action) {
       state.userType = "";
@@ -22,6 +24,8 @@ const profileSlice = createSlice({
       state.name = "";
       state.email = "";
       state.userId = null
+      localStorage.removeItem('refreshtoken')
+      document.cookie = `accessToken=''; max-age=100`
     },
   },
 });
