@@ -58,20 +58,19 @@ export default RootLayout;
 
 export const profileLoader = async () => {
   try {
-    const profile = await axios.get("auth/getUserData");
+    const profile = await axios.get("http://192.168.53.116:5000/auth/getUserData");
     store.dispatch(
       profileActions.setProfileInfo({
         userRole: profile.data.role,
         name: profile.data.name,
         email: profile.data.email,
         userId: profile.data.id,
-        
       })
     );
   } catch (error) {
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
-      return redirect("/login");
+      // return redirect("/login");
     }
   }
   return profile.data;

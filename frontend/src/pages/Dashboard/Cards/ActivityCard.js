@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const CustomerData = ({ customers, users }) => {
+const CustomerData = ({ customers }) => {
   return customers.map((element, index) => (
     <Fragment key={index}>
       <ListItem alignItems="center">
@@ -21,7 +21,7 @@ const CustomerData = ({ customers, users }) => {
         <ListItemText
           primary={
             <Typography fontSize="16px" fontWeight={500} display="inline-block">
-              {element}
+              {element.CustomerName}
             </Typography>
           }
         />
@@ -33,7 +33,7 @@ const CustomerData = ({ customers, users }) => {
               fontWeight={500}
               sx={{ float: "right" }}
             >
-              {users[index]}
+              {element.UserCount}
             </Typography>
           }
         />
@@ -43,6 +43,7 @@ const CustomerData = ({ customers, users }) => {
   ));
 };
 export default function BasicCard(props) {
+  const customerData = props.customerData;
   return (
     <Card
       sx={{ width: { xs: 400, sm: 500, lg: 550 }, borderRadius: "10px" }}
@@ -53,7 +54,7 @@ export default function BasicCard(props) {
         <Typography variant="h5" sx={{ textAlign: "center", margin: "1rem 0" }}>
           {props.title}
         </Typography>
-        <CustomerData customers={props.names} users={props.count} />
+        <CustomerData customers={customerData} />
       </CardContent>
     </Card>
   );
