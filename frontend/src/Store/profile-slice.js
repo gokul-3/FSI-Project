@@ -15,9 +15,7 @@ const profileSlice = createSlice({
       state.email = action.payload.email;
       state.userId = action.payload.userId;
     },
-    login(state, action){
-      state.isLoggedIn = true;
-    },
+
     login(state, action) {
       state.isLoggedIn = true;
       localStorage.setItem('refreshtoken', action.payload.refreshToken);
