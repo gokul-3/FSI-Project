@@ -24,7 +24,7 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 const router = createBrowserRouter([
   {
     path: "/",
-    errorElement: <URLNotFoundError />,
+    // errorElement: <URLNotFoundError />,
     element: <RootLayout />,
     loader: profileLoader,
     children: [

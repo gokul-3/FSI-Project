@@ -10,7 +10,7 @@ const profileSlice = createSlice({
   },
   reducers: {
     setProfileInfo(state, action) {
-      state.userType = action.payload.userType;
+      state.userRole = action.payload.userRole;
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.userId = action.payload.userId;
