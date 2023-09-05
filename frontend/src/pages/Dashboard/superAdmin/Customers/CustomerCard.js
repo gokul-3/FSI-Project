@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import dummyLogo from "../../../../assets/dummyUser.jpg";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+
 export default function CustomerCard({
   index,
   showDeleteConfirmation,
@@ -30,11 +32,13 @@ export default function CustomerCard({
       setImageUrl(url);
     }
   }, [customers.data[index].icon]);
-  const handleOpenUsers = () => {};
+  const handleOpenUsers = (customerId) => {
+    <Navigate to={`/${customerId}`} replace={true} />
+  };
   return (
     <Tooltip title={customers.data[index].name}>
       <Card sx={{ margin: "12px", height: "280px", width: "300px" }}>
-        <CardActionArea onClick={handleOpenUsers}>
+        <CardActionArea onClick={()=>handleOpenUsers(customers.data[index].id)}>
           <CardMedia
             component="img"
             height="140"

@@ -19,16 +19,16 @@ const UserData = ({ users }) => {
             </Typography>
           }
         />
-        {/* <ListItemText
+        <ListItemText
           primary={
             <Typography
               fontSize="14px"
               sx={{ display: "inline-block", float: "right" }}
             >
-              {element.length} days ago
+              {30 - element.Difference} days ago
             </Typography>
           }
-        /> */}
+        />
       </ListItem>
       {index !== users.length - 1 && <Divider variant="" />}
     </Fragment>
