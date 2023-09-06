@@ -4,9 +4,9 @@ import { Navigate } from "react-router-dom";
 import UserTable from "../UserList/Table";
 
 const UserDashboard = () => {
-  const { userRole } = useSelector((state) => state.profile);
+  const { userRole, name } = useSelector((state) => state.profile);
   if (userRole !== "user") return <Navigate to="/login" />;
-  return <UserTable/>;
+  return <div><h1>Hello User, {name}</h1></div>;
 };
 
 export default UserDashboard;

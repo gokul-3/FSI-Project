@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { Fragment } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 export const MobileDrawer = ({
   mobileOpen = false,
@@ -88,6 +88,7 @@ const DrawerContent = () => {
   const { userRole } = useSelector((state) => state.profile);
   console.log(userRole);
   const navigate = useNavigate();
+  const location = useLocation()
   if(!userRole){return navigate('/login')};
   return (
     <Box>
@@ -101,7 +102,7 @@ const DrawerContent = () => {
                 onClick={() => {
                   navigate(link);
                 }}
-                sx={{ py: 1.5 }}
+                sx={{ py: 1.5, bgcolor:  link === location.pathname ? "#80808054" : "white"}}
               >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={itemName} />
