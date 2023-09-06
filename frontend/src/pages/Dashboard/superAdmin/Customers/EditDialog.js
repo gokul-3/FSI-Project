@@ -6,16 +6,15 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Box,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setCustomerEditedImg,
-  setCustomerEditedName,
-} from "../../../../Store/superAdmin-slice";
+import { superAdminActions } from "../../../../Store/superAdmin-slice";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
 
 export default function EditDialog({ open, handleClose, handleEditCustomer }) {
+  const { setCustomerEditedImg, setCustomerEditedName } = superAdminActions;
   const maxlen = 50;
   const dispatch = useDispatch();
   const editedImg = useSelector(
@@ -63,51 +62,57 @@ export default function EditDialog({ open, handleClose, handleEditCustomer }) {
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Customer Name"
-            type="text"
-            value={editedName}
-            inputProps={{ maxLength: maxlen }}
-            fullWidth
-            variant="standard"
-            onChange={handleEditChange}
-            error={Boolean(nameError)}
-            helperText={nameError}
-          />
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            style={{ display: "none" }}
-            id="image-upload-input"
-            onChange={handleFileChange}
-          />
-          <label htmlFor="image-upload-input">
-            <Button
-              variant="outlined"
-              component="span"
-              startIcon={<CloudUploadIcon />}
-            >
-              Choose Logo
+        <Box p={1}>
+          <DialogTitle>Edit</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Customer Name"
+              type="text"
+              value={editedName}
+              inputProps={{ maxLength: maxlen }}
+              fullWidth
+              variant="standard"
+              onChange={handleEditChange}
+              sx={{mb: 4}}
+              error={Boolean(nameError)}
+              helperText={nameError}
+            />
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              style={{ display: "none" }}
+              id="image-upload-input"
+              onChange={handleFileChange}
+            />
+            <label htmlFor="image-upload-input">
+              <Button
+                variant="outlined"
+                component="span"
+                startIcon={<CloudUploadIcon />}
+              >
+                Choose Logo
+              </Button>
+            </label>
+            {selectedFileName && <p>Selected Image: {selectedFileName}</p>}
+            {fileError && <div style={{ color: "red" }}>{fileError}</div>}
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={handleClose}>
+              Cancel
             </Button>
-          </label>
-          {selectedFileName && <p>Selected Image: {selectedFileName}</p>}
-          {fileError && <div style={{ color: "red" }}>{fileError}</div>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            onClick={handleEditCustomer}
-            disabled={nameError || fileError}
-          >
-            Save
-          </Button>
-        </DialogActions>
+            <Button
+              variant="contained"
+              onClick={handleEditCustomer}
+              disabled={nameError || fileError}
+            >
+              Save
+            </Button>
+          </DialogActions>
+        </Box>
       </Dialog>
     </div>
   );

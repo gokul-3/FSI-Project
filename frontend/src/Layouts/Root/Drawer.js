@@ -61,27 +61,38 @@ export const PermanentDrawer = ({ drawerWidth }) => {
 };
 
 const superAdminSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/superAdmin" },
-  { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customers" },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/" },
+  { itemName: "Customers", icon: <CustomersIcon />, link: "/customers" },
 ];
 const customerAdminSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customerAdmin" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/users" },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/operators" },
 ];
 const supervisorSideMenu = [
-  // { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/" },
 ];
+// const superAdminSideMenu = [
+//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/superAdmin" },
+//   { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customers" },
+// ];
+// const customerAdminSideMenu = [
+//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customerAdmin" },
+//   { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/users" },
+// ];
+// const supervisorSideMenu = [
+//   // { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
+//   { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor" },
+// ];
 
-const operatorSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/users" },
-];
+// const operatorSideMenu = [
+//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/users" },
+// ];
 
 const sideMenu = {
   superAdmin: superAdminSideMenu,
   customerAdmin: customerAdminSideMenu,
   supervisor: supervisorSideMenu,
-  operator: operatorSideMenu,
+  // operator: operatorSideMenu,
 };
 
 const DrawerContent = () => {

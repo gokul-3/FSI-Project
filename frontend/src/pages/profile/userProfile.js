@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { ChangePassword } from "./changePassword";
 import ShowInfoModal from "../../Layouts/Modal/Modal";
@@ -25,15 +25,15 @@ const UserProfile = () => {
         }}
       />
       <Stack direction="column" gap={2} margin={3}>
-        <Typography sx={{ my: 2 }} variant="h5" color="grey">
+        <Typography sx={{ my: 2 }} variant="h5">
           User Info
         </Typography>
         <TextField
           fullWidth
           variant="outlined"
           label="Name"
+          sx={{ pointerEvents: "none" }}
           value={user.name}
-          disabled
         />
 
         <TextField
@@ -41,7 +41,7 @@ const UserProfile = () => {
           variant="outlined"
           label="Email"
           value={user.email}
-          disabled
+          sx={{ pointerEvents: "none" }}
         />
         {showChangePassword ? (
           <ChangePassword
@@ -49,9 +49,14 @@ const UserProfile = () => {
             setModalInfo={setModalInfoHandler}
           />
         ) : (
-          <Button onClick={() => setShowChangePassword(true)}>
-            Change Password
-          </Button>
+          <Box mt={1} display="flex" justifyContent="end">
+            <Button
+              variant="contained"
+              onClick={() => setShowChangePassword(true)}
+            >
+              Change Password
+            </Button>
+          </Box>
         )}
       </Stack>
     </>

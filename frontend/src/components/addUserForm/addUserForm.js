@@ -52,22 +52,19 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
 
   const onSubmit = async (data) => {
     try {
+      const accessToken = localStorage.getItem("accesstoken");
+      const response = await axios.post("/adduser", data, {
+        headers: { Authorization: "Bearer " + accessToken },
+      });
 
-      const accessToken = localStorage.getItem('accesstoken')
-      const response = await axios.post("/adduser", data, { headers: {"Authorization": "Bearer " + accessToken} });
-
-      const accessEncoded = accessToken
+      const accessEncoded = accessToken;
       const encodedEmail = window.btoa(data.email + ":");
       const headers = {
         "Content-Type": "application/json",
-        "Authorization": "Basic " + encodedEmail,
-        "Authorization": "Bearer " + accessEncoded
+        Authorization: "Basic " + encodedEmail,
+        Authorization: "Bearer " + accessEncoded,
       };
-      const res = await axios.post(
-        "/auth/createPassword",
-        {},
-        { headers }
-      );
+      const res = await axios.post("/auth/createPassword", {}, { headers });
       reset();
       setOpenSnackbar(!openSnackbar);
     } catch (error) {
@@ -116,11 +113,11 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
   return (
     <>
       <Dialog open={openModal} fullWidth>
-        <DialogTitle>Want to add new user?</DialogTitle>
+        <DialogTitle>Add User</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ mb: "1em" }}>
+          {/* <DialogContentText sx={{ mb: "1em" }}>
             Send them a request
-          </DialogContentText>
+          </DialogContentText> */}
 
           <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={2}>
@@ -188,20 +185,21 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-evenly",
+                  justifyContent: "end",
                   mt: "2em",
+                  gap: "1rem",
                 }}
               >
+                <Button variant="contained" onClick={handleAddUserCancel}>
+                  Cancel
+                </Button>
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   disabled={disableSubmit()}
                   endIcon={<SendIcon />}
                   type="submit"
                 >
                   Send
-                </Button>
-                <Button variant="outlined" onClick={handleAddUserCancel}>
-                  Cancel
                 </Button>
               </Box>
             </Stack>

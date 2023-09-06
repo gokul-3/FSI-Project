@@ -1,107 +1,124 @@
-import React, { useState, useEffect } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import { FormControl } from '@mui/material';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
-import Tooltip from '@mui/material/Tooltip';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import { useSelector } from 'react-redux';
-import MuiAlert from '@mui/material/Alert';
-import { Navigate } from "react-router-dom";
-import {
-  useParams
-} from "react-router-dom";
-import Action from './Action';
-import { FormModal } from '../../../components/addUserForm/addUserForm'
-import axios from '../../../axios';
-
-
+import React, { useState, useEffect } from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import { Box, FormControl } from "@mui/material";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import ClearIcon from "@mui/icons-material/Clear";
+import Tooltip from "@mui/material/Tooltip";
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import { useSelector } from "react-redux";
+import MuiAlert from "@mui/material/Alert";
+import { Navigate, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import Action from "./Action";
+import { FormModal } from "../../../components/addUserForm/addUserForm";
+import axios from "../../../axios";
+import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
+import { HttpStatusCode } from "axios";
 
 const oldcolumns = [
-  { id: 'id', label: 'User ID', minWidth: 170 },
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'email', label: 'Email', minWidth: 170 },
-  { id: 'Status', label: 'Status', minWidth: 170 },
-  { id: 'role', label: 'Designation', minWidth: 170 },
-  { id: 'action', label: 'Action', minWidth: 170 },
+  { id: "id", label: "User ID", minWidth: 170 },
+  { id: "name", label: "Name", minWidth: 170 },
+  { id: "email", label: "Email", minWidth: 170 },
+  { id: "Status", label: "Status", minWidth: 170 },
+  { id: "role", label: "Designation", minWidth: 170 },
+  { id: "action", label: "Action", minWidth: 170 },
 ];
 
 const DEBOUNCE_DELAY = 500;
 
 const UserTable = () => {
+  // states used
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [name, setName] = useState("");
+  const [roleFilter, setroleFilter] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [actionType, setActionType] = useState("");
+  const [actionMessage, setActionMessage] = useState("");
+  const [actionDone, setActionDone] = useState(true);
+  const [openForm, setOpenForm] = useState(false);
+  const params = useParams();
+  const { pathname } = useLocation();
 
   let { customerId, userRole } = useSelector((state) => state.profile);
-  if (!customerId){
-    const params=useParams();
-    customerId = params.customerId
+  if (!customerId) {
+    customerId = params.customerId;
   }
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  const columns = oldcolumns.map((column) => { return userRole !== 'supervisor' ? column : column.id !== 'action' && column })
+  if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
+    return (
+      <ErrorPageTemplate
+        header={"Unauthorised Error"}
+        code={HttpStatusCode.Unauthorized}
+      />
+    );
+  } else if (
+    pathname.split("/")[1] === "operators" &&
+    userRole != "customerAdmin"
+  ) {
+    return (
+      <ErrorPageTemplate
+        header={"Unauthorised Error"}
+        code={HttpStatusCode.Unauthorized}
+      />
+    );
+  }
+  const columns = oldcolumns.map((column) => {
+    return userRole !== "supervisor"
+      ? column
+      : column.id !== "action" && column;
+  });
   //Worker Funciton
   const fetchData = async () => {
     try {
-      
+      const queryParams = {
+        customer_id: customerId,
+        name: name,
+        role: roleFilter,
+      };
 
+      const accessToken = localStorage.getItem("accesstoken");
+      const headers = {
+        Authorization: "Bearer " + accessToken,
+      };
+      const response = await axios.get(`/user`, {
+        params: queryParams,
+        headers,
+      });
 
-    const queryParams = {
-      customer_id: customerId,
-      name: name,
-      role: roleFilter,
-    };
-
-    const accessToken = localStorage.getItem('accesstoken');
-    const headers = {
-      "Authorization": "Bearer " + accessToken
-    }
-    const response = await axios.get(`/user`, {
-      params: queryParams,
-      headers
-    });
-
-    if (response.data.status === "success") {
-      const responseData = response.data.users;
-      setData(responseData);
-    } else {
-      setData([]);
-    }
-  } catch (error) {
+      if (response.data.status === "success") {
+        const responseData = response.data.users;
+        setData(responseData);
+      } else {
+        setData([]);
+      }
+    } catch (error) {
       console.log(error);
-  }
+    }
   };
-
-  // states used
-  const [data, setData] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [name, setName] = useState("");
-  const [roleFilter, setroleFilter] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [actionType, setActionType] = useState('');
-  const [actionMessage, setActionMessage] = useState('');
-  const [actionDone, setActionDone] = useState(true);
-  const [openForm, setOpenForm] = useState(false);
 
   //Effects
   useEffect(() => {
     let typingTimeout;
-    setActionDone(true)
+    setActionDone(true);
     if (!isTyping) {
       fetchData();
     } else {
@@ -114,13 +131,12 @@ const UserTable = () => {
     return () => {
       clearTimeout(typingTimeout);
     };
-
   }, [roleFilter, name, customerId, actionType, actionDone]);
 
-  //Handler functions 
+  //Handler functions
   const handleCloseAlert = () => {
-    setActionMessage('')
-  }
+    setActionMessage("");
+  };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -131,26 +147,46 @@ const UserTable = () => {
   const handleNameChange = (event) => {
     const selectedName = event.target.value;
     setName(selectedName);
-    setIsTyping(true)
-  }
+    setIsTyping(true);
+  };
   const handleRoleChange = (event) => {
-    setroleFilter(event.target.value)
-  }
+    setroleFilter(event.target.value);
+  };
   const handleClear = (event) => {
-    setName("")
-    setroleFilter("")
-  }
+    setName("");
+    setroleFilter("");
+  };
 
   return (
     <>
-
       <FormModal openModal={openForm} setOpenModal={setOpenForm} />
 
-      <div className="responsive-table">
-        <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', verticalAlign: 'center', margin: '2em', position: 'relative' }}>
-          <TextField id="standard-basic" value={name} label="Search by Name" variant="standard" onChange={handleNameChange} sx={{ minWidth: 120, marginRight: 2 }} />
-          <FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
-            <InputLabel id="demo-simple-select-standard-label">Designation</InputLabel>
+      <Box p={3} className="responsive-table" position="relative">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyItems: "center",
+            verticalAlign: "center",
+            margin: "2em",
+            // position: "relative",
+          }}
+        >
+          <TextField
+            id="standard-basic"
+            value={name}
+            label="Search by Name"
+            variant="standard"
+            onChange={handleNameChange}
+            sx={{ minWidth: 120, marginRight: 2 }}
+          />
+          <FormControl
+            variant="standard"
+            sx={{ minWidth: 120, marginRight: 2 }}
+          >
+            <InputLabel id="demo-simple-select-standard-label">
+              Designation
+            </InputLabel>
             <Select
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
@@ -168,25 +204,23 @@ const UserTable = () => {
               <ClearIcon />
             </IconButton>
           </Tooltip>
-          {
-            (userRole !== 'supervisor' || userRole !== 'supervisor') ?
-              (<Button
-                variant="contained"
-                color="primary"
-                sx={{ position: "absolute", top: 10, right: 10 }}
-                onClick={() => { setOpenForm(true) }}
-              >
-                + Add User
-              </Button>) : (
-                null
-              )
-          }
-
+          {userRole !== "supervisor" ? (
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ position: "absolute", top: 10, right: 10 }}
+              onClick={() => {
+                setOpenForm(true);
+              }}
+            >
+              + Add User
+            </Button>
+          ) : null}
         </div>
         <br></br>
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table">
+            <Table padding="10px" stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
@@ -207,7 +241,23 @@ const UserTable = () => {
                     <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
                       {columns.map((column) => (
                         <TableCell key={column.id} align="left">
-                          {column.id === 'Status' ? (row['Active'] ? 'Active' : 'Inactive') : column.id === 'action' ? <Action data={row} actionType={actionType} setActionType={setActionType} setActionMessage={setActionMessage} setActionDone={setActionDone} ></Action> : row[column.id]}
+                          {column.id === "Status" ? (
+                            row["Active"] ? (
+                              "Active"
+                            ) : (
+                              "Inactive"
+                            )
+                          ) : column.id === "action" ? (
+                            <Action
+                              data={row}
+                              actionType={actionType}
+                              setActionType={setActionType}
+                              setActionMessage={setActionMessage}
+                              setActionDone={setActionDone}
+                            ></Action>
+                          ) : (
+                            row[column.id]
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
@@ -224,21 +274,26 @@ const UserTable = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <p>{data.length} matches found</p>
+          <Box p={2}>{data.length} matches found</Box>
         </Paper>
-        <Stack spacing={2} sx={{ width: '100%' }}>
-          <Snackbar open={!!actionMessage} autoHideDuration={3000} onClose={handleCloseAlert}>
-            <Alert onClose={() => setActionMessage('')} severity="success" sx={{ width: '100%' }}>
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Snackbar
+            open={!!actionMessage}
+            autoHideDuration={3000}
+            onClose={handleCloseAlert}
+          >
+            <Alert
+              onClose={() => setActionMessage("")}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
               {actionMessage}
             </Alert>
           </Snackbar>
         </Stack>
-      </div>
+      </Box>
     </>
   );
 };
 
 export default UserTable;
-
-
-

@@ -87,7 +87,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
           fontSize="26px"
           sx={{ cursor: "pointer" }}
           onClick={() => {
-            navigate(`/${userRole}`);
+            navigate("/");
           }}
         >
           <CodeIcon fontSize="large" />

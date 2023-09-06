@@ -5,7 +5,7 @@ const CustomersList = () => {
     <div>
         display list of Customers
         click any one customer to view their user list
-        <UserTable customer_id={2}></UserTable>
+        <UserTable />
     </div>
   )
 }
