@@ -59,15 +59,9 @@ export const customerAdminDashboardLoader = async () => {
     const { profile } = store.getState();
     const isLoggedIn = profile.isLoggedIn;
     let profileDataId = profile.userId;
-    const accessToken = localStorage.getItem('accesstoken');
-    const headers = {
-      "Authorization": "Bearer " + accessToken
-    }
 
-    if (!isLoggedIn) {
-      const profileData = (
-        await axios.get("http://localhost:5000/auth/getUserData", { headers })
-      ).data;
+    const getData = async (headers) => {
+      const profileData = (await axios.get("http://localhost:5000/auth/getUserData", { headers })).data;
       store.dispatch(
         profileActions.setProfileInfo({
           userRole: profileData.role,
@@ -77,20 +71,40 @@ export const customerAdminDashboardLoader = async () => {
         })
       );
       profileDataId = profileData.id;
+      const customerAdminDashboardData = await axios.get(
+        `http://localhost:5000/dashboard/getCustomerData/${profileDataId}`, { headers }
+      );
+      return customerAdminDashboardData.data;
     }
-    const customerAdminDashboardData = await axios.get(
-      `http://localhost:5000/dashboard/getCustomerData/${profileDataId}`, { headers }
-    );
-    console.log("customer admin dashboard", customerAdminDashboardData);
-    return customerAdminDashboardData.data;
+    if (!isLoggedIn) {
+      const accessToken = localStorage.getItem('accesstoken');
+      const headers = {
+        "Authorization": "Bearer " + accessToken
+      }
+      getData(headers)
+    }
   } catch (error) {
     console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
+      const refreshtoken = localStorage.getItem('refreshtoken');
+      const headers = {
+        "Authorization": "Bearer " + refreshtoken
+      }
+      axios.get('http://localhost:5000/refresh', { headers })
+        .then(res => {
+          const newAccessToken = res.data.accessToken
+          localStorage.setItem('accesstoken', newAccessToken)
+          const headers = {
+            "Authorization": "Bearer " + newAccessToken
+          }
+          getData(headers)
 
+        })
+        .catch(err => {
+          return redirect("/login");
+        })
 
-      // const refreshToken  = axios.get('http://localhost:5000/refresh',{},{header})
-      return redirect("/login");
     }
   }
   // return null;
