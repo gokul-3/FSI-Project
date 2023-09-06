@@ -9,12 +9,13 @@ import {
 } from "@mui/material";
 
 const UserData = ({ users }) => {
+  
   return users.map((element, index) => (
     <Fragment key={index} >
-      <ListItem alignItems="center" key={index} sx={{textAlign:"center"}} >
+      <ListItem alignItems="center" key={index}  >
         <ListItemText 
           primary={
-            <Typography fontSize="14px" sx={{ display: "inline-block"}}>
+            <Typography fontSize="14px" sx={{ display: "inline-block",paddingLeft:'10px'}}>
               {element.UserName}
             </Typography>
           }
@@ -23,9 +24,9 @@ const UserData = ({ users }) => {
           primary={
             <Typography
               fontSize="14px"
-              sx={{ display: "inline-block", float: "right" }}
+              sx={{ display: "inline-block", paddingRight:'10px',float: "right" }}
             >
-              {30 - element.Difference} days ago
+              {element.Difference}
             </Typography>
           }
         />
