@@ -68,7 +68,6 @@ export default function Login() {
         if (err.response) {
           setErrorMessage(err.response.data.message)
         }
-        console.log(err);
       })
   };
 

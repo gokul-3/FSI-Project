@@ -18,6 +18,7 @@ const defaultTheme = createTheme();
 
 export default function ForgotPassword() {
   const [sending, setSending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('')
   const [model, setModel] = useState({
     open: false,
     message: "",
@@ -48,6 +49,7 @@ export default function ForgotPassword() {
         { headers }
       )
       .then((res) => {
+        setErrorMessage('')
         console.log(res.data.message);
         setModel(
           {
@@ -58,7 +60,11 @@ export default function ForgotPassword() {
           setSending(false)
         );
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) =>{ 
+        setSending(false)
+      if (err.response) {
+        setErrorMessage(err.response.data.message)
+      }})
   };
 
   return (
@@ -136,6 +142,9 @@ export default function ForgotPassword() {
                 {sending ? "Sending..." : "Send email"}
               </Button>
             </form>
+            <Typography color='red' textAlign='center'>
+              {errorMessage}
+            </Typography>
           </Box>
         </Grid>
       </Grid>
