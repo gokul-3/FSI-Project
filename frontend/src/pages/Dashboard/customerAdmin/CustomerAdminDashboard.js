@@ -2,7 +2,7 @@ import React from "react";
 import ListCard from "../Cards/ListCard";
 import CustomerCountCard from "../Cards/CountCard";
 import { Box, Typography } from "@mui/material";
-import { Navigate, redirect, useLoaderData } from "react-router-dom";
+import { redirect, useLoaderData } from "react-router-dom";
 import { useSelector } from "react-redux";
 import store from "../../../Store/index";
 import axios from "../../../axios";
@@ -14,7 +14,7 @@ const CustomerAdminDashboard = () => {
   const { userRole, name } = useSelector((state) => state.profile);
 
 
-  if (userRole !== "customerAdmin") return <Navigate to="/login" />;
+  if (userRole !== "customerAdmin") redirect('/login');
   const customerDashboardData = useLoaderData();
 
   return (
@@ -26,7 +26,7 @@ const CustomerAdminDashboard = () => {
         flexDirection="column"
         gap="3rem"
         marginBottom="3rem"
-        marginTop = '3rem'
+        marginTop='3rem'
       >
         <CustomerCountCard
           totalCustomers={{
@@ -49,8 +49,10 @@ export default CustomerAdminDashboard;
 export const customerAdminDashboardLoader = async () => {
   try {
     const { profile } = store.getState();
+
     const isLoggedIn = profile.isLoggedIn;
     let profileDataId = profile.userId;
+    let profileRole = profile.userRole;
     const accessToken = localStorage.getItem('accesstoken');
     const headers = {
       "Authorization": "Bearer " + accessToken
@@ -68,8 +70,10 @@ export const customerAdminDashboardLoader = async () => {
           userId: profileData.id,
         })
       );
+      profileRole = profileData.role;
       profileDataId = profileData.id;
     }
+    if (profileRole !== "customerAdmin") return redirect("/login");
     const customerAdminDashboardData = await axios.get(
       `/dashboard/getCustomerData/${profileDataId}`, { headers }
     );

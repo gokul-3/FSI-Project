@@ -158,9 +158,9 @@ const UserTable = () => {
               onChange={handleRoleChange}
             >
               <MenuItem value="All Users">All Users</MenuItem>
-              <MenuItem value="Customer Admin">Customer Admin</MenuItem>
-              <MenuItem value="Supervisor">Supervisor</MenuItem>
-              <MenuItem value="Operator">Operator</MenuItem>
+              <MenuItem value="customerAdmin">Customer Admin</MenuItem>
+              <MenuItem value="supervisor">Supervisor</MenuItem>
+              <MenuItem value="user">User</MenuItem>
             </Select>
           </FormControl>
           <Tooltip title="Clear Filter">

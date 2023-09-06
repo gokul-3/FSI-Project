@@ -59,8 +59,10 @@ export default function Login() {
         localStorage.setItem('accesstoken', accessToken);
 
         dispatch(profileActions.login())
+        console.log("reol", role);
         return role
       }).then((role) => {
+        console.log(role);
         navigate(`/${role}`)
       })
       .catch(err => {
