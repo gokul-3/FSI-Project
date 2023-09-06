@@ -25,6 +25,8 @@ export default function Login() {
   const [showPass, setshowPass] = useState(false)
   const [rememberStatus, setrememberStatus] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [sending, setSending] = useState(false);
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isLoggedIn, userRole } = useSelector(state => state.profile)
@@ -34,8 +36,7 @@ export default function Login() {
       password: ''
     }
   })
-  // if (isLoggedIn) return <Navigate to={`/${userRole}`} />
-  const { register, handleSubmit, formState, reset } = form
+  const { register, handleSubmit, formState } = form
   const { errors } = formState
   const onSubmit = (data) => {
     const encodedEmail = window.btoa(data.email_userId + ":" + data.password)
@@ -43,6 +44,7 @@ export default function Login() {
       'Content-Type': 'application/json',
       'Authorization': "Basic " + encodedEmail
     }
+    setSending(true)
     axios.post('/auth/login', { withCredentials: true }, { headers }
     )
       .then(res => {
@@ -57,13 +59,13 @@ export default function Login() {
         localStorage.setItem('accesstoken', accessToken);
 
         dispatch(profileActions.login())
-        // reset()
         return role
       }).then((role) => {
         navigate(`/${role}`)
       })
       .catch(err => {
         if (err.response) {
+          setSending(false)
           setErrorMessage(err.response.data.message)
         }
       })
@@ -145,10 +147,11 @@ export default function Login() {
             <Button
               type="submit"
               fullWidth
+              disabled = {sending}
               variant="contained"
               sx={{ mt: 3, mb: 2, height: '3rem', background: 'linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))' }}
             >
-              Sign In
+              {sending ? "Please wait...":"Sign in"}
             </Button>
             <Grid container>
               <Grid item xs textAlign='center'>
