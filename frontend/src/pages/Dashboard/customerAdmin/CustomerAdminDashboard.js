@@ -56,7 +56,7 @@ export default CustomerAdminDashboard;
 
 export const customerAdminDashboardLoader = async () => {
   try {
-    const { profile } = store.getState();
+    const refresh{ profile } = store.getState();
     const isLoggedIn = profile.isLoggedIn;
     let profileDataId = profile.userId;
     const accessToken = localStorage.getItem('accesstoken');
