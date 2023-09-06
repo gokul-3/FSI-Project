@@ -10,7 +10,6 @@ const UNAUTHORISED_ERROR = 400;
 const SuperAdminDashboard = () => {
   const { userRole } = useSelector((state) => state.profile);
   const superDashboardData = useLoaderData();
-  console.log(superDashboardData);
   if (userRole !== "superAdmin") return <Navigate to="/login" />;
   return (
     <>
@@ -67,10 +66,8 @@ export const superAdminDashboardLoader = async () => {
     const superAdminDashboardData = await axios.get(
       "/dashboard/getSuperAdminData", { headers }
     );
-    console.log(superAdminDashboardData);
     return superAdminDashboardData.data;
   } catch (error) {
-    console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
       return redirect("/login");

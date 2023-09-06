@@ -23,7 +23,6 @@ import SnackbarNotify from "../snackbar/Snackbar";
 import axios from "../../axios";
 
 export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
-  console.log('model called', openModal);
   const schema = Yup.object().shape({
     name: Yup.string().trim().required("Name is required"),
     email: Yup.string()
@@ -57,7 +56,6 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
       const accessToken = localStorage.getItem('accesstoken')
       const response = await axios.post("/adduser", data, { headers: {"Authorization": "Bearer " + accessToken} });
 
-      console.log("Response from server", response);
       const accessEncoded = accessToken
       const encodedEmail = window.btoa(data.email + ":");
       const headers = {

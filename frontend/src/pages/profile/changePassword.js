@@ -58,14 +58,13 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + accessToken
       };
-      const response = await axios.put("/auth/changePassword", { data }, { headers });
+      const response = await axios.put("/auth/changePassword", { ...data }, { headers });
       reset();
       setModalInfo({
         title: "Success",
         content: response.data?.message,
       });
       setShowChangePassword(false);
-      console.log(response);
     } catch (err) {
       setModalInfo({ title: "Error", content: err.response.data?.message });
     }

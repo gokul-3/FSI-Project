@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function MessageModel(props) {
   const [open, setOpen] = React.useState(props.open);
-  console.log(props);
   const theme = useTheme();
   const navigate = useNavigate()
 

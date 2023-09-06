@@ -41,10 +41,12 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       };
       await axios.get("auth/logout", { headers });
-      navigate("/login");
       dispatch(profileActions.logout());
+      navigate("/login");
     } catch (error) {
-      console.log(error.response);
+      dispatch(profileActions.logout());
+      navigate("/login");
+
     }
   };
   return (

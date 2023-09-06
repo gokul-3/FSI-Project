@@ -35,7 +35,6 @@ export default function CustomerCard({
     }
   }, [customers.data[index].icon]);
   const handleOpenUsers = (customerId) => {
-    console.log(customerId);
     // <Navigate to={`/${customerId}`} />
     Navigate(`${customerId}`)
   };

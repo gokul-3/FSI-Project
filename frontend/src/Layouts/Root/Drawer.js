@@ -86,7 +86,6 @@ const sideMenu = {
 
 const DrawerContent = () => {
   const { userRole } = useSelector((state) => state.profile);
-  console.log(userRole);
   const navigate = useNavigate();
   if(!userRole){return navigate('/login')};
   return (

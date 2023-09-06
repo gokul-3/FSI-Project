@@ -13,20 +13,12 @@ const UNAUTHORISED_ERROR = 401;
 const CustomerAdminDashboard = () => {
   const { userRole, name } = useSelector((state) => state.profile);
 
-  console.log('ioside customer admin');
 
   if (userRole !== "customerAdmin") return <Navigate to="/login" />;
   const customerDashboardData = useLoaderData();
 
   return (
     <>
-      <Typography
-        sx={{ textAlign: { xs: "center", sm: "start" } }}
-        variant="h6"
-        margin="1rem"
-      >
-        Hello, {name}
-      </Typography>
       <Box
         display="flex"
         justifyContent="space-evenly"
@@ -34,6 +26,7 @@ const CustomerAdminDashboard = () => {
         flexDirection="column"
         gap="3rem"
         marginBottom="3rem"
+        marginTop = '3rem'
       >
         <CustomerCountCard
           totalCustomers={{
@@ -45,7 +38,6 @@ const CustomerAdminDashboard = () => {
             count: customerDashboardData.activeUsers,
           }}
         />
-        {console.log(customerDashboardData.newUsers)}
         <ListCard userData={customerDashboardData.newUsers} />
       </Box>
     </>
@@ -81,10 +73,8 @@ export const customerAdminDashboardLoader = async () => {
     const customerAdminDashboardData = await axios.get(
       `/dashboard/getCustomerData/${profileDataId}`, { headers }
     );
-    console.log("customer admin dashboard", customerAdminDashboardData);
     return customerAdminDashboardData.data;
   } catch (error) {
-    console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
       return redirect("/login");

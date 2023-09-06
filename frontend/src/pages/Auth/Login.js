@@ -34,7 +34,6 @@ export default function Login() {
       password: ''
     }
   })
-  console.log(isLoggedIn, userRole);
   // if (isLoggedIn) return <Navigate to={`/${userRole}`} />
   const { register, handleSubmit, formState, reset } = form
   const { errors } = formState
@@ -58,7 +57,6 @@ export default function Login() {
         localStorage.setItem('accesstoken', accessToken);
 
         dispatch(profileActions.login())
-        console.log('logged in as', role);
         // reset()
         return role
       }).then((role) => {
@@ -68,7 +66,6 @@ export default function Login() {
         if (err.response) {
           setErrorMessage(err.response.data.message)
         }
-        console.log(err);
       })
   };
 
@@ -128,7 +125,7 @@ export default function Login() {
               InputProps={{
                 endAdornment:
                   <Button onClick={() => setshowPass(!showPass)}>
-                    {showPass ? <VisibilityOff /> : <Visibility />}
+                    {showPass ? <Visibility /> : <VisibilityOff />}
                   </Button>
               }}
               {...register('password', {
