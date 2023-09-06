@@ -65,7 +65,6 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
         content: response.data?.message,
       });
       setShowChangePassword(false);
-      console.log(response);
     } catch (err) {
       setModalInfo({ title: "Error", content: err.response.data?.message });
     }

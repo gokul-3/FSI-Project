@@ -88,7 +88,6 @@ export default function Customers() {
       setIsDeletedMsgOpen(true);
       setDeleteIndex(null);
       setIsConfirmationDialogOpen(false);
-      console.log(customers.totalRecords);
       if (customers.totalRecords % 2 != 0) {
         setPage(page - 1);
       } else {
@@ -104,7 +103,6 @@ export default function Customers() {
       const response = await axios.get(`/customer?page=${page}&search=${searchQuery}`, { headers });
       setIsLoading(false);
       dispatch(setCustomersData(response.data));
-      console.log(response.data);
     } catch (error) {
       handleError(error);
     }

@@ -48,7 +48,6 @@ const UserTable = () => {
     const params=useParams();
     customerId = params.customerId
   }
-  console.log("customerid",customerId)
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -57,6 +56,10 @@ const UserTable = () => {
   const columns = oldcolumns.map((column) => { return userRole !== 'supervisor' ? column : column.id !== 'action' && column })
   //Worker Funciton
   const fetchData = async () => {
+    try {
+      
+
+
     const queryParams = {
       customer_id: customerId,
       name: name,
@@ -78,6 +81,9 @@ const UserTable = () => {
     } else {
       setData([]);
     }
+  } catch (error) {
+      console.log(error);
+  }
   };
 
   // states used
@@ -168,7 +174,7 @@ const UserTable = () => {
                 variant="contained"
                 color="primary"
                 sx={{ position: "absolute", top: 10, right: 10 }}
-                onClick={() => { console.log("add botton"), setOpenForm(true) }}
+                onClick={() => { setOpenForm(true) }}
               >
                 + Add User
               </Button>) : (

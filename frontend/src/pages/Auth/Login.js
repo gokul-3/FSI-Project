@@ -59,7 +59,6 @@ export default function Login() {
         localStorage.setItem('accesstoken', accessToken);
 
         dispatch(profileActions.login())
-        console.log('logged in as', role);
         return role
       }).then((role) => {
         navigate(`/${role}`)
@@ -128,7 +127,7 @@ export default function Login() {
               InputProps={{
                 endAdornment:
                   <Button onClick={() => setshowPass(!showPass)}>
-                    {showPass ? <VisibilityOff /> : <Visibility />}
+                    {showPass ? <Visibility /> : <VisibilityOff />}
                   </Button>
               }}
               {...register('password', {

@@ -35,8 +35,6 @@ export default function ForgotPassword() {
 
   const onSubmit = (data) => {
     const encodedEmail = window.btoa(data.email + ":");
-    console.log(data.email);
-    console.log(encodedEmail);
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Basic " + encodedEmail,
@@ -49,8 +47,11 @@ export default function ForgotPassword() {
         { headers }
       )
       .then((res) => {
+<<<<<<< HEAD
+=======
         setErrorMessage('')
         console.log(res.data.message);
+>>>>>>> 3983e2d91637ae7e9c92db76a921afde45e259cf
         setModel(
           {
             open: true,
@@ -60,11 +61,14 @@ export default function ForgotPassword() {
           setSending(false)
         );
       })
+<<<<<<< HEAD
+=======
       .catch((err) =>{ 
         setSending(false)
       if (err.response) {
         setErrorMessage(err.response.data.message)
       }})
+>>>>>>> 3983e2d91637ae7e9c92db76a921afde45e259cf
   };
 
   return (

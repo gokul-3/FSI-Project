@@ -85,7 +85,6 @@ const theme = createTheme({
   },
 });
 const App = () => {
-  console.log(process.env.REACT_APP_BACKEND_URL);
   return (
     <ThemeProvider theme={theme}>
       <RouterProvider router={router} />
