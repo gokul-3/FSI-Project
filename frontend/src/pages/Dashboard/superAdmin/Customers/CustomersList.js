@@ -41,6 +41,10 @@ export default function Customers() {
   const pageLength = Math.ceil(customers.totalRecords / pageLimit);
   const [createCustomer, setCreateCustomer] = useState(false);
 
+  const accessToken = localStorage.getItem('accesstoken');
+  const headers = {
+    "Authorization": "Bearer " + accessToken
+  }
   const showSkeletonLoading = (count) => {
     const skeletons = [];
     for (let i = 0; i < count; i++) {
@@ -57,9 +61,10 @@ export default function Customers() {
       formData.append("Image", editedImg);
     }
     try {
+
       const updatedCustomer = await axios.patch(
         `http://localhost:5000/customer/${customers.data[editIndex].id}`,
-        formData
+        formData, { headers }
       );
       const updatedDataArray = [...customers.data];
       updatedDataArray[editIndex] = {
@@ -78,7 +83,7 @@ export default function Customers() {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/customer/${customers.data[deleteIndex].id}`);
+      await axios.delete(`http://localhost:5000/customer/${customers.data[deleteIndex].id}`, { headers });
       setIsDeletedMsgOpen(true);
       setDeleteIndex(null);
       setIsConfirmationDialogOpen(false);
@@ -95,13 +100,7 @@ export default function Customers() {
 
   const fetchData = async () => {
     try {
-      const refreshToken = localStorage.getItem('refreshtoken')
-      const refreshEncoded = window.btoa(refreshToken)
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': "Bearer " + refreshEncoded
-      }
-      const response = await axios.get(`http://localhost:5000/customer?page=${page}&search=${searchQuery}`,{headers});
+      const response = await axios.get(`http://localhost:5000/customer?page=${page}&search=${searchQuery}`, { headers });
       setIsLoading(false);
       dispatch(setCustomersData(response.data));
       console.log(response.data);

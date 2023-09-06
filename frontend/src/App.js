@@ -26,7 +26,7 @@ import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import RedirectToDashboard from "./pages/Auth/RedirectToDashboard";
 import UserTable from "./pages/Dashboard/UserList/Table";
-const UNAUTHORISED_ERROR = 400;
+const UNAUTHORISED_ERROR = 401;
 
 const router = createBrowserRouter([
   {
@@ -62,14 +62,14 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "user",
+        path: "users",
         children: [{ index: true, element: <UserDashboard /> }],
       },
       {
         path: "supervisor",
         children: [
           { index: true, element: <SupervisorDashboard /> },
-          { path: "user", element: <></> },
+          { path: "users", element: <UserTable/> },
         ],
       },
     ],

@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import SnackbarNotify from "../snackbar/Snackbar";
 
 export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
+  console.log('model called', openModal);
   const schema = Yup.object().shape({
     name: Yup.string().trim().required("Name is required"),
     email: Yup.string()
@@ -52,12 +53,17 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await Axios.post("http://localhost:4000/adduser", data);
+
+      const accessToken = localStorage.getItem('accesstoken')
+      const response = await Axios.post("http://localhost:5000/adduser", data, { headers: {"Authorization": "Bearer " + accessToken} });
+
       console.log("Response from server", response);
+      const accessEncoded = accessToken
       const encodedEmail = window.btoa(data.email + ":");
       const headers = {
         "Content-Type": "application/json",
-        Authorization: "Basic " + encodedEmail,
+        "Authorization": "Basic " + encodedEmail,
+        "Authorization": "Bearer " + accessEncoded
       };
       const res = await Axios.post(
         "http://localhost:5000/auth/createPassword",

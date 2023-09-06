@@ -1,12 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import CustomerAdminDashboard from "../customerAdmin/CustomerAdminDashboard";
+import UserTable from "../UserList/Table";
 
 const SupervisorDashboard = () => {
   const { userRole } = useSelector((state) => state.profile);
-  if (userRole !== "supervisor") return <Navigate to="/login" />;
 
-  return <div>SupervisorDashboard</div>;
+  return <UserTable/>;
 };
 
 export default SupervisorDashboard;

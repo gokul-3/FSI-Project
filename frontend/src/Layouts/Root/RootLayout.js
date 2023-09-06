@@ -59,15 +59,20 @@ export const profileLoader = async () => {
   try {
     const state = store.getState();
     const isLoggedIn = state.profile.isLoggedIn;
+
     if (!isLoggedIn) {
-      const profile = await axios.get("http://localhost:5000/auth/getUserData");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      };
+      const profile = await axios.get("http://localhost:5000/auth/getUserData", { headers });
       store.dispatch(
         profileActions.setProfileInfo({
           userRole: profile.data.role,
           name: profile.data.name,
           email: profile.data.email,
           userId: profile.data.id,
-          customerId : profile.data.customerId
+          customerId: profile.data.customerId
         })
       );
       console.log(profile);

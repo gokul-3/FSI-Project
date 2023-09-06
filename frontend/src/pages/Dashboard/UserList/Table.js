@@ -27,6 +27,7 @@ import {
   useParams
 } from "react-router-dom";
 import Action from './Action';
+import { FormModal } from '../../../components/addUserForm/addUserForm'
 
 
 
@@ -43,7 +44,7 @@ const DEBOUNCE_DELAY = 500;
 
 const UserTable = () => {
 
-  const {customerId,userRole} = useSelector((state)=>state.profile);
+  const { customerId, userRole } = useSelector((state) => state.profile);
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -58,8 +59,13 @@ const UserTable = () => {
       role: roleFilter,
     };
 
+    const accessToken = localStorage.getItem('accesstoken');
+    const headers = {
+      "Authorization": "Bearer " + accessToken
+    }
     const response = await axios.get(`http://localhost:5000/user`, {
       params: queryParams,
+      headers
     });
 
     if (response.data.status === "success") {
@@ -80,6 +86,7 @@ const UserTable = () => {
   const [actionType, setActionType] = useState('');
   const [actionMessage, setActionMessage] = useState('');
   const [actionDone, setActionDone] = useState(true);
+  const [openForm, setOpenForm] = useState(false);
 
   //Effects
   useEffect(() => {
@@ -101,7 +108,7 @@ const UserTable = () => {
   }, [roleFilter, name, customerId, actionType, actionDone]);
 
   //Handler functions 
-  const  handleCloseAlert= () => {
+  const handleCloseAlert = () => {
     setActionMessage('')
   }
   const handleChangeRowsPerPage = (event) => {
@@ -125,87 +132,99 @@ const UserTable = () => {
   }
 
   return (
-    <div className="responsive-table">
-      <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', verticalAlign: 'center', margin: '2em' }}>
-        <TextField id="standard-basic" value={name} label="Search by Name" variant="standard" onChange={handleNameChange} sx={{ minWidth: 120, marginRight: 2 }} />
-        <FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
-          <InputLabel id="demo-simple-select-standard-label">Designation</InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={roleFilter}
-            onChange={handleRoleChange}
-          >
-            <MenuItem value="All Users">All Users</MenuItem>
-            <MenuItem value="Customer Admin">Customer Admin</MenuItem>
-            <MenuItem value="Supervisor">Supervisor</MenuItem>
-            <MenuItem value="Operator">Operator</MenuItem>
-          </Select>
-        </FormControl>
-        <Tooltip title="Clear Filter">
-          <IconButton>
-            <ClearIcon onClick={handleClear} />
-          </IconButton>
-        </Tooltip>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ position: "absolute", top: 10, right: 10 }}
-        >
-          + Add User
-        </Button>
+    <>
+
+      <FormModal openModal={openForm} setOpenModal={setOpenForm} />
+
+      <div className="responsive-table">
+        <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', verticalAlign: 'center', margin: '2em', position: 'relative' }}>
+          <TextField id="standard-basic" value={name} label="Search by Name" variant="standard" onChange={handleNameChange} sx={{ minWidth: 120, marginRight: 2 }} />
+          <FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
+            <InputLabel id="demo-simple-select-standard-label">Designation</InputLabel>
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              value={roleFilter}
+              onChange={handleRoleChange}
+            >
+              <MenuItem value="All Users">All Users</MenuItem>
+              <MenuItem value="Customer Admin">Customer Admin</MenuItem>
+              <MenuItem value="Supervisor">Supervisor</MenuItem>
+              <MenuItem value="Operator">Operator</MenuItem>
+            </Select>
+          </FormControl>
+          <Tooltip title="Clear Filter">
+            <IconButton onClick={handleClear}>
+              <ClearIcon />
+            </IconButton>
+          </Tooltip>
+          {
+            (userRole !== 'supervisor' || userRole !== 'supervisor') ?
+              (<Button
+                variant="contained"
+                color="primary"
+                sx={{ position: "absolute", top: 10, right: 10 }}
+                onClick={() => { console.log("add botton"), setOpenForm(true) }}
+              >
+                + Add User
+              </Button>) : (
+                null
+              )
+          }
+
+        </div>
+        <br></br>
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align="left"
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      <b>{column.label}</b>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                      {columns.map((column) => (
+                        <TableCell key={column.id} align="left">
+                          {column.id === 'Status' ? (row['Active'] ? 'Active' : 'Inactive') : column.id === 'action' ? <Action data={row} actionType={actionType} setActionType={setActionType} setActionMessage={setActionMessage} setActionDone={setActionDone} ></Action> : row[column.id]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 25, 100]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+          <p>{data.length} matches found</p>
+        </Paper>
+        <Stack spacing={2} sx={{ width: '100%' }}>
+          <Snackbar open={!!actionMessage} autoHideDuration={3000} onClose={handleCloseAlert}>
+            <Alert onClose={() => setActionMessage('')} severity="success" sx={{ width: '100%' }}>
+              {actionMessage}
+            </Alert>
+          </Snackbar>
+        </Stack>
       </div>
-      <br></br>
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align="left"
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    <b>{column.label}</b>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
-                  <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align="left">
-                        {column.id === 'Status' ? (row['Active'] ? 'Active' : 'Inactive') : column.id === 'action' ? <Action data={row} actionType={actionType} setActionType={setActionType} setActionMessage={setActionMessage} setActionDone={setActionDone} ></Action> : row[column.id]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 25, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-        <p>{data.length} matches found</p>
-      </Paper>
-      <Stack spacing={2} sx={{ width: '100%' }}>
-        <Snackbar open={!!actionMessage} autoHideDuration={3000} onClose={handleCloseAlert}>
-          <Alert onClose={() => setActionMessage('')} severity="success" sx={{ width: '100%' }}>
-            {actionMessage}
-          </Alert>
-        </Snackbar>
-      </Stack>
-    </div>
+    </>
   );
 };
 

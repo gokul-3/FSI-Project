@@ -13,107 +13,111 @@ import Select from '@mui/material/Select';
 import { FormControl } from '@mui/material';
 
 const deletePromptText =
-` Deleting the user will result in the loss of all account data, 
+  ` Deleting the user will result in the loss of all account data, 
   including profile information, settings, and created or saved content. 
   Click 'Cancel' to return to your profile, or click 'Delete' if you are certain about account deletion.`
 
-    
-export default function AlertDialog({ open, setOpen, data, actionType,setActionType ,setActionMessage,setActionDone}) {
-   
-    const [roleFilter, setRoleFilter] = useState(data.role);
-    const [error,setError]=useState('')
 
-    const handleUserChange = (event) => {
-        const selectedRole = event.target.value;
-        setRoleFilter(selectedRole);
-    };
-    const handleAction = async () => {
-        if (actionType === 'delete') {
-          try {
-            const user = await axios.delete(`http://localhost:4000/api/users?data=${data.id}`);
-            if (user.data.status === 'success') {
-              setOpen(false);
-              setActionType('');
-              setActionMessage(user.data.message)
-              setActionDone(false)
-              
-            } else {
-              setError(user.data.message);
-            }
-          } catch (error) {
-            // console.error('Error deleting user:', error);
-            setError('An error occurred while deleting the user.');
-          }
+export default function AlertDialog({ open, setOpen, data, actionType, setActionType, setActionMessage, setActionDone }) {
+
+  const [roleFilter, setRoleFilter] = useState(data.role);
+  const [error, setError] = useState('')
+
+  const handleUserChange = (event) => {
+    const selectedRole = event.target.value;
+    setRoleFilter(selectedRole);
+  };
+  const handleAction = async () => {
+    const accessToken = localStorage.getItem('accesstoken');
+    const headers = {
+      "Authorization": "Bearer " + accessToken
+    }
+    if (actionType === 'delete') {
+      try {
+        const user = await axios.delete(`http://localhost:5000/user?data=${data.id}`, { headers });
+        if (user.data.status === 'success') {
+          setOpen(false);
+          setActionType('');
+          setActionMessage(user.data.message)
+          setActionDone(false)
+
+        } else {
+          setError(user.data.message);
         }
-    
-        if (actionType === 'edit') {
-          try {
-            const user = await axios.put(`http://localhost:4000/api/users`, { data: data.id, Role: roleFilter });
-            if (user.data.status === 'success') {
-              setOpen(false);
-              setActionType('');
-              setActionMessage(user.data.message)
-              setActionDone(false)
-            } else {
-              setError(user.data.message);
-            }
-          } catch (error) {
-            // console.error('Error editing user:', error);
-            setError('An error occurred while editing the user.');
-          }
+      } catch (error) {
+        // console.error('Error deleting user:', error);
+        setError('An error occurred while deleting the user.');
+      }
+    }
+
+    if (actionType === 'edit') {
+      try {
+        const user = await axios.put(`http://localhost:5000/user`, { data: data.id, Role: roleFilter }, { headers });
+        if (user.data.status === 'success') {
+          setOpen(false);
+          setActionType('');
+          setActionMessage(user.data.message)
+          setActionDone(false)
+        } else {
+          setError(user.data.message);
         }
-      };
-    const handleClose = () => {
-        setOpen(false)
-        setActionType('');
-        setActionDone(false)
-    };
+      } catch (error) {
+        // console.error('Error editing user:', error);
+        setError('An error occurred while editing the user.');
+      }
+    }
+  };
+  const handleClose = () => {
+    setOpen(false)
+    setActionType('');
+    setActionDone(false)
+  };
 
 
 
-    return (
-        <div>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {`${actionType === 'delete' ? 'Are you sure want to delete' : 'You are editing'} the user ${data.name}?`}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {actionType === 'delete' ?
-                            deletePromptText
-                            :
-                            < FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
-                                <InputLabel id="demo-simple-select-standard-label">Designation</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-standard-label"
-                                    id="demo-simple-select-standard"
-                                    value={roleFilter}
-                                    onChange={handleUserChange}
-                                >
-                                    <MenuItem value="Customer Admin">Customer Admin</MenuItem>
-                                    <MenuItem value="Supervisor">Supervisor</MenuItem>
-                                    <MenuItem value="Operator">Operator</MenuItem>
-                                </Select>
-                            </FormControl>}
-                            <p>{error}</p>
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAction} autoFocus>
-                        {actionType === 'delete' ? 'Delete' : 'Edit'}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+  return (
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {`${actionType === 'delete' ? 'Are you sure want to delete' : 'You are editing'} the user ${data.name}?`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {actionType === 'delete' ?
+              deletePromptText
+              :
+              < FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
+                <InputLabel id="demo-simple-select-standard-label">Designation</InputLabel>
+                <Select
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  value={roleFilter}
+                  onChange={handleUserChange}
+                >
+                  <MenuItem value="customerAdmin">Customer Admin</MenuItem>
+                  <MenuItem value="supervisor">Supervisor</MenuItem>
+                  <MenuItem value="operator">Operator</MenuItem>
+                </Select>
+              </FormControl>}
+            <p>{error}</p>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleAction} autoFocus>
+            {actionType === 'delete' ? 'Delete' : 'Edit'}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-  
-        </div>
-    );
+
+    </div>
+  );
 }
 
 

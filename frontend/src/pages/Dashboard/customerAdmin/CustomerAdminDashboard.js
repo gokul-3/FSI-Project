@@ -2,16 +2,18 @@ import React from "react";
 import ListCard from "../Cards/ListCard";
 import CustomerCountCard from "../Cards/CountCard";
 import { Box, Typography } from "@mui/material";
-import { Navigate, useLoaderData } from "react-router-dom";
+import { Navigate, redirect, useLoaderData } from "react-router-dom";
 import { useSelector } from "react-redux";
 import store from "../../../Store/index";
 import axios from "../../../axios";
 import { profileLoader } from "../../../Layouts/Root/RootLayout";
 import { profileActions } from "../../../Store/profile-slice";
-const UNAUTHORISED_ERROR = 400;
+const UNAUTHORISED_ERROR = 401;
 
 const CustomerAdminDashboard = () => {
-  const { userRole } = useSelector((state) => state.profile);
+  const { userRole, name } = useSelector((state) => state.profile);
+
+  console.log('ioside customer admin');
 
   if (userRole !== "customerAdmin") return <Navigate to="/login" />;
   const customerDashboardData = useLoaderData();
@@ -23,7 +25,7 @@ const CustomerAdminDashboard = () => {
         variant="h6"
         margin="1rem"
       >
-        Hello, Customer
+        Hello, {name}
       </Typography>
       <Box
         display="flex"
@@ -57,9 +59,14 @@ export const customerAdminDashboardLoader = async () => {
     const { profile } = store.getState();
     const isLoggedIn = profile.isLoggedIn;
     let profileDataId = profile.userId;
+    const accessToken = localStorage.getItem('accesstoken');
+    const headers = {
+      "Authorization": "Bearer " + accessToken
+    }
+
     if (!isLoggedIn) {
       const profileData = (
-        await axios.get("http://localhost:5000/auth/getUserData")
+        await axios.get("http://localhost:5000/auth/getUserData", { headers })
       ).data;
       store.dispatch(
         profileActions.setProfileInfo({
@@ -72,16 +79,19 @@ export const customerAdminDashboardLoader = async () => {
       profileDataId = profileData.id;
     }
     const customerAdminDashboardData = await axios.get(
-      `http://localhost:5000/dashboard/getCustomerData/${profileDataId}`
+      `http://localhost:5000/dashboard/getCustomerData/${profileDataId}`, { headers }
     );
-    console.log(customerAdminDashboardData.data);
+    console.log("customer admin dashboard", customerAdminDashboardData);
     return customerAdminDashboardData.data;
   } catch (error) {
     console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
+
+
+      // const refreshToken  = axios.get('http://localhost:5000/refresh',{},{header})
       return redirect("/login");
     }
   }
-  return null;
+  // return null;
 };

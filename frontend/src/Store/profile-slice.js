@@ -7,7 +7,8 @@ const profileSlice = createSlice({
     name: "",
     email: "",
     userId:null,
-    customerId : null
+    customerId : null,
+    customerName: null
   },
   reducers: {
     setProfileInfo(state, action) {
@@ -16,13 +17,11 @@ const profileSlice = createSlice({
       state.email = action.payload.email;
       state.userId = action.payload.userId;
       state.customerId = action.payload.customerId
+      state.customerName = action.payload.customerName
     },
 
     login(state, action) {
       state.isLoggedIn = true;
-      localStorage.setItem('refreshtoken', action.payload.refreshToken);
-      localStorage.setItem('accesstoken', action.payload.accessToken);
-
     },
     logout(state) {
       state.userRole = "";
@@ -30,7 +29,8 @@ const profileSlice = createSlice({
       state.name = "";
       state.email = "";
       state.userId = null
-      state.customerId = null
+      state.customerId = null,
+      state.customerName = null,
       localStorage.removeItem('refreshtoken')
       localStorage.removeItem('accesstoken')
     },

@@ -11,13 +11,13 @@ import {
   FormControlLabel,
   Switch
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { VisibilityOff, Visibility, Cookie } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import img from '../../assets/bg.jpg'
 import { profileActions } from '../../Store/profile-slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 export default function Login() {
@@ -25,17 +25,19 @@ export default function Login() {
   const [showPass, setshowPass] = useState(false)
   const [rememberStatus, setrememberStatus] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  const { isLoggedIn, userRole } = useSelector(state => state.profile)
   const form = useForm({
     defaultValues: {
       email_userId: '',
       password: ''
     }
   })
-  const { register, handleSubmit, formState } = form
+  console.log(isLoggedIn, userRole);
+  // if (isLoggedIn) return <Navigate to={`/${userRole}`} />
+  const { register, handleSubmit, formState, reset } = form
   const { errors } = formState
-  const dispatch = useDispatch()
   const onSubmit = (data) => {
     const encodedEmail = window.btoa(data.email_userId + ":" + data.password)
     const headers = {
@@ -47,13 +49,19 @@ export default function Login() {
       .then(res => {
         setErrorMessage('')
         const { email, name, role, refreshToken, id, accessToken, customerId } = res.data
-        dispatch(profileActions.setProfileInfo({ email, name, userRole: role, userId: id, customerId}))
+        dispatch(profileActions.setProfileInfo({ email, name, userRole: role, userId: id, customerId }))
         let refreshTokenToBeSaved = "";
         if (rememberStatus) {
           refreshTokenToBeSaved = refreshToken
         }
-        dispatch(profileActions.login({ refreshToken: refreshTokenToBeSaved, accessToken }))
-        console.log(role);
+        localStorage.setItem('refreshtoken', refreshTokenToBeSaved);
+        localStorage.setItem('accesstoken', accessToken);
+
+        dispatch(profileActions.login())
+        console.log('logged in as', role);
+        // reset()
+        return role
+      }).then((role) => {
         navigate(`/${role}`)
       })
       .catch(err => {

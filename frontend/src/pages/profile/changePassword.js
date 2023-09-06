@@ -50,8 +50,15 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
   });
 
   const onSubmit = async (data) => {
+
     try {
-      const response = await axios.put("auth/changePassword", data);
+
+      const accessToken = localStorage.getItem('accesstoken')
+      const headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + accessToken
+      };
+      const response = await axios.put("http://localhost:5000/auth/changePassword", { data }, { headers });
       reset();
       setModalInfo({
         title: "Success",

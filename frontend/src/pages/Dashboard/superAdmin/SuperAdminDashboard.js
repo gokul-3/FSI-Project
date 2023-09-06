@@ -9,10 +9,10 @@ import store from "../../../Store/index";
 
 const UNAUTHORISED_ERROR = 400;
 const SuperAdminDashboard = () => {
-  // const { userRole } = useSelector((state) => state.profile);
+  const { userRole } = useSelector((state) => state.profile);
   const superDashboardData = useLoaderData();
   console.log(superDashboardData);
-  // if (userRole !== "superAdmin") return <Navigate to="/login" />;
+  if (userRole !== "superAdmin") return <Navigate to="/login" />;
   return (
     <>
       <Typography
@@ -61,14 +61,17 @@ const SuperAdminDashboard = () => {
 };
 export const superAdminDashboardLoader = async () => {
   try {
-    
+    const accessToken = localStorage.getItem('accesstoken');
+    const headers = {
+      "Authorization": "Bearer " + accessToken
+    }
     const superAdminDashboardData = await axios.get(
-      "http://localhost:5000/dashboard/getSuperAdminData"
+      "http://localhost:5000/dashboard/getSuperAdminData", { headers }
     );
     console.log(superAdminDashboardData);
     return superAdminDashboardData.data;
   } catch (error) {
-    console.log(error);  
+    console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
       return redirect("/login");
