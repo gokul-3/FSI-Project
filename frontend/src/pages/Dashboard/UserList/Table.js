@@ -44,7 +44,12 @@ const DEBOUNCE_DELAY = 500;
 
 const UserTable = () => {
 
-  const { customerId, userRole } = useSelector((state) => state.profile);
+  let { customerId, userRole } = useSelector((state) => state.profile);
+  if (!customerId){
+    const params=useParams();
+    customerId = params.customerId
+  }
+  console.log("customerid",customerId)
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

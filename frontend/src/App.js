@@ -46,6 +46,7 @@ const router = createBrowserRouter([
             element: <SuperAdminDashboard />,
           },
           { path: "customers", element: <CustomersList /> },
+          {path:"customers/:customerId",element:<UserTable/>}
         ],
       },
       {

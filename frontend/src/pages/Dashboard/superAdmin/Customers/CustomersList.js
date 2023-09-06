@@ -15,6 +15,7 @@ import EditDialog from "./EditDialog";
 import { DeletedMsg } from "./DeletedMsg";
 import axiosInstance from "../../../../axios";
 import axios from "axios";
+import { FormModal } from "../../../../components/addUserForm/addUserForm";
 export default function Customers() {
   const pageLimit = 9;
 
@@ -40,6 +41,7 @@ export default function Customers() {
   const [iseditDialogOpen, setIsEditDialogOpen] = useState(false);
   const pageLength = Math.ceil(customers.totalRecords / pageLimit);
   const [createCustomer, setCreateCustomer] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
 
   const accessToken = localStorage.getItem('accesstoken');
   const headers = {
@@ -165,7 +167,7 @@ export default function Customers() {
                 variant="contained"
                 color="primary"
                 sx={{ position: "absolute", top: 70, right: 10 }}
-                onClick={() => setCreateCustomer(!createCustomer)}
+                onClick={() => setOpenForm(!openForm)}
               >
                 + Add Customer
               </Button>
@@ -253,6 +255,7 @@ export default function Customers() {
               setIsDeletedMsgOpen(false);
             }}
           />
+          <FormModal openModal={openForm} setOpenModal={setOpenForm}/>
         </>
       )}
     </Grid>
