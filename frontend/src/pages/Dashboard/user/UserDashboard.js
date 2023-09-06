@@ -5,8 +5,8 @@ import UserTable from "../UserList/Table";
 
 const UserDashboard = () => {
   const { userRole } = useSelector((state) => state.profile);
-  if (userRole !== "user") return <Navigate to="/login" />;
-  return <UserTable/>;
+  if (userRole !== "operator") return <Navigate to="/login" />;
+  return <>Hello user!!!</>;
 };
 
 export default UserDashboard;

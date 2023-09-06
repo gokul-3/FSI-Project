@@ -73,7 +73,7 @@ const supervisorSideMenu = [
   { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor" },
 ];
 
-const userSideMenu = [
+const operatorSideMenu = [
   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/users" },
 ];
 
@@ -81,7 +81,7 @@ const sideMenu = {
   superAdmin: superAdminSideMenu,
   customerAdmin: customerAdminSideMenu,
   supervisor: supervisorSideMenu,
-  user: userSideMenu,
+  operator: operatorSideMenu,
 };
 
 const DrawerContent = () => {
@@ -100,7 +100,7 @@ const DrawerContent = () => {
                 onClick={() => {
                   navigate(link);
                 }}
-                sx={{ py: 1.5 }}
+                sx={{ py: 1.5, bgcolor:  link === location.pathname ? "#80808054" : "white"}}
               >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={itemName} />

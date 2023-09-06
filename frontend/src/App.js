@@ -56,20 +56,20 @@ const router = createBrowserRouter([
             loader: customerAdminDashboardLoader,
             element: <CustomerAdminDashboard />,
           },
-          { path: "users",
+          { path: "operator",
           
            element: <UserTable/> },
         ],
       },
       {
-        path: "users",
+        path: "operator",
         children: [{ index: true, element: <UserDashboard /> }],
       },
       {
         path: "supervisor",
         children: [
           { index: true, element: <SupervisorDashboard /> },
-          { path: "users", element: <UserTable/> },
+          { path: "operator", element: <UserTable/> },
         ],
       },
     ],

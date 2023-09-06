@@ -175,7 +175,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                 >
                   <MenuItem value="customerAdmin">Customer Admin</MenuItem>
                   <MenuItem value="supervisor">Supervisor</MenuItem>
-                  <MenuItem value="operator">Operator</MenuItem>
+                  <MenuItem value="user">User</MenuItem>
                 </Select>
               </FormControl>
               {Boolean(errors.role ? true : false) ? (
