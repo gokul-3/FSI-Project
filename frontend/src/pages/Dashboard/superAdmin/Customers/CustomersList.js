@@ -14,8 +14,6 @@ import CustomerCard from "./CustomerCard";
 import EditDialog from "./EditDialog";
 import { DeletedMsg } from "./DeletedMsg";
 import axios from "../../../../axios";
-import axiosInstance from "../../../../axios";
-import axios from "axios";
 import { FormModal } from "../../../../components/addUserForm/addUserForm";
 export default function Customers() {
   const pageLimit = 9;
