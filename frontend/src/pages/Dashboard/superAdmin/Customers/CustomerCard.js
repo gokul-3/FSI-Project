@@ -9,9 +9,10 @@ import {
   Button,
   Tooltip,
 } from "@mui/material";
-import dummyLogo from "../../../../assets/dummyUser.jpg";
+import dummyLogo from "../../../../assets/dummyuser.png";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 export default function CustomerCard({
   index,
@@ -21,6 +22,7 @@ export default function CustomerCard({
   const customers = useSelector((state) => state.superAdmin.Customers.data);
   const [imageUrl, setImageUrl] = useState(null);
   const maxDisplayLen = 20;
+  const Navigate=useNavigate();
   useEffect(() => {
     if (customers.data[index].icon) {
       const blob = new Blob([new Uint8Array(customers.data[index].icon.data)], {
@@ -33,7 +35,9 @@ export default function CustomerCard({
     }
   }, [customers.data[index].icon]);
   const handleOpenUsers = (customerId) => {
-    <Navigate to={`/${customerId}`} replace={true} />
+    console.log(customerId);
+    // <Navigate to={`/${customerId}`} />
+    Navigate(`${customerId}`)
   };
   return (
     <Tooltip title={customers.data[index].name}>

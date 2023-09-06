@@ -12,8 +12,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import MessageModel from "./MessageModel";
+import axios from "../../axios";
 
 const defaultTheme = createTheme();
 
@@ -61,7 +61,7 @@ export default function ResetPassword() {
       setSending(true);
       axios
         .put(
-          `http://localhost:5000/auth/resetPassword/${token}`,
+          `/auth/resetPassword/${token}`,
           {},
           { headers }
         )

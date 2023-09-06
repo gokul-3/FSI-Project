@@ -54,7 +54,6 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-
 export const profileLoader = async () => {
   try {
     const state = store.getState();
@@ -65,7 +64,7 @@ export const profileLoader = async () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       };
-      const profile = await axios.get("http://localhost:5000/auth/getUserData", { headers });
+      const profile = await axios.get("/auth/getUserData", { headers });
       store.dispatch(
         profileActions.setProfileInfo({
           userRole: profile.data.role,
@@ -80,7 +79,7 @@ export const profileLoader = async () => {
     }
   } catch (error) {
     const statusCode = error?.response?.status;
-
+    console.log("errror");
     if (statusCode === UNAUTHORISED_ERROR) {
       return redirect("/login");
     }

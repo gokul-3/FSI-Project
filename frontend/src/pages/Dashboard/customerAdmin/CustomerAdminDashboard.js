@@ -66,7 +66,7 @@ export const customerAdminDashboardLoader = async () => {
 
     if (!isLoggedIn) {
       const profileData = (
-        await axios.get("http://localhost:5000/auth/getUserData", { headers })
+        await axios.get("/auth/getUserData", { headers })
       ).data;
       store.dispatch(
         profileActions.setProfileInfo({
@@ -79,7 +79,7 @@ export const customerAdminDashboardLoader = async () => {
       profileDataId = profileData.id;
     }
     const customerAdminDashboardData = await axios.get(
-      `http://localhost:5000/dashboard/getCustomerData/${profileDataId}`, { headers }
+      `/dashboard/getCustomerData/${profileDataId}`, { headers }
     );
     console.log("customer admin dashboard", customerAdminDashboardData);
     return customerAdminDashboardData.data;
@@ -87,9 +87,6 @@ export const customerAdminDashboardLoader = async () => {
     console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
-
-
-      // const refreshToken  = axios.get('http://localhost:5000/refresh',{},{header})
       return redirect("/login");
     }
   }

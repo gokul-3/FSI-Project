@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -11,6 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { FormControl } from '@mui/material';
+import axios from '../../../axios';
 
 const deletePromptText =
   ` Deleting the user will result in the loss of all account data, 
@@ -34,7 +33,7 @@ export default function AlertDialog({ open, setOpen, data, actionType, setAction
     }
     if (actionType === 'delete') {
       try {
-        const user = await axios.delete(`http://localhost:5000/user?data=${data.id}`, { headers });
+        const user = await axios.delete(`/user?data=${data.id}`, { headers });
         if (user.data.status === 'success') {
           setOpen(false);
           setActionType('');
@@ -52,7 +51,7 @@ export default function AlertDialog({ open, setOpen, data, actionType, setAction
 
     if (actionType === 'edit') {
       try {
-        const user = await axios.put(`http://localhost:5000/user`, { data: data.id, Role: roleFilter }, { headers });
+        const user = await axios.put(`/user`, { data: data.id, Role: roleFilter }, { headers });
         if (user.data.status === 'success') {
           setOpen(false);
           setActionType('');
