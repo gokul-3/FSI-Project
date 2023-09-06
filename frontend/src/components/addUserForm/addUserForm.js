@@ -16,11 +16,11 @@ import {
   Box,
   Input,
 } from "@mui/material";
-import Axios from "axios";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import SnackbarNotify from "../snackbar/Snackbar";
+import axios from "../../axios";
 
 export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
   console.log('model called', openModal);
@@ -55,7 +55,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
     try {
 
       const accessToken = localStorage.getItem('accesstoken')
-      const response = await Axios.post("http://localhost:5000/adduser", data, { headers: {"Authorization": "Bearer " + accessToken} });
+      const response = await axios.post("/adduser", data, { headers: {"Authorization": "Bearer " + accessToken} });
 
       console.log("Response from server", response);
       const accessEncoded = accessToken
@@ -65,8 +65,8 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
         "Authorization": "Basic " + encodedEmail,
         "Authorization": "Bearer " + accessEncoded
       };
-      const res = await Axios.post(
-        "http://localhost:5000/auth/createPassword",
+      const res = await axios.post(
+        "/auth/createPassword",
         {},
         { headers }
       );

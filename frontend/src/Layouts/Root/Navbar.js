@@ -19,7 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { profileActions } from "../../Store/profile-slice";
-import axios from "axios";
+import axios from "../../axios";
 const INTERNAL_SERVER_ERROR = 500;
 
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
@@ -40,7 +40,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       };
-      await axios.get("http://localhost:5000/auth/logout", { headers });
+      await axios.get("auth/logout", { headers });
       navigate("/login");
       dispatch(profileActions.logout());
     } catch (error) {

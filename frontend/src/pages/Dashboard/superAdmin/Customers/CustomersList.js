@@ -13,8 +13,7 @@ import ConfirmationDialog from "./ConfirmationDialog";
 import CustomerCard from "./CustomerCard";
 import EditDialog from "./EditDialog";
 import { DeletedMsg } from "./DeletedMsg";
-import axiosInstance from "../../../../axios";
-import axios from "axios";
+import axios from "../../../../axios";
 export default function Customers() {
   const pageLimit = 9;
 
@@ -63,7 +62,7 @@ export default function Customers() {
     try {
 
       const updatedCustomer = await axios.patch(
-        `http://localhost:5000/customer/${customers.data[editIndex].id}`,
+        `/customer/${customers.data[editIndex].id}`,
         formData, { headers }
       );
       const updatedDataArray = [...customers.data];
@@ -83,7 +82,7 @@ export default function Customers() {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/customer/${customers.data[deleteIndex].id}`, { headers });
+      await axios.delete(`/customer/${customers.data[deleteIndex].id}`, { headers });
       setIsDeletedMsgOpen(true);
       setDeleteIndex(null);
       setIsConfirmationDialogOpen(false);
@@ -100,7 +99,7 @@ export default function Customers() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/customer?page=${page}&search=${searchQuery}`, { headers });
+      const response = await axios.get(`/customer?page=${page}&search=${searchQuery}`, { headers });
       setIsLoading(false);
       dispatch(setCustomersData(response.data));
       console.log(response.data);

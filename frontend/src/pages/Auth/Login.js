@@ -14,10 +14,10 @@ import {
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { VisibilityOff, Visibility, Cookie } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import img from '../../assets/bg.jpg'
 import { profileActions } from '../../Store/profile-slice';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from '../../axios';
 
 
 export default function Login() {
@@ -44,7 +44,7 @@ export default function Login() {
       'Content-Type': 'application/json',
       'Authorization': "Basic " + encodedEmail
     }
-    axios.post('http://localhost:5000/auth/login', { withCredentials: true }, { headers }
+    axios.post('/auth/login', { withCredentials: true }, { headers }
     )
       .then(res => {
         setErrorMessage('')

@@ -54,14 +54,17 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-
 export const profileLoader = async () => {
   try {
     const state = store.getState();
     const isLoggedIn = state.profile.isLoggedIn;
 
-    const getData = async (headers) => {
-      const profile = await axios.get("http://localhost:5000/auth/getUserData", { headers });
+    if (!isLoggedIn) {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+      };
+      const profile = await axios.get("/auth/getUserData", { headers });
       store.dispatch(
         profileActions.setProfileInfo({
           userRole: profile.data.role,
@@ -71,34 +74,14 @@ export const profileLoader = async () => {
           customerId: profile.data.customerId
         })
       );
+      console.log(profile);
       return profile.data;
-    }
-    if (!isLoggedIn) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      };
-      getData(headers)
     }
   } catch (error) {
     const statusCode = error?.response?.status;
+    console.log("errror");
     if (statusCode === UNAUTHORISED_ERROR) {
-      const refreshtoken = localStorage.getItem('refreshtoken');
-      const headers = {
-        "Authorization": "Bearer " + refreshtoken
-      }
-      axios.get('http://localhost:5000/refresh', { headers })
-        .then(res => {
-          const newAccessToken = res.data.accessToken
-          localStorage.setItem('accesstoken', newAccessToken)
-          const headers = {
-            "Authorization": "Bearer " + newAccessToken
-          }
-          getData(headers)
-        })
-        .catch(err => {
-          return redirect("/login");
-        })
+      return redirect("/login");
     }
   }
   return null;

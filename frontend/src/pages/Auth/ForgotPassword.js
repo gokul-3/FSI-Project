@@ -11,8 +11,8 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import MessageModel from "./MessageModel";
+import axios from "../../axios";
 
 const defaultTheme = createTheme();
 
@@ -43,7 +43,7 @@ export default function ForgotPassword() {
     setSending(true);
     axios
       .post(
-        "http://localhost:5000/auth/sendResetPasswordEmail",
+        "/auth/sendResetPasswordEmail",
         {},
         { headers }
       )

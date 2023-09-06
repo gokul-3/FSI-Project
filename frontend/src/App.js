@@ -8,7 +8,6 @@ import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import "./App.css";
 
-import axios from "./axios";
 import SuperAdminDashboard, {
   superAdminDashboardLoader,
 } from "./pages/Dashboard/superAdmin/SuperAdminDashboard";

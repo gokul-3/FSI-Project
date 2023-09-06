@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -28,6 +26,7 @@ import {
 } from "react-router-dom";
 import Action from './Action';
 import { FormModal } from '../../../components/addUserForm/addUserForm'
+import axios from '../../../axios';
 
 
 
@@ -63,7 +62,7 @@ const UserTable = () => {
     const headers = {
       "Authorization": "Bearer " + accessToken
     }
-    const response = await axios.get(`http://localhost:5000/user`, {
+    const response = await axios.get(`/user`, {
       params: queryParams,
       headers
     });

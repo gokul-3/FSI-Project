@@ -5,7 +5,6 @@ import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Navigate, redirect, useLoaderData } from "react-router-dom";
 import axios from "../../../axios";
-import store from "../../../Store/index";
 
 const UNAUTHORISED_ERROR = 400;
 const SuperAdminDashboard = () => {
@@ -66,7 +65,7 @@ export const superAdminDashboardLoader = async () => {
       "Authorization": "Bearer " + accessToken
     }
     const superAdminDashboardData = await axios.get(
-      "http://localhost:5000/dashboard/getSuperAdminData", { headers }
+      "/dashboard/getSuperAdminData", { headers }
     );
     console.log(superAdminDashboardData);
     return superAdminDashboardData.data;
