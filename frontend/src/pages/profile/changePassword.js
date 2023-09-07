@@ -26,20 +26,27 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
   const schema = Yup.object().shape({
     old_password: Yup.string().required("Old password is required"),
     new_password: Yup.string()
-      .required("Password is required")
-      .min(8)
-      .max(15)
-      .notOneOf(
-        [Yup.ref("old_password")],
-        "New password must be different from the old password"
-      )
+      .required("New Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .max(15, "Password must be at most 15 characters")
       .matches(/[0-9]/, "Must include digit")
       .matches(/[a-z]/, "Must include one lowercase")
       .matches(/[A-Z]/, "Must include one uppercase")
-      .matches(/[^\w\s]/, "Must include one special character"),
+      .matches(/[^\w\s]/, "Must include one special character")
+      .test(
+        "different-from-old",
+        "New password must be different from the old password",
+        function (value) {
+          const oldPassword = this.parent.old_password;
+          return value !== oldPassword;
+        }
+      ),
     confirm_password: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("new_password"), null], "Passwords must match"),
+      .oneOf(
+        [Yup.ref("new_password"), null],
+        "New Password and Old Password must match"
+      ),
   });
 
   const {

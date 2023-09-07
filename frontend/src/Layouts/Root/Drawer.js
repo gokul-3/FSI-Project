@@ -66,7 +66,7 @@ const superAdminSideMenu = [
 ];
 const customerAdminSideMenu = [
   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/operators" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/users" },
 ];
 const supervisorSideMenu = [
   { itemName: "Users", icon: <CustomersIcon />, link: "/" },
