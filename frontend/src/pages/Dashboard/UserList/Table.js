@@ -28,6 +28,7 @@ import axios from "../../../axios";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 import { ArrowBackIos } from "@mui/icons-material";
+import BackdropLoader from "../../../Layouts/Root/BackdropLoader";
 
 const oldcolumns = [
   { id: "id", label: "User ID", minWidth: 170 },
@@ -59,6 +60,7 @@ const UserTable = () => {
   let {
     customerId,
     userRole,
+    isLoggedIn,
     name: userName,
   } = useSelector((state) => state.profile);
   let { Customers } = useSelector((state) => state.superAdmin);
@@ -122,6 +124,7 @@ const UserTable = () => {
       clearTimeout(typingTimeout);
     };
   }, [roleFilter, name, customerId, actionType, actionDone]);
+ 
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
       <ErrorPageTemplate
@@ -166,7 +169,11 @@ const UserTable = () => {
 
   return (
     <>
-      <FormModal openModal={openForm} setOpenModal={setOpenForm} firmName={data[0]?.customer.name}/>
+      <FormModal
+        openModal={openForm}
+        setOpenModal={setOpenForm}
+        firmName={data[0]?.customer.name}
+      />
       <Box p={3} className="responsive-table" position="relative">
         {userRole === "superAdmin" && (
           <Box display="flex" mt={5}>
@@ -226,7 +233,7 @@ const UserTable = () => {
               <MenuItem value="user">User</MenuItem>
             </Select>
           </FormControl>
-          {name.length !== 0 && (
+          {(name.length !== 0 || roleFilter.length !== 0) && (
             <Tooltip title="Clear Filter">
               <IconButton onClick={handleClear}>
                 <ClearIcon />

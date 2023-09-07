@@ -22,6 +22,8 @@ import { superAdminActions } from "../../Store/superAdmin-slice";
 import { customerAdminActions } from "../../Store/customerAdmin-slice";
 import { setProfileInfo } from "../../Store/profileSetter";
 import moment from "moment";
+import BackdropLoader from "./BackdropLoader";
+import ErrorPageTemplate from "../ErrorPages/ErrorPageTemplate";
 
 const drawerWidth = 240;
 const profileRoute = "auth/getUserData";
@@ -56,14 +58,16 @@ const RootLayout = () => {
               navigate("/login");
             }
             try {
-              const headers = {
-                Authorization: "Bearer " + refreshToken,
-              };
-              const res = await axios.post("/auth/refresh", {}, { headers });
-              localStorage.setItem("accesstoken", res.data.accessToken);
-              const expiryDate = moment().add(1, "m").toDate();
-              localStorage.setItem("expirydate", expiryDate.toString());
-              changeToken();
+              if(isLoggedIn){
+                const headers = {
+                  Authorization: "Bearer " + refreshToken,
+                };
+                const res = await axios.post("/auth/refresh", {}, { headers });
+                localStorage.setItem("accesstoken", res.data.accessToken);
+                const expiryDate = moment().add(15, "m").toDate();
+                localStorage.setItem("expirydate", expiryDate.toString());
+                changeToken();
+              }
             } catch (error) {
               localStorage.clear();
               if (error) navigate("/login");
@@ -71,7 +75,7 @@ const RootLayout = () => {
           }, [expireTime - new Date()]);
         };
         changeToken();
-        const profileInfo = (await axios.get("auth/user-data")).data;
+        const profileInfo = (await axios.get("/dashboard")).data;
         console.log(profileInfo);
         setProfileInfo(profileInfo);
       } catch (error) {
@@ -79,13 +83,13 @@ const RootLayout = () => {
         if (error.request) {
           const statusCode = error.request.status;
           if (statusCode === HttpStatusCode.InternalServerError) {
-            //
+            <ErrorPageTemplate header="Error!!! Something went wrong" code={statusCode}/>
           } else if (statusCode === HttpStatusCode.BadRequest) {
-            //
+            <ErrorPageTemplate header="Error!!! Something went wrong" code={statusCode}/>
           } else if (statusCode === HttpStatusCode.NotFound) {
-            //
+            <ErrorPageTemplate header="Error!!! Page not found" code={statusCode}/>
           } else if (statusCode === HttpStatusCode.Unauthorized) {
-            //
+            <ErrorPageTemplate header="Error!!! Unauthorized" code={statusCode}/>
           } else {
             console.log(error);
           }
@@ -95,6 +99,9 @@ const RootLayout = () => {
     if (isAccessTokenPresent) fetchProfileInfo();
     else navigate("/login");
   }, [isAccessTokenPresent, isLoggedIn]);
+  if (!isLoggedIn && isAccessTokenPresent) {
+    return <BackdropLoader open={true} />;
+  }
   return (
     <div>
       <Box sx={{ display: "flex" }}>

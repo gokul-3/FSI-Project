@@ -22,7 +22,7 @@ import { useNavigate, useNavigation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { profileActions } from "../../Store/profile-slice";
 import axios from "../../axios";
-import NavigationLoader from "./NavigationLoader";
+import NavigationLoader from "./BackdropLoader";
 const INTERNAL_SERVER_ERROR = 500;
 
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
