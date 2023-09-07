@@ -219,18 +219,6 @@ const UserTable = () => {
           >
             <ArrowBackIos fontSize="12px" /> Back
           </Button>
-          {userRole !== "supervisor" ? (
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{float:'right'}}
-              onClick={() => {
-                setOpenForm(true);
-              }}
-            >
-              Add User
-            </Button>
-          ) : null}
           </Box>
           
           
@@ -245,13 +233,21 @@ const UserTable = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyItems: "center",
-            verticalAlign: "center",
-            // margin: "2em",
-            my: "2rem",
-            // position: "relative",
+            verticalAlign: 'center',
+            justifyContent: "space-between",
+            mx: "2rem",
+            mb: '2rem'
           }}
         >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyItems: "center",
+            verticalAlign: "center",
+            
+          }}
+          >
           <TextField
             id="standard-basic"
             value={name}
@@ -259,7 +255,7 @@ const UserTable = () => {
             variant="standard"
             onChange={handleNameChange}
             sx={{ minWidth: 120, marginRight: 2 }}
-          />
+            />
           <TextField
             id="email-filter"
             value={emailFilter}
@@ -267,12 +263,12 @@ const UserTable = () => {
             variant="standard"
             onChange={handleEmailChange}
             sx={{ minWidth: 120, marginRight: 2 }}
-          />
+            />
 
           <FormControl
             variant="standard"
             sx={{ minWidth: 120, marginRight: 2 }}
-          >
+            >
             <InputLabel id="demo-simple-select-standard-label">
               Designation
             </InputLabel>
@@ -285,17 +281,33 @@ const UserTable = () => {
               <MenuItem value="All Users">All Users</MenuItem>
               <MenuItem value="customerAdmin">Customer Admin</MenuItem>
               <MenuItem value="supervisor">Supervisor</MenuItem>
-              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="operator">Operator</MenuItem>
             </Select>
           </FormControl>
           {(name.length !== 0 || emailFilter.length !== 0) && (
             <Tooltip title="Clear Filter">
               <IconButton onClick={handleClear}  sx={{top:10}}>
-              < Typography >clear</Typography>
+              < Typography variant="">clear</Typography>
               </IconButton>
             </Tooltip>
           )}
           
+            </Box>
+            <Box>
+            {(userRole !== "supervisor" || userRole !== "operator")? (
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{float:'right'}}
+              onClick={() => {
+                setOpenForm(true);
+              }}
+              disableElevation
+            >
+              Add User
+            </Button>
+          ) : null}
+            </Box>
         </Box>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>

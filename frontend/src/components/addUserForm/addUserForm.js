@@ -15,6 +15,8 @@ import {
   FormHelperText,
   Box,
   Input,
+  Snackbar,
+  Alert,
   Typography,
   CircularProgress,
 } from "@mui/material";
@@ -47,16 +49,17 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
   const [errorText, setErrorText] = useState("");
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
 
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
       const res = await axios.post("/user", data);
       setIsLoading(false);
-      setResponse(res.message);
+      setResponse(res.data?.message);
+      setSnackbarOpen(true);
       reset();
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
       setErrorText(error.response?.message);
     }
@@ -66,6 +69,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
     reset();
     setResponse("");
     setErrorText("");
+    setSnackbarOpen(false);
     setOpenModal(false);
   };
 
@@ -145,7 +149,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   fullWidth
                   {...register("role")}
                   error={errors.role ? true : false}
-                  disabled={!!firmName}
+                  disabled={!(!!firmName)}
                   defaultValue={!!firmName ? "" : "customerAdmin"}
                 >
                   <MenuItem value="customerAdmin">Customer Admin</MenuItem>
@@ -160,12 +164,11 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   {errors.role?.message}
                 </FormHelperText>
               ) : null}
-              {/* <Box>{isLoading ? <CircularProgress /> : null}</Box> */}
               <Box>
-                {!!response ? (
-                  <Typography sx={{ color: "red" }}>{response}</Typography>
-                ) : (
+                {!!errorText ? (
                   <Typography sx={{ color: "blue" }}>{errorText}</Typography>
+                ) : (
+                  null
                 )}
               </Box>
               <Box
@@ -195,6 +198,11 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
           </form>
         </DialogContent>
       </Dialog>
+      <Snackbar open={isSnackbarOpen} autoHideDuration={5000} onClose={handleAddUserCancel}>
+            <Alert onClose={handleAddUserCancel} severity='success' sx={{ width: '100%' }}>
+                {response.data?.message}
+            </Alert>
+        </Snackbar>
     </>
   );
 };
