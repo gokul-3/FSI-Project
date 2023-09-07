@@ -9,8 +9,9 @@ import {
 } from "@mui/material";
 
 const UserData = ({ users }) => {
-  
-  return users.map((element, index) => (
+  return users.length === 0 ?"No Users available":
+  users.map((element, index) => (
+
     <Fragment key={index} >
       <ListItem alignItems="center" key={index}  >
         <ListItemText 
@@ -26,7 +27,7 @@ const UserData = ({ users }) => {
               fontSize="14px"
               sx={{ display: "inline-block", paddingRight:'10px',float: "right" }}
             >
-              {element.Difference}
+              {element.Difference==30?"Today":(element.Difference==29?"Yesterday":`${30 -element.Difference} days ago`)}
             </Typography>
           }
         />

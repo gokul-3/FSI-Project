@@ -10,10 +10,20 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+
 const CustomerData = ({ customers }) => {
+const getLogoUrl = (icon) => {
+//  console.log("imageElement", icon);
+ const blob = new Blob([new Uint8Array(icon?.data)], {
+ type: "image/jpeg",
+ });
+ return URL.createObjectURL(blob);
+
+};
+
   const navigate = useNavigate();
   return customers.length === 0
-    ? "No customers available"
+    ? "No Customers available"
     : customers.map((element, index) => (
         <Fragment key={index}>
           <ListItem
@@ -24,10 +34,7 @@ const CustomerData = ({ customers }) => {
             sx={{ cursor: "pointer" }}
           >
             <ListItemAvatar>
-              <Avatar
-                alt={element.CustomerName}
-                src="/static/images/avatar/1.jpg"
-              />
+            <Avatar alt={element.CustomerName} src={getLogoUrl(element.customerIcon)}/>
             </ListItemAvatar>
 
             <ListItemText

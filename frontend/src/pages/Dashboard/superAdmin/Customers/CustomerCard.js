@@ -9,7 +9,7 @@ import {
   Button,
   Tooltip,
 } from "@mui/material";
-import dummyLogo from "../../../../assets/dummyuser.png";
+import dummyLogo from "../../../../assets/no_image.png";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { red } from "@mui/material/colors";
