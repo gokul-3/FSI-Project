@@ -91,7 +91,7 @@ const router = createBrowserRouter([
         element: <CustomersList />,
       },
       {
-        path: "/operators",
+        path: "/users",
         element: <UserTable />,
       },
       {

@@ -30,8 +30,8 @@ export default function ResetPassword() {
   const schema = Yup.object().shape({
     password: Yup.string()
       .required("Password is required")
-      .min(8)
-      .max(15)
+      .min(8, "Password must be at least 8 characters")
+      .max(15, "Password must be at most 15 characters")
       .matches(/[0-9]/, "Must include digit")
       .matches(/[a-z]/, "Must include one lowercase")
       .matches(/[A-Z]/, "Must include one uppercase")

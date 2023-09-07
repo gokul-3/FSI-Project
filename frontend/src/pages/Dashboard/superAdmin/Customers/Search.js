@@ -63,7 +63,7 @@ export default function Search({ onSearch }) {
         onChange={handleInputChange}
         onKeyDown={handleKeyPress}
       />
-      <Tooltip title="Clear Filter">
+      {searchInput && <Tooltip title="Clear Filter">
         <IconButton
           onClick={() => {
             setSearchInput("");
@@ -72,7 +72,7 @@ export default function Search({ onSearch }) {
         >
           <ClearIcon />
         </IconButton>
-      </Tooltip>
+      </Tooltip>}
       <SearchButton onClick={handleSearch}>
         <SearchIcon />
       </SearchButton>
