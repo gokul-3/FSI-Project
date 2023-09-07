@@ -22,6 +22,7 @@ import { FormModal } from "../../../../components/addUserForm/addUserForm";
 import ErrorPageTemplate from "../../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 import { ArrowBackIos } from "@mui/icons-material";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 export default function Customers() {
   const pageLimit = 8;
   const { setCustomersData, setCustomerEditedImg, setCustomerEditedName } =
@@ -62,7 +63,7 @@ export default function Customers() {
     }
     return skeletons;
   };
-
+  const navigate = useNavigate();
   const handleEditCustomer = async () => {
     const formData = new FormData();
     formData.append("name", editedName);
@@ -174,19 +175,21 @@ export default function Customers() {
           <ErrorPage error={error} />
         </Grid>
       ) : (
-        <><Button
-                sx={{
-                  position:'relative',
-                  top:'2.5rem',
-                  left:'2.5rem',
-                }}
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  navigate(-1);
-                }}
-              ><ArrowBackIos fontSize="12px" /> Back
-              </Button>
+        <>
+          <Button
+            sx={{
+              position: "relative",
+              top: "2.5rem",
+              left: "2.5rem",
+            }}
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIos fontSize="12px" /> Back
+          </Button>
           <Grid
             container
             spacing={0}
@@ -200,7 +203,6 @@ export default function Customers() {
               textAlign: "center",
             }}
           >
-                
             <Grid
               item
               width="100%"
@@ -209,7 +211,6 @@ export default function Customers() {
               gap="2rem"
               justifyContent="center"
             >
-              
               <Search
                 onSearch={(searchVal) => {
                   setSearchQuery(searchVal);
