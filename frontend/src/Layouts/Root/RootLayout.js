@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Navigate,
   Outlet,
   json,
   redirect,
@@ -58,12 +59,7 @@ export const profileLoader = async () => {
   try {
     const state = store.getState();
     const isLoggedIn = state.profile.isLoggedIn;
-
-    if (!isLoggedIn) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      };
+    const getData = async (headers) => {
       const profile = await axios.get("/auth/getUserData", { headers });
       store.dispatch(
         profileActions.setProfileInfo({
@@ -73,15 +69,46 @@ export const profileLoader = async () => {
           userId: profile.data.id,
           customerId: profile.data.customerId
         })
-      );
-      console.log(profile);
-      return profile.data;
-    }
-  } catch (error) {
-    const statusCode = error?.response?.status;
+        );
+        console.log(profile);
+        return profile.data;
+      }
+      if (!isLoggedIn) {
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        };
+        return await getData(headers)
+      }
+    } catch (error) {
+    console.log("refreshToken");
+    const statusCode = error.response.status;
     console.log("errror");
     if (statusCode === UNAUTHORISED_ERROR) {
-      return redirect("/login");
+      console.log("Hello");
+      const refreshToken = localStorage.getItem('refreshtoken')
+      if (!refreshToken) {
+        return redirect("/login");
+      }
+      console.log(refreshToken);
+      try {
+        let headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${refreshToken}`,
+        };
+
+        const res = await axios.post('/auth/refresh', {}, { headers })
+        localStorage.setItem('accesstoken', res.data.accessToken)
+         headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+        };
+        getData(headers)
+        return null;
+      } catch (error) {
+        console.log(error);
+      return redirect('/')
+      }
     }
   }
   return null;

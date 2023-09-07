@@ -36,6 +36,10 @@ export default function Login() {
       password: ''
     }
   })
+  if (isLoggedIn) {
+    // navigate()
+    return <Navigate to={`/${userRole}`} />
+  }
   const { register, handleSubmit, formState } = form
   const { errors } = formState
   const onSubmit = (data) => {
@@ -50,15 +54,14 @@ export default function Login() {
       .then(res => {
         setErrorMessage('')
         const { email, name, role, refreshToken, id, accessToken, customerId } = res.data
-        dispatch(profileActions.setProfileInfo({ email, name, userRole: role, userId: id, customerId }))
         let refreshTokenToBeSaved = "";
         if (rememberStatus) {
           refreshTokenToBeSaved = refreshToken
         }
         localStorage.setItem('refreshtoken', refreshTokenToBeSaved);
         localStorage.setItem('accesstoken', accessToken);
-
-        dispatch(profileActions.login())
+        
+        dispatch(profileActions.setProfileInfo({ email, name, userRole: role, userId: id, customerId }))
         console.log('logged in as', role);
         return role
       }).then((role) => {
@@ -148,11 +151,11 @@ export default function Login() {
             <Button
               type="submit"
               fullWidth
-              disabled = {sending}
+              disabled={sending}
               variant="contained"
               sx={{ mt: 3, mb: 2, height: '3rem', background: 'linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))' }}
             >
-              {sending ? "Please wait...":"Sign in"}
+              {sending ? "Please wait..." : "Sign in"}
             </Button>
             <Grid container>
               <Grid item xs textAlign='center'>

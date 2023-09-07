@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { Navigate, redirect, useLoaderData } from "react-router-dom";
 import axios from "../../../axios";
 
-const UNAUTHORISED_ERROR = 400;
+const UNAUTHORISED_ERROR = 401;
 const SuperAdminDashboard = () => {
   const { userRole } = useSelector((state) => state.profile);
   const superDashboardData = useLoaderData();
@@ -73,7 +73,13 @@ export const superAdminDashboardLoader = async () => {
     console.log(error);
     const statusCode = error.response.status;
     if (statusCode === UNAUTHORISED_ERROR) {
-      return redirect("/login");
+      const refreshToken = localStorage.getItem('refreshtoken')
+      return redirect('/login')
+      // if (!refreshToken) {
+      //   return redirect("/login");
+      // } else
+      //   return redirect("/");
+
     }
   }
 };

@@ -18,10 +18,8 @@ const profileSlice = createSlice({
       state.userId = action.payload.userId;
       state.customerId = action.payload.customerId
       state.customerName = action.payload.customerName
-    },
-
-    login(state, action) {
       state.isLoggedIn = true;
+      console.log('hello');
     },
     logout(state) {
       state.userRole = "";
