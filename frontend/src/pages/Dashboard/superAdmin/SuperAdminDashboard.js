@@ -5,13 +5,26 @@ import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Navigate, redirect, useLoaderData } from "react-router-dom";
 import axios from "../../../axios";
+import store from "../../../Store/index";
+import { profileActions } from "../../../Store/profile-slice";
+import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
+import { HttpStatusCode } from "axios";
 
+<<<<<<< HEAD
 const UNAUTHORISED_ERROR = 401;
+=======
+>>>>>>> emman-rc
 const SuperAdminDashboard = () => {
   const { userRole } = useSelector((state) => state.profile);
-  const superDashboardData = useLoaderData();
-  console.log(superDashboardData);
-  if (userRole !== "superAdmin") return <Navigate to="/login" />;
+  const superDashboardData = useSelector((state) => state.superAdmin);
+  console.log(userRole);
+  if (userRole !== "superAdmin")
+    return (
+      <ErrorPageTemplate
+        header={"Unauthorised Error"}
+        code={HttpStatusCode.Unauthorized}
+      />
+    );
   return (
     <>
       <Typography
@@ -35,7 +48,7 @@ const SuperAdminDashboard = () => {
           }}
           recentlyActive={{
             header: `Activity last 7 days`,
-            count: superDashboardData.activeStatus,
+            count: superDashboardData.activeCustomers,
           }}
         />
         <Box
@@ -58,6 +71,7 @@ const SuperAdminDashboard = () => {
     </>
   );
 };
+<<<<<<< HEAD
 export const superAdminDashboardLoader = async () => {
   try {
     const accessToken = localStorage.getItem('accesstoken');
@@ -83,4 +97,42 @@ export const superAdminDashboardLoader = async () => {
     }
   }
 };
+=======
+// export const superAdminDashboardLoader = async () => {
+//   try {
+//     const { profile } = store.getState();
+
+//     const accessToken = localStorage.getItem("accesstoken");
+//     const headers = {
+//       Authorization: "Bearer " + accessToken,
+//     };
+//     let profileRole = profile.userRole;
+//     if (!profile.isLoggedIn) {
+//       const profileData = (await axios.get("/auth/getUserData", { headers }))
+//         .data;
+//       store.dispatch(
+//         profileActions.setProfileInfo({
+//           userRole: profileData.role,
+//           name: profileData.name,
+//           email: profileData.email,
+//           userId: profileData.id,
+//         })
+//       );
+//       profileRole = profileData.role;
+//     }
+//     if (profileRole !== "superAdmin") return redirect("/login");
+//     const superAdminDashboardData = await axios.get(
+//       "/dashboard/getSuperAdminData",
+//       { headers }
+//     );
+//     return superAdminDashboardData.data;
+//   } catch (error) {
+//     console.log(error);
+//     const statusCode = error.response.status;
+//     if (statusCode === UNAUTHORISED_ERROR) {
+//       return redirect("/login");
+//     }
+//   }
+// };
+>>>>>>> emman-rc
 export default SuperAdminDashboard;

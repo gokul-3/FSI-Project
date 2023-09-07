@@ -14,18 +14,56 @@ import Toolbar from "@mui/material/Toolbar";
 import Navbar from "./Navbar";
 import { MobileDrawer, PermanentDrawer } from "./Drawer";
 import axios from "../../axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { profileActions } from "../../Store/profile-slice";
 import store from "../../Store";
+import { HttpStatusCode } from "axios";
+import { superAdminActions } from "../../Store/superAdmin-slice";
+import { customerAdminActions } from "../../Store/customerAdmin-slice";
+import { setProfileInfo } from "../../Store/profileSetter";
 
-const UNAUTHORISED_ERROR = 401;
 const drawerWidth = 240;
+const profileRoute = "auth/getUserData";
 
 const RootLayout = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.profile);
+  const dashboardActions = {
+    superAdmin: superAdminActions.setSuperAdminDashboardData,
+    customerAdmin: customerAdminActions.setCustomerDashboardData,
+  };
+  const isAccessTokenPresent = localStorage.getItem("accesstoken") !== null;
+  useEffect(() => {
+    const fetchProfileInfo = async () => {
+      try {
+        const profileInfo = (await axios.get("auth/getUserData")).data;
+        setProfileInfo(profileInfo);
+      } catch (error) {
+        console.log(error);
+        if (error.request) {
+          const statusCode = error.request.status;
+          if (statusCode === HttpStatusCode.InternalServerError) {
+            //
+          } else if (statusCode === HttpStatusCode.BadRequest) {
+            //
+          } else if (statusCode === HttpStatusCode.NotFound) {
+            //
+          } else if (statusCode === HttpStatusCode.Unauthorized) {
+            //
+          } else {
+            console.log(error);
+          }
+        }
+      }
+    };
+    if (isAccessTokenPresent) fetchProfileInfo();
+    else navigate("/login");
+  }, [isAccessTokenPresent, isLoggedIn]);
   return (
     <div>
       <Box sx={{ display: "flex" }}>
@@ -47,7 +85,9 @@ const RootLayout = () => {
           }}
         >
           <Toolbar />
-          <Outlet />
+          <Box p={1}>
+            <Outlet />
+          </Box>
         </Box>
       </Box>
     </div>
@@ -55,61 +95,70 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-export const profileLoader = async () => {
-  try {
-    const state = store.getState();
-    const isLoggedIn = state.profile.isLoggedIn;
-    const getData = async (headers) => {
-      const profile = await axios.get("/auth/getUserData", { headers });
-      store.dispatch(
-        profileActions.setProfileInfo({
-          userRole: profile.data.role,
-          name: profile.data.name,
-          email: profile.data.email,
-          userId: profile.data.id,
-          customerId: profile.data.customerId
-        })
-        );
-        console.log(profile);
-        return profile.data;
-      }
-      if (!isLoggedIn) {
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-        };
-        return await getData(headers)
-      }
-    } catch (error) {
-    console.log("refreshToken");
-    const statusCode = error.response.status;
-    console.log("errror");
-    if (statusCode === UNAUTHORISED_ERROR) {
-      console.log("Hello");
-      const refreshToken = localStorage.getItem('refreshtoken')
-      if (!refreshToken) {
-        return redirect("/login");
-      }
-      console.log(refreshToken);
-      try {
-        let headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${refreshToken}`,
-        };
+// export const profileLoader = async () => {
+//   try {
+//     const state = store.getState();
+//     const isLoggedIn = state.profile.isLoggedIn;
 
-        const res = await axios.post('/auth/refresh', {}, { headers })
-        localStorage.setItem('accesstoken', res.data.accessToken)
-         headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-        };
-        getData(headers)
-        return null;
-      } catch (error) {
-        console.log(error);
-      return redirect('/')
-      }
-    }
-  }
-  return null;
-};
+//     if (!isLoggedIn) {
+//       const headers = {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
+//       };
+//       const profile = await axios.get("/auth/getUserData", { headers });
+//       store.dispatch(
+//         profileActions.setProfileInfo({
+//           userRole: profile.data.role,
+//           name: profile.data.name,
+//           email: profile.data.email,
+//           userId: profile.data.id,
+//           customerId: profile.data.customerId,
+//         })
+//       );
+//       return profile.data;
+//     }
+//   } catch (error) {
+//     const statusCode = error?.response?.status;
+//     if (statusCode === UNAUTHORISED_ERROR) {
+//       try {
+//         const refreshToken = localStorage.getItem("refreshtoken");
+//         if (!refreshToken) {
+//           return redirect("/login");
+//         }
+//         const headers = {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${refreshToken}`,
+//         };
+//         await axios
+//           .post("auth/refresh", { headers })
+//           .then((res) => {
+//             console.log(res);
+//           })
+//           .catch((err) => {
+//             console.log(err);
+//           });
+//         localStorage.setItem("accesstoken", accessToken);
+//         const getHeaders = {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${accessToken}`,
+//         };
+//         const profile = await axios.get("/auth/getUserData", {
+//           headers: getHeaders,
+//         });
+//         store.dispatch(
+//           profileActions.setProfileInfo({
+//             userRole: profile.data.role,
+//             name: profile.data.name,
+//             email: profile.data.email,
+//             userId: profile.data.id,
+//             customerId: profile.data.customerId,
+//           })
+//         );
+//         return profile.data;
+//       } catch (error) {
+//         redirect("/login");
+//       }
+//     }
+//   }
+//   return null;
+// };

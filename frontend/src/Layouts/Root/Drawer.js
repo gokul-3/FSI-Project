@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { Fragment } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 export const MobileDrawer = ({
   mobileOpen = false,
@@ -61,33 +61,44 @@ export const PermanentDrawer = ({ drawerWidth }) => {
 };
 
 const superAdminSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/superAdmin" },
-  { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customers" },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/" },
+  { itemName: "Customers", icon: <CustomersIcon />, link: "/customers" },
 ];
 const customerAdminSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customerAdmin" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/users" },
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/operators" },
 ];
 const supervisorSideMenu = [
-  // { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
-  { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor" },
+  { itemName: "Users", icon: <CustomersIcon />, link: "/" },
 ];
+// const superAdminSideMenu = [
+//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/superAdmin" },
+//   { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customers" },
+// ];
+// const customerAdminSideMenu = [
+//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customerAdmin" },
+//   { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/users" },
+// ];
+// const supervisorSideMenu = [
+//   // { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
+//   { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor" },
+// ];
 
-const userSideMenu = [
-  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/users" },
-];
+// const operatorSideMenu = [
+//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/users" },
+// ];
 
 const sideMenu = {
   superAdmin: superAdminSideMenu,
   customerAdmin: customerAdminSideMenu,
   supervisor: supervisorSideMenu,
-  user: userSideMenu,
+  // operator: operatorSideMenu,
 };
 
 const DrawerContent = () => {
   const { userRole } = useSelector((state) => state.profile);
-  console.log(userRole);
   const navigate = useNavigate();
+  const location = useLocation()
   if(!userRole){return navigate('/login')};
   return (
     <Box>
@@ -101,7 +112,7 @@ const DrawerContent = () => {
                 onClick={() => {
                   navigate(link);
                 }}
-                sx={{ py: 1.5 }}
+                sx={{ py: 1.5, bgcolor:  link === location.pathname ? "#80808054" : "white"}}
               >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={itemName} />

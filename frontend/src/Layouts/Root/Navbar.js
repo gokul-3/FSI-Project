@@ -4,8 +4,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
   Avatar,
+  Box,
   Divider,
   IconButton,
+  LinearProgress,
   Menu,
   MenuItem,
   Toolbar,
@@ -16,18 +18,21 @@ import {
   Logout as LogoutIcon,
   Person2 as ProfileIcon,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { profileActions } from "../../Store/profile-slice";
 import axios from "../../axios";
+import NavigationLoader from "./NavigationLoader";
 const INTERNAL_SERVER_ERROR = 500;
 
 const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   const navigate = useNavigate();
+  const { state } = useNavigation();
   const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
   const { userRole } = useSelector((state) => state.profile);
   const openAccountMenu = Boolean(accountMenuAnchor);
   const dispatch = useDispatch();
+
   const handleMenuClick = (event) => {
     setAccountMenuAnchor(event.currentTarget);
   };
@@ -41,10 +46,12 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
       };
       await axios.get("auth/logout", { headers });
-      navigate("/login");
       dispatch(profileActions.logout());
+      navigate("/login");
     } catch (error) {
-      console.log(error.response);
+      dispatch(profileActions.logout());
+      navigate("/login");
+
     }
   };
   return (
@@ -80,7 +87,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
           fontSize="26px"
           sx={{ cursor: "pointer" }}
           onClick={() => {
-            navigate(`/${userRole}`);
+            navigate("/");
           }}
         >
           <CodeIcon fontSize="large" />
@@ -112,6 +119,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
           </MenuItem>
         </Menu>
       </Toolbar>
+        {/* <NavigationLoader open={state === "loading"}/> */}
     </AppBar>
   );
 };

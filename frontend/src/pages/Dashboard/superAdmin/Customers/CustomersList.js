@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Grid, Pagination, Typography } from "@mui/material";
-import {
-  setCustomersData,
-  setCustomerEditedImg,
-  setCustomerEditedName,
-} from "../../../../Store/superAdmin-slice";
+import { superAdminActions } from "../../../../Store/superAdmin-slice";
 import { useSelector, useDispatch } from "react-redux";
 import SkeletonCard from "./SkeletonCard";
 import Search from "./Search";
@@ -15,9 +11,13 @@ import EditDialog from "./EditDialog";
 import { DeletedMsg } from "./DeletedMsg";
 import axios from "../../../../axios";
 import { FormModal } from "../../../../components/addUserForm/addUserForm";
+import { Navigate } from "react-router-dom";
+import ErrorPageTemplate from "../../../../Layouts/ErrorPages/ErrorPageTemplate";
+import { HttpStatusCode } from "axios";
 export default function Customers() {
   const pageLimit = 9;
-
+  const { setCustomersData, setCustomerEditedImg, setCustomerEditedName } =
+    superAdminActions;
   const dispatch = useDispatch();
   const customers = useSelector((state) => state.superAdmin.Customers.data);
 
@@ -37,14 +37,23 @@ export default function Customers() {
   const editedImg = useSelector(
     (state) => state.superAdmin.Customers.editedImg
   );
+  const userRole = useSelector((state) => state.profile.userRole);
   const [iseditDialogOpen, setIsEditDialogOpen] = useState(false);
   const pageLength = Math.ceil(customers.totalRecords / pageLimit);
   const [createCustomer, setCreateCustomer] = useState(false);
   const [openForm, setOpenForm] = useState(false);
 
-  const accessToken = localStorage.getItem('accesstoken');
+  const accessToken = localStorage.getItem("accesstoken");
   const headers = {
-    "Authorization": "Bearer " + accessToken
+    Authorization: "Bearer " + accessToken,
+  };
+  if (userRole != "superAdmin") {
+    return (
+      <ErrorPageTemplate
+        header={"Unauthorised Error"}
+        code={HttpStatusCode.Unauthorized}
+      />
+    );
   }
   const showSkeletonLoading = (count) => {
     const skeletons = [];
@@ -62,10 +71,10 @@ export default function Customers() {
       formData.append("Image", editedImg);
     }
     try {
-
-      const updatedCustomer = await axios.patch(
+      const updatedCustomer = await axios.put(
         `/customer/${customers.data[editIndex].id}`,
-        formData, { headers }
+        formData,
+        { headers }
       );
       const updatedDataArray = [...customers.data];
       updatedDataArray[editIndex] = {
@@ -84,11 +93,12 @@ export default function Customers() {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`/customer/${customers.data[deleteIndex].id}`, { headers });
+      await axios.delete(`/customer/${customers.data[deleteIndex].id}`, {
+        headers,
+      });
       setIsDeletedMsgOpen(true);
       setDeleteIndex(null);
       setIsConfirmationDialogOpen(false);
-      console.log(customers.totalRecords);
       if (customers.totalRecords % 2 != 0) {
         setPage(page - 1);
       } else {
@@ -101,10 +111,12 @@ export default function Customers() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/customer?page=${page}&search=${searchQuery}`, { headers });
+      const response = await axios.get(
+        `/customer?page=${page}&search=${searchQuery}`,
+        { headers }
+      );
       setIsLoading(false);
       dispatch(setCustomersData(response.data));
-      console.log(response.data);
     } catch (error) {
       handleError(error);
     }
@@ -142,7 +154,7 @@ export default function Customers() {
   }, [page, searchQuery, Deleted]);
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} pb={5}>
       {error ? (
         <Grid
           container
@@ -165,7 +177,7 @@ export default function Customers() {
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ position: "absolute", top: 70, right: 10 }}
+                sx={{ position: "absolute", top: 80, right: 20 }}
                 onClick={() => setOpenForm(!openForm)}
               >
                 + Add Customer
@@ -178,7 +190,12 @@ export default function Customers() {
             direction="column"
             alignItems="center"
             justifyContent="center"
-            sx={{ minHeight: "30vh", textAlign: "center" }}
+            sx={{
+              minHeight: "0vh",
+              marginTop: "6rem",
+              marginBottom: "3rem",
+              textAlign: "center",
+            }}
           >
             <Grid item xs={3}>
               <Search
@@ -254,7 +271,7 @@ export default function Customers() {
               setIsDeletedMsgOpen(false);
             }}
           />
-          <FormModal openModal={openForm} setOpenModal={setOpenForm}/>
+          <FormModal openModal={openForm} setOpenModal={setOpenForm} />
         </>
       )}
     </Grid>

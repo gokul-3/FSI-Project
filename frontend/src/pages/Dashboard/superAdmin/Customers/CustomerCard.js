@@ -13,7 +13,6 @@ import dummyLogo from "../../../../assets/dummyuser.png";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-
 export default function CustomerCard({
   index,
   showDeleteConfirmation,
@@ -22,7 +21,7 @@ export default function CustomerCard({
   const customers = useSelector((state) => state.superAdmin.Customers.data);
   const [imageUrl, setImageUrl] = useState(null);
   const maxDisplayLen = 20;
-  const Navigate=useNavigate();
+  const Navigate = useNavigate();
   useEffect(() => {
     if (customers.data[index].icon) {
       const blob = new Blob([new Uint8Array(customers.data[index].icon.data)], {
@@ -35,14 +34,15 @@ export default function CustomerCard({
     }
   }, [customers.data[index].icon]);
   const handleOpenUsers = (customerId) => {
-    console.log(customerId);
     // <Navigate to={`/${customerId}`} />
-    Navigate(`${customerId}`)
+    Navigate(`${customerId}`);
   };
   return (
-    <Tooltip title={customers.data[index].name}>
-      <Card sx={{ margin: "12px", height: "280px", width: "300px" }}>
-        <CardActionArea onClick={()=>handleOpenUsers(customers.data[index].id)}>
+    <Card sx={{ margin: "20px", height: "265px", width: "300px" }}>
+      <Tooltip title={customers.data[index].name}>
+        <CardActionArea
+          onClick={() => handleOpenUsers(customers.data[index].id)}
+        >
           <CardMedia
             component="img"
             height="140"
@@ -57,19 +57,23 @@ export default function CustomerCard({
             </Typography>
           </CardContent>
         </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary" onClick={() => showEdit(index)}>
+        <CardActions sx={{ display: "flex", justifyContent: "end", px: 1 }}>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => showEdit(index)}
+          >
             Edit
           </Button>
           <Button
+            variant="contained"
             size="small"
-            color="primary"
             onClick={() => showDeleteConfirmation(index)}
           >
             Delete
           </Button>
         </CardActions>
-      </Card>
-    </Tooltip>
+      </Tooltip>
+    </Card>
   );
 }

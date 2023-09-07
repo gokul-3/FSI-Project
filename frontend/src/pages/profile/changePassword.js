@@ -65,7 +65,6 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
         content: response.data?.message,
       });
       setShowChangePassword(false);
-      console.log(response);
     } catch (err) {
       setModalInfo({ title: "Error", content: err.response.data?.message });
     }
@@ -151,7 +150,7 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
                   ),
                 }}
               />
-              <Stack mt={3} gap={2} direction="row">
+              <Stack justifyContent="flex-end" mt={3} gap={2} direction="row">
                 <Button
                   type="button"
                   variant="contained"

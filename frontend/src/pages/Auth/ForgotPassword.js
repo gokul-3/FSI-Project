@@ -35,8 +35,6 @@ export default function ForgotPassword() {
 
   const onSubmit = (data) => {
     const encodedEmail = window.btoa(data.email + ":");
-    console.log(data.email);
-    console.log(encodedEmail);
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Basic " + encodedEmail,

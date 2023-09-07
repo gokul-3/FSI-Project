@@ -6,9 +6,10 @@ const profileSlice = createSlice({
     isLoggedIn: false,
     name: "",
     email: "",
-    userId:null,
-    customerId : null,
-    customerName: null
+    userId: null,
+    customerId: null,
+    customerName: null,
+    dashboardData: {},
   },
   reducers: {
     setProfileInfo(state, action) {
@@ -16,24 +17,23 @@ const profileSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.userId = action.payload.userId;
-      state.customerId = action.payload.customerId
-      state.customerName = action.payload.customerName
+      state.customerId = action.payload.customerId;
+      state.customerName = action.payload.customerName;
       state.isLoggedIn = true;
-      console.log('hello');
     },
+
     logout(state) {
       state.userRole = "";
       state.isLoggedIn = false;
       state.name = "";
       state.email = "";
-      state.userId = null
-      state.customerId = null,
-      state.customerName = null,
-      localStorage.removeItem('refreshtoken')
-      localStorage.removeItem('accesstoken')
+      state.userId = null;
+      (state.customerId = null),
+        (state.customerName = null),
+        localStorage.removeItem("refreshtoken");
+      localStorage.removeItem("accesstoken");
     },
   },
 });
-
 export const profileActions = profileSlice.actions;
 export default profileSlice.reducer;

@@ -9,18 +9,33 @@ import {
   ListItemAvatar,
   Typography,
 } from "@mui/material";
-
+import { Link, useNavigate } from "react-router-dom";
 const CustomerData = ({ customers }) => {
+  const navigate = useNavigate();
   return customers.map((element, index) => (
     <Fragment key={index}>
-      <ListItem alignItems="center">
+      <ListItem
+        onClick={() => {
+          navigate(`/customers/${element.customerId}`);
+        }}
+        alignItems="center"
+        sx={{ cursor: "pointer" }}
+      >
         <ListItemAvatar>
-          <Avatar alt={element.CustomerName} src="/static/images/avatar/1.jpg" />
+          <Avatar
+            alt={element.CustomerName}
+            src="/static/images/avatar/1.jpg"
+          />
         </ListItemAvatar>
 
         <ListItemText
           primary={
-            <Typography fontSize="16px" fontWeight={400} display="inline-block">
+            <Typography
+              fontSize="16px"
+              fontWeight={400}
+              color="black"
+              display="inline-block"
+            >
               {element.CustomerName}
             </Typography>
           }
@@ -33,7 +48,7 @@ const CustomerData = ({ customers }) => {
               fontWeight={400}
               sx={{ float: "right" }}
             >
-              {element.UserCount} user{element.UserCount>1?'s':''}
+              {element.UserCount} user{element.UserCount > 1 ? "s" : ""}
             </Typography>
           }
         />

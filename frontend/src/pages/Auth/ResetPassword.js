@@ -51,9 +51,7 @@ export default function ResetPassword() {
 
   const onSubmit = (data) => {
     try {
-      console.log(data);
       const encodedPassword = window.btoa(":" + data.confirm_password);
-      console.log(encodedPassword);
       const headers = {
         "Content-Type": "application/json",
         Authorization: "Basic " + encodedPassword,
@@ -84,7 +82,6 @@ export default function ResetPassword() {
           });
         });
     } catch (err) {
-      console.log(err);
     }
   };
 
@@ -138,7 +135,7 @@ export default function ResetPassword() {
                 InputProps={{
                   endAdornment: (
                     <Button onClick={() => setshowPass(!showPass)}>
-                      {showPass ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
                     </Button>
                   ),
                 }}
