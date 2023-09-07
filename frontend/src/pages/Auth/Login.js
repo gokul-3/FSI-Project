@@ -55,7 +55,7 @@ export default function Login() {
       }
       localStorage.setItem("refreshtoken", refreshTokenToBeSaved);
       localStorage.setItem("accesstoken", accessToken);
-      const expiryDate = moment().add(1, "m").toDate();
+      const expiryDate = moment().add(15, "m").toDate();
       localStorage.setItem("expirydate", expiryDate.toString());
       const profileInfo = (await axios.get("dashboard")).data;
       setProfileInfo(profileInfo);
@@ -78,7 +78,7 @@ export default function Login() {
       display="flex"
       justifyContent="center"
       alignContent={"center"}
-      minHeight={"60vh"}
+      minHeight={'60vh'}
     >
       <Grid
         item

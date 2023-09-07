@@ -28,9 +28,9 @@ const profileSlice = createSlice({
       state.name = "";
       state.email = "";
       state.userId = null;
-      state.customerId = null;
-      state.customerName = null;
-      localStorage.clear();
+      state.customerId = null,
+      state.customerName = null,
+      localStorage.clear()
     },
   },
 });
