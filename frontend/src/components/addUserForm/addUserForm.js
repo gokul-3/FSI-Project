@@ -102,29 +102,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
 
           <form style={{padding: "10px 0"}} noValidate onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={2}>
-              <TextField
-                margin="normal"
-                fullWidth
-                label="Admin Name"
-                type="text"
-                id="user_name"
-                {...register("name")}
-                error={errors.name ? true : false}
-                helperText={errors.name?.message}
-              />
-
-              <TextField
-                margin="normal"
-                fullWidth
-                label="Email Id"
-                type="email"
-                id="emailid"
-                {...register("email")}
-                error={Boolean(errorText) || (errors.email ? true : false)}
-                helperText={errors.email?.message}
-              />
-
-              <TextField
+            <TextField
                 margin="normal"
                 fullWidth
                 label="Customer Name"
@@ -136,6 +114,26 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                 error={errors.firm ? true : false}
                 helperText={errors.firm?.message}
               />
+              <TextField
+                margin="normal"
+                fullWidth
+                label="Admin Name"
+                type="text"
+                id="user_name"
+                {...register("name")}
+                error={errors.name ? true : false}
+                helperText={errors.name?.message}
+              />
+              <TextField
+                margin="normal"
+                fullWidth
+                label="Email Id"
+                type="email"
+                id="emailid"
+                {...register("email")}
+                error={Boolean(errorText) || (errors.email ? true : false)}
+                helperText={errors.email?.message}
+              />       
               <FormControl>
                 <InputLabel id="addUser-designation-label">
                   Designation
@@ -147,11 +145,12 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   fullWidth
                   {...register("role")}
                   error={errors.role ? true : false}
+                  disabled={!!firmName}
                   defaultValue={!!firmName ? "" : "customerAdmin"}
                 >
                   <MenuItem value="customerAdmin">Customer Admin</MenuItem>
                   <MenuItem value="supervisor">Supervisor</MenuItem>
-                  <MenuItem value="user">User</MenuItem>
+                  <MenuItem value="operator">Operator</MenuItem>
                 </Select>
               </FormControl>
               {Boolean(errors.role ? true : false) ? (
