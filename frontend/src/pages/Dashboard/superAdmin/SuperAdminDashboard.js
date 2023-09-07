@@ -10,10 +10,6 @@ import { profileActions } from "../../../Store/profile-slice";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 
-<<<<<<< HEAD
-const UNAUTHORISED_ERROR = 401;
-=======
->>>>>>> emman-rc
 const SuperAdminDashboard = () => {
   const { userRole } = useSelector((state) => state.profile);
   const superDashboardData = useSelector((state) => state.superAdmin);
@@ -71,33 +67,6 @@ const SuperAdminDashboard = () => {
     </>
   );
 };
-<<<<<<< HEAD
-export const superAdminDashboardLoader = async () => {
-  try {
-    const accessToken = localStorage.getItem('accesstoken');
-    const headers = {
-      "Authorization": "Bearer " + accessToken
-    }
-    const superAdminDashboardData = await axios.get(
-      "/dashboard/getSuperAdminData", { headers }
-    );
-    console.log(superAdminDashboardData);
-    return superAdminDashboardData.data;
-  } catch (error) {
-    console.log(error);
-    const statusCode = error.response.status;
-    if (statusCode === UNAUTHORISED_ERROR) {
-      const refreshToken = localStorage.getItem('refreshtoken')
-      return redirect('/login')
-      // if (!refreshToken) {
-      //   return redirect("/login");
-      // } else
-      //   return redirect("/");
-
-    }
-  }
-};
-=======
 // export const superAdminDashboardLoader = async () => {
 //   try {
 //     const { profile } = store.getState();
@@ -134,5 +103,4 @@ export const superAdminDashboardLoader = async () => {
 //     }
 //   }
 // };
->>>>>>> emman-rc
 export default SuperAdminDashboard;

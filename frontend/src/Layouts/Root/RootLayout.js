@@ -37,11 +37,34 @@ const RootLayout = () => {
     superAdmin: superAdminActions.setSuperAdminDashboardData,
     customerAdmin: customerAdminActions.setCustomerDashboardData,
   };
+
   const isAccessTokenPresent = localStorage.getItem("accesstoken") !== null;
   useEffect(() => {
     const fetchProfileInfo = async () => {
       try {
-        const profileInfo = (await axios.get("auth/getUserData")).data;
+        const expireTime = new Date(localStorage.getItem('expirydate'))
+        setTimeout(async () => {
+          const refreshToken = localStorage.getItem('refreshtoken')
+          if (!refreshToken) {
+            localStorage.clear()
+             navigate('/login')
+          }
+          try {
+            const headers = {
+              'Authorization' :"Bearer "+ refreshToken
+            }
+            const { accessToken } = await axios.post('/auth/refresh', {}, {headers})
+            localStorage.setItem('accesstoken', accessToken)
+            const expiryDate = moment().add(15, "m").toDate();
+            localStorage.setItem("expirydate", expiryDate.toString());
+          } catch (error) {
+            localStorage.clear()
+             navigate('/login')
+          }
+    
+        }, [expireTime - new Date()])
+
+        const profileInfo = (await axios.get("auth/user-data")).data;
         setProfileInfo(profileInfo);
       } catch (error) {
         console.log(error);

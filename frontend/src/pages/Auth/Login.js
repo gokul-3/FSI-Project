@@ -65,10 +65,9 @@ export default function Login() {
         }
         localStorage.setItem("refreshtoken", refreshTokenToBeSaved);
         localStorage.setItem("accesstoken", accessToken);
-        // const expiryDate = moment().add(15, "m").toDate();
-        // localStorage.setItem("expirydate", expiryDate.toString());
+        const expiryDate = moment().add(15, "m").toDate();
+        localStorage.setItem("expirydate", expiryDate.toString());  
         setProfileInfo({ email, name, role, id, customerId, dashboardData });
-
         navigate("/");
       })
       .catch((err) => {
@@ -140,11 +139,6 @@ export default function Login() {
               }}
               {...register("password", {
                 required: "Password is required",
-                pattern: {
-                  value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,15})/,
-                  message: "Invalid password",
-                },
               })}
               error={!!errors.password}
               helperText={errors.password?.message}

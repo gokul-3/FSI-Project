@@ -51,7 +51,6 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
     } catch (error) {
       dispatch(profileActions.logout());
       navigate("/login");
-
     }
   };
   return (

@@ -10,7 +10,6 @@ import { profileLoader } from "../../../Layouts/Root/RootLayout";
 import { profileActions } from "../../../Store/profile-slice";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
-const UNAUTHORISED_ERROR = 401;
 
 const CustomerAdminDashboard = () => {
   const { userRole, name } = useSelector((state) => state.profile);
