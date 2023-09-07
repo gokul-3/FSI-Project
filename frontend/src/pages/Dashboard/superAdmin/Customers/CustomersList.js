@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Pagination } from "@mui/material";
+import { Button, Grid, Pagination,FormControl,InputLabel,Select,MenuItem, } from "@mui/material";
 import { superAdminActions } from "../../../../Store/superAdmin-slice";
 import { useSelector, useDispatch } from "react-redux";
 import SkeletonCard from "./SkeletonCard";
@@ -41,7 +41,7 @@ export default function Customers() {
   const pageLength = Math.ceil(customers.totalRecords / pageLimit);
   const [createCustomer, setCreateCustomer] = useState(false);
   const [openForm, setOpenForm] = useState(false);
-
+  const [sortValue, setSortValue] = useState("created_at-desc");
   const accessToken = localStorage.getItem("accesstoken");
   const headers = {
     Authorization: "Bearer " + accessToken,
@@ -103,7 +103,7 @@ export default function Customers() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `/customer?page=${page}&search=${searchQuery}`,
+        `/customer?page=${page}&search=${searchQuery}&sort=${sortValue}`,
         { headers }
       );
       setIsLoading(false);
@@ -142,7 +142,7 @@ export default function Customers() {
   useEffect(() => {
     setIsLoading(true);
     fetchData();
-  }, [page, searchQuery, Deleted]);
+  }, [page, searchQuery, Deleted,sortValue]);
   if (userRole != "superAdmin") {
     return (
       <ErrorPageTemplate
@@ -192,6 +192,43 @@ export default function Customers() {
                   setPage(1);
                 }}
               />
+              <FormControl>
+
+<InputLabel id="demo-simple-select-autowidth-label">
+
+  Sort by
+
+</InputLabel>
+
+<Select
+
+  labelId="demo-simple-select-autowidth-label"
+
+  id="demo-simple-select-autowidth"
+
+  value={sortValue}
+
+  onChange={(e) => {
+
+    setSortValue(e.target.value);
+
+  }}
+
+  autoWidth
+
+  label="Filter"
+
+>
+
+  <MenuItem value="created_at-desc">New Customers First</MenuItem>
+
+  <MenuItem value="created_at-asc">Old Customers First</MenuItem>
+
+  <MenuItem value="name-asc">Name (A-Z)</MenuItem>
+
+</Select>
+
+</FormControl>
               <Button
                 variant="contained"
                 color="primary"
