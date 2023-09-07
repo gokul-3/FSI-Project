@@ -5,8 +5,7 @@ const instance = axios.create({
 instance.interceptors.request.use(async function (config) {
   try {
     if (
-      config.headers.Authorization === undefined ||
-      config.headers.Authorization.split(" ")[0] !== "Basic"
+      config.headers.Authorization === undefined 
     )
       config.headers.Authorization = `Bearer ${localStorage.getItem(
         "accesstoken"

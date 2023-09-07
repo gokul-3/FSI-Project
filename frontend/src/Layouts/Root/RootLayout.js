@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Navigate,
   Outlet,
   json,
   redirect,
@@ -20,6 +21,7 @@ import { HttpStatusCode } from "axios";
 import { superAdminActions } from "../../Store/superAdmin-slice";
 import { customerAdminActions } from "../../Store/customerAdmin-slice";
 import { setProfileInfo } from "../../Store/profileSetter";
+import moment from "moment";
 
 const drawerWidth = 240;
 const profileRoute = "auth/getUserData";
@@ -31,20 +33,46 @@ const RootLayout = () => {
   };
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state) => state.profile);
+  const { isLoggedIn, userId } = useSelector((state) => state.profile);
   const dashboardActions = {
     superAdmin: superAdminActions.setSuperAdminDashboardData,
     customerAdmin: customerAdminActions.setCustomerDashboardData,
   };
+
   const isAccessTokenPresent = localStorage.getItem("accesstoken") !== null;
-  // setTimeout(()=> {
-  // logout
-  // }, [expiryDate - new Date()])
   useEffect(() => {
     console.log("rendered");
     const fetchProfileInfo = async () => {
       try {
-        const profileInfo = (await axios.get("dashboard")).data;
+        const changeToken = async () => {
+          const expireTime = new Date(localStorage.getItem("expirydate"));
+          setTimeout(async () => {
+            const refreshToken = localStorage.getItem("refreshtoken");
+            console.log(refreshToken);
+            if (!refreshToken) {
+              localStorage.clear();
+              await axios.post("auth/logout", { id: userId });
+              dispatch(profileActions.logout());
+              navigate("/login");
+            }
+            try {
+              const headers = {
+                Authorization: "Bearer " + refreshToken,
+              };
+              const res = await axios.post("/auth/refresh", {}, { headers });
+              localStorage.setItem("accesstoken", res.data.accessToken);
+              const expiryDate = moment().add(1, "m").toDate();
+              localStorage.setItem("expirydate", expiryDate.toString());
+              changeToken();
+            } catch (error) {
+              localStorage.clear();
+              if (error) navigate("/login");
+            }
+          }, [expireTime - new Date()]);
+        };
+        changeToken();
+        const profileInfo = (await axios.get("auth/user-data")).data;
+        console.log(profileInfo);
         setProfileInfo(profileInfo);
       } catch (error) {
         console.log(error);
