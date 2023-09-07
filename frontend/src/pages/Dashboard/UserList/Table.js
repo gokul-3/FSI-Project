@@ -47,13 +47,13 @@ const UserTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [name, setName] = useState("");
   const [roleFilter, setroleFilter] = useState("");
-  const [emailFilter, setEmailFilter] = useState("")
+  const [emailFilter, setEmailFilter] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [actionType, setActionType] = useState("");
   const [actionMessage, setActionMessage] = useState("");
   const [actionDone, setActionDone] = useState(true);
   const [openForm, setOpenForm] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [count, setCount] = useState(0);
 
   const params = useParams();
@@ -88,7 +88,7 @@ const UserTable = () => {
         role: roleFilter,
         email: emailFilter,
         page: page,
-        pageLimit: rowsPerPage
+        pageLimit: rowsPerPage,
       };
 
       const accessToken = localStorage.getItem("accesstoken");
@@ -102,12 +102,10 @@ const UserTable = () => {
       if (response.data.status === "success") {
         const responseData = response.data.users;
         setData(responseData.users);
-        setCount(responseData.totalUsers
-        )
-      }
-      else {
+        setCount(responseData.totalUsers);
+      } else {
         setData([]);
-        setError(response.data.message)
+        setError(response.data.message);
       }
     } catch (error) {
       return (
@@ -116,7 +114,6 @@ const UserTable = () => {
           code={HttpStatusCode.NotFound}
         />
       );
-
     }
   };
   //Effects
@@ -135,8 +132,16 @@ const UserTable = () => {
     return () => {
       clearTimeout(typingTimeout);
     };
-  }, [roleFilter, name, emailFilter, customerId, actionType, actionDone, page, rowsPerPage]);
-
+  }, [
+    roleFilter,
+    name,
+    emailFilter,
+    customerId,
+    actionType,
+    actionDone,
+    page,
+    rowsPerPage,
+  ]);
 
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
@@ -156,8 +161,6 @@ const UserTable = () => {
       />
     );
   }
-
-
 
   //Handler functions
   const handleCloseAlert = () => {
@@ -188,53 +191,68 @@ const UserTable = () => {
     setName("");
     setroleFilter("");
     setEmailFilter("");
-    setIsTyping(true)
+    setIsTyping(true);
   };
 
-  if (error != '') {
-
+  if (error != "") {
     return (
       <ErrorPageTemplate
         header={"Page Not Found"}
         code={HttpStatusCode.NotFound}
       />
     );
-
   }
 
   return (
     <>
-      <FormModal openModal={openForm} setOpenModal={setOpenForm} firmName={data[0]?.customer.name} />
+      <FormModal
+        openModal={openForm}
+        setOpenModal={setOpenForm}
+        firmName={data[0]?.customer.name}
+      />
       <Box p={3} className="responsive-table" position="relative">
+        <Button
+          sx={{
+            float: "left",
+          }}
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <ArrowBackIos fontSize="12px" /> Back
+        </Button>
+        {userRole !== "supervisor" ? (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: "right" }}
+            onClick={() => {
+              setOpenForm(true);
+            }}
+          >
+            Add User
+          </Button>
+        ) : null}
         {userRole === "superAdmin" && (
-          <Box display="flex" mt={5}>
+          <Box display="flex" justifyContent="center" mt={5}>
             <Typography
               sx={{ textAlign: { xs: "center", sm: "start" } }}
-              variant="h5"
+              variant="h4"
               fontWeight={500}
-            // margin="1rem"
-            // ml={2}
-            >
-              Customer:
-            </Typography>
-            <Typography
-              sx={{ textAlign: { xs: "center", sm: "start" } }}
-              ml={2}
-              variant="h5"
             >
               {data[0]?.customer.name}
             </Typography>
           </Box>
         )}
+
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyItems: "center",
-            verticalAlign: "center",
-            // margin: "2em",
+            gap: "1rem",
             my: "2rem",
-            // position: "relative",
           }}
         >
           <TextField
@@ -266,47 +284,25 @@ const UserTable = () => {
               id="demo-simple-select-standard"
               value={roleFilter}
               onChange={handleRoleChange}
+              placeholder="Designation"
             >
               <MenuItem value="All Users">All Users</MenuItem>
               <MenuItem value="customerAdmin">Customer Admin</MenuItem>
               <MenuItem value="supervisor">Supervisor</MenuItem>
-              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="operator">Operator</MenuItem>
             </Select>
           </FormControl>
+
           {(name.length !== 0 || emailFilter.length !== 0) && (
             <Tooltip title="Clear Filter">
-              <IconButton onClick={handleClear}>
-                <ClearIcon />
+              <IconButton
+                onClick={handleClear}
+                sx={{ position: "relative", top: "10px" }}
+              >
+                <Typography onClick={handleClear}>Clear</Typography>
               </IconButton>
             </Tooltip>
           )}
-          <Button
-            sx={{
-              position: "absolute",
-              top: 10,
-              left: 10,
-            }}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <ArrowBackIos fontSize="12px" /> Back
-          </Button>
-
-          {userRole !== "supervisor" ? (
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ position: "absolute", top: 10, right: 10 }}
-              onClick={() => {
-                setOpenForm(true);
-              }}
-            >
-              + Add User
-            </Button>
-          ) : null}
         </Box>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
@@ -325,32 +321,31 @@ const UserTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data
-                  .map((row) => (
-                    <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
-                      {columns.map((column) => (
-                        <TableCell key={column.id} align="left">
-                          {column.id === "Status" ? (
-                            row["Active"] ? (
-                              "Active"
-                            ) : (
-                              "Inactive"
-                            )
-                          ) : column.id === "action" ? (
-                            <Action
-                              data={row}
-                              actionType={actionType}
-                              setActionType={setActionType}
-                              setActionMessage={setActionMessage}
-                              setActionDone={setActionDone}
-                            ></Action>
+                {data.map((row) => (
+                  <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                    {columns.map((column) => (
+                      <TableCell key={column.id} align="left">
+                        {column.id === "Status" ? (
+                          row["Active"] ? (
+                            "Active"
                           ) : (
-                            row[column.id]
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                            "Inactive"
+                          )
+                        ) : column.id === "action" ? (
+                          <Action
+                            data={row}
+                            actionType={actionType}
+                            setActionType={setActionType}
+                            setActionMessage={setActionMessage}
+                            setActionDone={setActionDone}
+                          ></Action>
+                        ) : (
+                          row[column.id]
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

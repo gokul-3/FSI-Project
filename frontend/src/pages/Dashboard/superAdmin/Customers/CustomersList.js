@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Pagination,FormControl,InputLabel,Select,MenuItem, } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Pagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { superAdminActions } from "../../../../Store/superAdmin-slice";
 import { useSelector, useDispatch } from "react-redux";
 import SkeletonCard from "./SkeletonCard";
@@ -13,6 +21,7 @@ import axios from "../../../../axios";
 import { FormModal } from "../../../../components/addUserForm/addUserForm";
 import ErrorPageTemplate from "../../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
+import { ArrowBackIos } from "@mui/icons-material";
 export default function Customers() {
   const pageLimit = 8;
   const { setCustomersData, setCustomerEditedImg, setCustomerEditedName } =
@@ -142,7 +151,7 @@ export default function Customers() {
   useEffect(() => {
     setIsLoading(true);
     fetchData();
-  }, [page, searchQuery, Deleted,sortValue]);
+  }, [page, searchQuery, Deleted, sortValue]);
   if (userRole != "superAdmin") {
     return (
       <ErrorPageTemplate
@@ -165,7 +174,19 @@ export default function Customers() {
           <ErrorPage error={error} />
         </Grid>
       ) : (
-        <>
+        <><Button
+                sx={{
+                  position:'relative',
+                  top:'2.5rem',
+                  left:'2.5rem',
+                }}
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              ><ArrowBackIos fontSize="12px" /> Back
+              </Button>
           <Grid
             container
             spacing={0}
@@ -179,13 +200,16 @@ export default function Customers() {
               textAlign: "center",
             }}
           >
+                
             <Grid
               item
               width="100%"
               display="flex"
+              flexWrap="wrap-reverse"
               gap="2rem"
               justifyContent="center"
             >
+              
               <Search
                 onSearch={(searchVal) => {
                   setSearchQuery(searchVal);
@@ -193,56 +217,33 @@ export default function Customers() {
                 }}
               />
               <FormControl>
+                <InputLabel id="demo-simple-select-autowidth-label">
+                  Sort by
+                </InputLabel>
 
-<InputLabel id="demo-simple-select-autowidth-label">
-
-  Sort by
-
-</InputLabel>
-
-<Select
-
-  labelId="demo-simple-select-autowidth-label"
-
-  id="demo-simple-select-autowidth"
-
-  value={sortValue}
-
-  onChange={(e) => {
-
-    setSortValue(e.target.value);
-
-  }}
-
-  autoWidth
-
-  label="Filter"
-
->
-
-  <MenuItem value="created_at-desc">New Customers First</MenuItem>
-
-  <MenuItem value="created_at-asc">Old Customers First</MenuItem>
-
-  <MenuItem value="name-asc">Name (A-Z)</MenuItem>
-
-</Select>
-
-</FormControl>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={sortValue}
+                  onChange={(e) => {
+                    setSortValue(e.target.value);
+                  }}
+                  autoWidth
+                  label="Filter"
+                >
+                  <MenuItem value="created_at-desc">Recent</MenuItem>
+                  <MenuItem value="created_at-asc">Older</MenuItem>
+                  <MenuItem value="name-asc">Name</MenuItem>
+                </Select>
+              </FormControl>
               <Button
                 variant="contained"
                 color="primary"
-                // sx={{ position: "absolute", top: 80, right: 20 }}
                 onClick={() => setOpenForm(!openForm)}
               >
-                + Add Customer
+                Add Customer
               </Button>
             </Grid>
-            {/* {searchQuery && <Grid item xs={3}>
-              <Typography variant="h6" color="textSecondary">
-                Search Results for `{searchQuery}`
-              </Typography>
-            </Grid>} */}
           </Grid>
           <Grid item xs={12}>
             <Grid container justifyContent="center" spacing={3}>

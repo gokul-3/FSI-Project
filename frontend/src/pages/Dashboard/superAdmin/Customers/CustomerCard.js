@@ -63,7 +63,7 @@ export default function CustomerCard({
             size="small"
             onClick={() => showEdit(index)}
           >
-            Edit
+            Add Logo
           </Button>
           <Button
             // variant="contained"
