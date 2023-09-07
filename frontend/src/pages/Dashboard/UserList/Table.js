@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -204,26 +204,43 @@ const UserTable = () => {
     <>
       <FormModal openModal={openForm} setOpenModal={setOpenForm} firmName={data[0]?.customer.name} />
       <Box p={3} className="responsive-table" position="relative">
+      
         {userRole === "superAdmin" && (
-          <Box display="flex" mt={5}>
-            <Typography
-              sx={{ textAlign: { xs: "center", sm: "start" } }}
-              variant="h5"
-              fontWeight={500}
-            // margin="1rem"
-            // ml={2}
+          <Box display="flex" justifyContent="space-between" mt={1}>
+            <Button
+            sx={{
+              float:'left'
+            }}
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIos fontSize="12px" /> Back
+          </Button>
+          {userRole !== "supervisor" ? (
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{float:'right'}}
+              onClick={() => {
+                setOpenForm(true);
+              }}
             >
-              Customer:
-            </Typography>
-            <Typography
-              sx={{ textAlign: { xs: "center", sm: "start" } }}
-              ml={2}
-              variant="h5"
-            >
-              {data[0]?.customer.name}
-            </Typography>
+              Add User
+            </Button>
+          ) : null}
           </Box>
+          
+          
         )}
+        <Typography
+          sx={{ textAlign: "center" }}
+          variant="h4"
+        >
+          {data[0]?.customer.name}
+        </Typography>
         <Box
           sx={{
             display: "flex",
@@ -273,38 +290,12 @@ const UserTable = () => {
           </FormControl>
           {(name.length !== 0 || emailFilter.length !== 0) && (
             <Tooltip title="Clear Filter">
-              <IconButton onClick={handleClear}>
-                <ClearIcon />
+              <IconButton onClick={handleClear}  sx={{top:10}}>
+              < Typography >clear</Typography>
               </IconButton>
             </Tooltip>
           )}
-          <Button
-            sx={{
-              position: "absolute",
-              top: 10,
-              left: 10,
-            }}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <ArrowBackIos fontSize="12px" /> Back
-          </Button>
-
-          {userRole !== "supervisor" ? (
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ position: "absolute", top: 10, right: 10 }}
-              onClick={() => {
-                setOpenForm(true);
-              }}
-            >
-              + Add User
-            </Button>
-          ) : null}
+          
         </Box>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
