@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import {
@@ -12,6 +12,7 @@ import {
   Paper,
   Snackbar,
   Modal,
+  CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "../../axios";
@@ -20,6 +21,7 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState();
 
   const schema = Yup.object().shape({
     old_password: Yup.string().required("Old password is required"),
@@ -50,22 +52,27 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
   });
 
   const onSubmit = async (data) => {
-
+    setLoading(true);
     try {
-
-      const accessToken = localStorage.getItem('accesstoken')
+      const accessToken = localStorage.getItem("accesstoken");
       const headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + accessToken
+        Authorization: "Bearer " + accessToken,
       };
-      const response = await axios.put("/auth/changePassword", { ...data }, { headers });
+      const response = await axios.put(
+        "/auth/change-password",
+        { ...data },
+        { headers }
+      );
       reset();
       setModalInfo({
         title: "Success",
         content: response.data?.message,
       });
       setShowChangePassword(false);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       setModalInfo({ title: "Error", content: err.response.data?.message });
     }
   };
@@ -76,6 +83,7 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <Stack direction="column" spacing={2} p={3}>
               <TextField
+                disabled={loading}
                 required
                 type={showOldPassword ? "text" : "password"}
                 variant="outlined"
@@ -100,6 +108,7 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
               />
               <TextField
                 required
+                disabled={loading}
                 type={showNewPassword ? "text" : "password"}
                 variant="outlined"
                 label="New Password"
@@ -122,6 +131,7 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
                 }}
               />
               <TextField
+                disabled={loading}
                 required
                 type={showConfirmPassword ? "text" : "password"}
                 variant="outlined"
@@ -154,13 +164,18 @@ export const ChangePassword = ({ setShowChangePassword, setModalInfo }) => {
                 <Button
                   type="button"
                   variant="contained"
+                  disabled={loading}
                   size="large"
                   onClick={() => setShowChangePassword(false)}
                 >
                   Cancel
                 </Button>
                 <Button type="submit" variant="contained" size="large">
-                  Change
+                  {loading ? (
+                    <CircularProgress color="inherit" size={30} />
+                  ) : (
+                    "Change"
+                  )}
                 </Button>
               </Stack>
             </Stack>

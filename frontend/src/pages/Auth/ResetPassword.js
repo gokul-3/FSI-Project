@@ -59,7 +59,7 @@ export default function ResetPassword() {
       setSending(true);
       axios
         .put(
-          `/auth/resetPassword/${token}`,
+          `/auth/reset-password/${token}`,
           {},
           { headers }
         )

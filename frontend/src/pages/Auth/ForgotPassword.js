@@ -18,7 +18,7 @@ const defaultTheme = createTheme();
 
 export default function ForgotPassword() {
   const [sending, setSending] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState("");
   const [model, setModel] = useState({
     open: false,
     message: "",
@@ -41,13 +41,9 @@ export default function ForgotPassword() {
     };
     setSending(true);
     axios
-      .post(
-        "/auth/sendResetPasswordEmail",
-        {},
-        { headers }
-      )
+      .post("/auth/send-reset-email", {}, { headers })
       .then((res) => {
-        setErrorMessage('')
+        setErrorMessage("");
         console.log(res.data.message);
         setModel(
           {
@@ -58,11 +54,12 @@ export default function ForgotPassword() {
           setSending(false)
         );
       })
-      .catch((err) =>{ 
-        setSending(false)
-      if (err.response) {
-        setErrorMessage(err.response.data.message)
-      }})
+      .catch((err) => {
+        setSending(false);
+        if (err.response) {
+          setErrorMessage(err.response.data.message);
+        }
+      });
   };
 
   return (
@@ -140,7 +137,7 @@ export default function ForgotPassword() {
                 {sending ? "Sending..." : "Send email"}
               </Button>
             </form>
-            <Typography color='red' textAlign='center'>
+            <Typography color="red" textAlign="center">
               {errorMessage}
             </Typography>
           </Box>

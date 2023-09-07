@@ -99,14 +99,14 @@ const router = createBrowserRouter([
         element: <UserTable />,
       },
       { path: "/profile", element: <UserProfile /> },
-      { path: "/forgotpassword", element: <ForgotPassword /> },
-      { path: "/resetpassword/:token", element: <ResetPassword /> },
     ],
   },
   {
     path: "/login",
     element: <Login />,
   },
+  { path: "/forgotpassword", element: <ForgotPassword /> },
+  { path: "/resetpassword/:token", element: <ResetPassword /> },
 ]);
 
 const theme = createTheme({

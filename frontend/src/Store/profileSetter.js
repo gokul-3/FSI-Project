@@ -1,10 +1,8 @@
-import axios from "../axios";
 import store from ".";
 import { profileActions } from "./profile-slice";
 import { superAdminActions } from "./superAdmin-slice";
 import { customerAdminActions } from "./customerAdmin-slice";
 export const setProfileInfo = (profileInfo) => {
-  console.log("hello");
   store.dispatch(
     profileActions.setProfileInfo({
       userRole: profileInfo.role,

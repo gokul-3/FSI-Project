@@ -44,7 +44,7 @@ const RootLayout = () => {
     console.log("rendered");
     const fetchProfileInfo = async () => {
       try {
-        const profileInfo = (await axios.get("auth/getUserData")).data;
+        const profileInfo = (await axios.get("dashboard")).data;
         setProfileInfo(profileInfo);
       } catch (error) {
         console.log(error);
@@ -98,70 +98,3 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-// export const profileLoader = async () => {
-//   try {
-//     const state = store.getState();
-//     const isLoggedIn = state.profile.isLoggedIn;
-
-//     if (!isLoggedIn) {
-//       const headers = {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-//       };
-//       const profile = await axios.get("/auth/getUserData", { headers });
-//       store.dispatch(
-//         profileActions.setProfileInfo({
-//           userRole: profile.data.role,
-//           name: profile.data.name,
-//           email: profile.data.email,
-//           userId: profile.data.id,
-//           customerId: profile.data.customerId,
-//         })
-//       );
-//       return profile.data;
-//     }
-//   } catch (error) {
-//     const statusCode = error?.response?.status;
-//     if (statusCode === UNAUTHORISED_ERROR) {
-//       try {
-//         const refreshToken = localStorage.getItem("refreshtoken");
-//         if (!refreshToken) {
-//           return redirect("/login");
-//         }
-//         const headers = {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${refreshToken}`,
-//         };
-//         await axios
-//           .post("auth/refresh", { headers })
-//           .then((res) => {
-//             console.log(res);
-//           })
-//           .catch((err) => {
-//             console.log(err);
-//           });
-//         localStorage.setItem("accesstoken", accessToken);
-//         const getHeaders = {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${accessToken}`,
-//         };
-//         const profile = await axios.get("/auth/getUserData", {
-//           headers: getHeaders,
-//         });
-//         store.dispatch(
-//           profileActions.setProfileInfo({
-//             userRole: profile.data.role,
-//             name: profile.data.name,
-//             email: profile.data.email,
-//             userId: profile.data.id,
-//             customerId: profile.data.customerId,
-//           })
-//         );
-//         return profile.data;
-//       } catch (error) {
-//         redirect("/login");
-//       }
-//     }
-//   }
-//   return null;
-// };

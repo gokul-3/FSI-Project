@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Grid, Pagination, Typography } from "@mui/material";
+import { Button, Grid, Pagination } from "@mui/material";
 import { superAdminActions } from "../../../../Store/superAdmin-slice";
 import { useSelector, useDispatch } from "react-redux";
 import SkeletonCard from "./SkeletonCard";
@@ -11,7 +11,6 @@ import EditDialog from "./EditDialog";
 import { DeletedMsg } from "./DeletedMsg";
 import axios from "../../../../axios";
 import { FormModal } from "../../../../components/addUserForm/addUserForm";
-import { Navigate } from "react-router-dom";
 import ErrorPageTemplate from "../../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 export default function Customers() {

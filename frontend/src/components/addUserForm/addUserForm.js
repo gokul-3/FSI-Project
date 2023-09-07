@@ -15,24 +15,24 @@ import {
   FormHelperText,
   Box,
   Input,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import SnackbarNotify from "../snackbar/Snackbar";
 import axios from "../../axios";
-import { red } from "@mui/material/colors";
 
 export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
   const schema = Yup.object().shape({
-    name: Yup.string().trim().required("Name is required"),
+    name: Yup.string().trim().required("Admin name is required"),
     email: Yup.string()
       .matches(
         /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/,
         "Invalid Email"
       )
       .required("Email Required"),
-    firm: Yup.string().trim().required("Firm name required"),
+    firm: Yup.string().trim().required("Firm name is required"),
     role: Yup.string().required("Select Role"),
   });
 
@@ -44,52 +44,39 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
     reset,
   } = useForm({ resolver: yupResolver(schema) });
 
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [userAlreadyExists, setUserAlreadyExists] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState({
-    status: "info",
-    message: "Request sent successfully",
-  });
+  const [errorText, setErrorText] = useState("");
+  const [response, setResponse] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data) => {
     try {
-      const accessToken = localStorage.getItem("accesstoken");
-      const response = await axios.post("/adduser", data, {
-        headers: { Authorization: "Bearer " + accessToken },
-      });
-
-      const accessEncoded = accessToken;
-      const encodedEmail = window.btoa(data.email + ":");
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: "Basic " + encodedEmail,
-        Authorization: "Bearer " + accessEncoded,
-      };
-      const res = await axios.post("/auth/createPassword", {}, { headers });
+      setIsLoading(true);
+      const res = await axios.post("/user", data);
+      setIsLoading(false);
+      setResponse(res.message);
       reset();
-      setOpenSnackbar(!openSnackbar);
     } catch (error) {
-      if (error.response.status == 409) {
-        errors.email = true;
-        setUserAlreadyExists("User already exists");
-      } else {
-        setSnackbarMessage({
-          status: "error",
-          message: "Failed to send request!",
-        });
-        setOpenSnackbar(true);
-      }
+      console.log(error);
+      setIsLoading(false);
+      setErrorText(error.response?.message);
     }
   };
 
   const handleAddUserCancel = () => {
     reset();
-    setUserAlreadyExists("");
+    setResponse("");
+    setErrorText("");
     setOpenModal(false);
   };
 
   const disableSubmit = () => {
-    if (!!errors.email || !!errors.name || !!errors.firm || !!errors.role) {
+    if (
+      !!errors.email ||
+      !!errors.name ||
+      !!errors.firm ||
+      !!errors.role ||
+      !!errorText
+    ) {
       if (
         !(
           !!getValues("email") &&
@@ -104,13 +91,6 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
     return false;
   };
 
-  const handleSnackbarClose = () => {
-    reset();
-    setOpenSnackbar(!openSnackbar);
-    setOpenModal(false);
-    setUserAlreadyExists("");
-  };
-
   return (
     <>
       <Dialog open={openModal} fullWidth>
@@ -120,12 +100,12 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
             Send them a request
           </DialogContentText> */}
 
-          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+          <form style={{padding: "10px 0"}} noValidate onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={2}>
               <TextField
                 margin="normal"
                 fullWidth
-                label="Name"
+                label="Admin Name"
                 type="text"
                 id="user_name"
                 {...register("name")}
@@ -140,16 +120,14 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                 type="email"
                 id="emailid"
                 {...register("email")}
-                error={
-                  Boolean(userAlreadyExists) || (errors.email ? true : false)
-                }
-                helperText={userAlreadyExists || errors.email?.message}
+                error={Boolean(errorText) || (errors.email ? true : false)}
+                helperText={errors.email?.message}
               />
 
               <TextField
                 margin="normal"
                 fullWidth
-                label="Firm Name"
+                label="Customer Name"
                 type="text"
                 id="firm"
                 defaultValue={firmName}
@@ -169,7 +147,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   fullWidth
                   {...register("role")}
                   error={errors.role ? true : false}
-                  defaultValue=""
+                  defaultValue={!!firmName ? "" : "customerAdmin"}
                 >
                   <MenuItem value="customerAdmin">Customer Admin</MenuItem>
                   <MenuItem value="supervisor">Supervisor</MenuItem>
@@ -183,6 +161,14 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   {errors.role?.message}
                 </FormHelperText>
               ) : null}
+              {/* <Box>{isLoading ? <CircularProgress /> : null}</Box> */}
+              <Box>
+                {!!response ? (
+                  <Typography sx={{ color: "red" }}>{response}</Typography>
+                ) : (
+                  <Typography sx={{ color: "blue" }}>{errorText}</Typography>
+                )}
+              </Box>
               <Box
                 sx={{
                   display: "flex",
@@ -191,30 +177,25 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   gap: "1rem",
                 }}
               >
-                <Button
-                  variant="contained"
-                  onClick={handleAddUserCancel}
-                >
+                <Button variant="contained" onClick={handleAddUserCancel}>
                   Cancel
                 </Button>
                 <Button
                   variant="contained"
                   disabled={disableSubmit()}
-                  endIcon={<SendIcon />}
                   type="submit"
                 >
-                  Send
+                  {isLoading ? (
+                    <CircularProgress color="inherit" size={30} />
+                  ) : ( 
+                    "Send"
+                  )}
                 </Button>
               </Box>
             </Stack>
           </form>
         </DialogContent>
       </Dialog>
-      <SnackbarNotify
-        openSnackbar={openSnackbar}
-        handleSnackbarClose={handleSnackbarClose}
-        snackbarMessage={snackbarMessage}
-      />
     </>
   );
 };
