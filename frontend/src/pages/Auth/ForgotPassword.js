@@ -42,7 +42,7 @@ export default function ForgotPassword() {
     setSending(true);
     axios
       .post(
-        "/auth/sendResetPasswordEmail",
+        "/auth/send-reset-email",
         {},
         { headers }
       )

@@ -21,6 +21,8 @@ import { HttpStatusCode } from "axios";
 import { superAdminActions } from "../../Store/superAdmin-slice";
 import { customerAdminActions } from "../../Store/customerAdmin-slice";
 import { setProfileInfo } from "../../Store/profileSetter";
+import moment from "moment";
+
 
 const drawerWidth = 240;
 const profileRoute = "auth/getUserData";
@@ -32,53 +34,62 @@ const RootLayout = () => {
   };
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state) => state.profile);
+  const { isLoggedIn, userId } = useSelector((state) => state.profile);
   const dashboardActions = {
     superAdmin: superAdminActions.setSuperAdminDashboardData,
     customerAdmin: customerAdminActions.setCustomerDashboardData,
   };
 
   const isAccessTokenPresent = localStorage.getItem("accesstoken") !== null;
+
   useEffect(() => {
     const fetchProfileInfo = async () => {
       try {
-        const expireTime = new Date(localStorage.getItem('expirydate'))
-        setTimeout(async () => {
-          const refreshToken = localStorage.getItem('refreshtoken')
-          if (!refreshToken) {
-            localStorage.clear()
-             navigate('/login')
-          }
-          try {
-            const headers = {
-              'Authorization' :"Bearer "+ refreshToken
+        const changeToken = async () => {
+          const expireTime = new Date(localStorage.getItem('expirydate'))
+          setTimeout(async () => {
+            const refreshToken = localStorage.getItem('refreshtoken')
+            console.log(refreshToken);
+            if (!refreshToken) {
+              localStorage.clear()
+              await axios.post("auth/logout", {id:userId});
+              dispatch(profileActions.logout());
+              return navigate('/login')
             }
-            const { accessToken } = await axios.post('/auth/refresh', {}, {headers})
-            localStorage.setItem('accesstoken', accessToken)
-            const expiryDate = moment().add(15, "m").toDate();
-            localStorage.setItem("expirydate", expiryDate.toString());
-          } catch (error) {
-            localStorage.clear()
-             navigate('/login')
+            try {
+              const headers = {
+                'Authorization': "Bearer " + refreshToken
+              }
+              const res = await axios.post('/auth/refresh', {}, { headers })
+              localStorage.setItem('accesstoken', res.data.accessToken)
+              const expiryDate = moment().add(1, "m").toDate();
+              localStorage.setItem("expirydate", expiryDate.toString());
+              changeToken()
+            } catch (error) {
+              localStorage.clear()
+              if(error)
+              navigate('/login')
           }
-    
-        }, [expireTime - new Date()])
 
-        const profileInfo = (await axios.get("auth/user-data")).data;
-        setProfileInfo(profileInfo);
-      } catch (error) {
-        console.log(error);
-        if (error.request) {
-          const statusCode = error.request.status;
-          if (statusCode === HttpStatusCode.InternalServerError) {
-            //
-          } else if (statusCode === HttpStatusCode.BadRequest) {
-            //
-          } else if (statusCode === HttpStatusCode.NotFound) {
-            //
-          } else if (statusCode === HttpStatusCode.Unauthorized) {
-            //
-          } else {
+        }, [expireTime - new Date()])
+      }
+      changeToken()
+       const profileInfo = (await axios.get("auth/user-data")).data;
+      console.log(profileInfo);
+      setProfileInfo(profileInfo);
+    } catch (error) {
+      console.log(error);
+      if (error.request) {
+        const statusCode = error.request.status;
+        if (statusCode === HttpStatusCode.InternalServerError) {
+          //
+        } else if (statusCode === HttpStatusCode.BadRequest) {
+          //
+        } else if (statusCode === HttpStatusCode.NotFound) {
+          //
+        } else if (statusCode === HttpStatusCode.Unauthorized) {
+          //
+        } else {
             console.log(error);
           }
         }
@@ -118,70 +129,3 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-// export const profileLoader = async () => {
-//   try {
-//     const state = store.getState();
-//     const isLoggedIn = state.profile.isLoggedIn;
-
-//     if (!isLoggedIn) {
-//       const headers = {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-//       };
-//       const profile = await axios.get("/auth/getUserData", { headers });
-//       store.dispatch(
-//         profileActions.setProfileInfo({
-//           userRole: profile.data.role,
-//           name: profile.data.name,
-//           email: profile.data.email,
-//           userId: profile.data.id,
-//           customerId: profile.data.customerId,
-//         })
-//       );
-//       return profile.data;
-//     }
-//   } catch (error) {
-//     const statusCode = error?.response?.status;
-//     if (statusCode === UNAUTHORISED_ERROR) {
-//       try {
-//         const refreshToken = localStorage.getItem("refreshtoken");
-//         if (!refreshToken) {
-//           return redirect("/login");
-//         }
-//         const headers = {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${refreshToken}`,
-//         };
-//         await axios
-//           .post("auth/refresh", { headers })
-//           .then((res) => {
-//             console.log(res);
-//           })
-//           .catch((err) => {
-//             console.log(err);
-//           });
-//         localStorage.setItem("accesstoken", accessToken);
-//         const getHeaders = {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${accessToken}`,
-//         };
-//         const profile = await axios.get("/auth/getUserData", {
-//           headers: getHeaders,
-//         });
-//         store.dispatch(
-//           profileActions.setProfileInfo({
-//             userRole: profile.data.role,
-//             name: profile.data.name,
-//             email: profile.data.email,
-//             userId: profile.data.id,
-//             customerId: profile.data.customerId,
-//           })
-//         );
-//         return profile.data;
-//       } catch (error) {
-//         redirect("/login");
-//       }
-//     }
-//   }
-//   return null;
-// };

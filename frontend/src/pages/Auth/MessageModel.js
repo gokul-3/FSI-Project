@@ -30,7 +30,7 @@ export default function MessageModel(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleClose} variant='contained' autoFocus>
             Ok
           </Button>
         </DialogActions>

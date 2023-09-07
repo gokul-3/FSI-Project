@@ -4,7 +4,7 @@ import { profileActions } from "./profile-slice";
 import { superAdminActions } from "./superAdmin-slice";
 import { customerAdminActions } from "./customerAdmin-slice";
 export const setProfileInfo = (profileInfo) => {
-  console.log("hello");
+  console.log(profileInfo);
   store.dispatch(
     profileActions.setProfileInfo({
       userRole: profileInfo.role,

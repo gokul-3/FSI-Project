@@ -29,7 +29,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [accountMenuAnchor, setAccountMenuAnchor] = React.useState(null);
-  const { userRole } = useSelector((state) => state.profile);
+  const {userId} = useSelector((state) => state.profile);
   const openAccountMenu = Boolean(accountMenuAnchor);
   const dispatch = useDispatch();
 
@@ -41,11 +41,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
   };
   const logoutUser = async () => {
     try {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accesstoken")}`,
-      };
-      await axios.get("auth/logout", { headers });
+      await axios.post("auth/logout", {id:userId});
       dispatch(profileActions.logout());
       navigate("/login");
     } catch (error) {
