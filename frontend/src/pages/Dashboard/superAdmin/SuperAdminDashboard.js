@@ -13,7 +13,6 @@ import { HttpStatusCode } from "axios";
 const SuperAdminDashboard = () => {
   const { userRole } = useSelector((state) => state.profile);
   const superDashboardData = useSelector((state) => state.superAdmin);
-  console.log(userRole);
   if (userRole !== "superAdmin")
     return (
       <ErrorPageTemplate

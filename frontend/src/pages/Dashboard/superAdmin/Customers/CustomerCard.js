@@ -12,6 +12,7 @@ import {
 import dummyLogo from "../../../../assets/dummyuser.png";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { red } from "@mui/material/colors";
 
 export default function CustomerCard({
   index,
@@ -21,7 +22,7 @@ export default function CustomerCard({
   const customers = useSelector((state) => state.superAdmin.Customers.data);
   const [imageUrl, setImageUrl] = useState(null);
   const maxDisplayLen = 20;
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     if (customers.data[index].icon) {
       const blob = new Blob([new Uint8Array(customers.data[index].icon.data)], {
@@ -34,8 +35,7 @@ export default function CustomerCard({
     }
   }, [customers.data[index].icon]);
   const handleOpenUsers = (customerId) => {
-    // <Navigate to={`/${customerId}`} />
-    Navigate(`${customerId}`);
+    navigate(`/customers/${customerId}`);
   };
   return (
     <Card sx={{ margin: "20px", height: "265px", width: "300px" }}>
@@ -59,14 +59,15 @@ export default function CustomerCard({
         </CardActionArea>
         <CardActions sx={{ display: "flex", justifyContent: "end", px: 1 }}>
           <Button
-            variant="contained"
+            // variant="contained"
             size="small"
             onClick={() => showEdit(index)}
           >
             Edit
           </Button>
           <Button
-            variant="contained"
+            // variant="contained"
+            sx={{ color: red[700] }}
             size="small"
             onClick={() => showDeleteConfirmation(index)}
           >

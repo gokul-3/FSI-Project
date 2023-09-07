@@ -37,7 +37,11 @@ const RootLayout = () => {
     customerAdmin: customerAdminActions.setCustomerDashboardData,
   };
   const isAccessTokenPresent = localStorage.getItem("accesstoken") !== null;
+  // setTimeout(()=> {
+  // logout
+  // }, [expiryDate - new Date()])
   useEffect(() => {
+    console.log("rendered");
     const fetchProfileInfo = async () => {
       try {
         const profileInfo = (await axios.get("auth/getUserData")).data;

@@ -21,6 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import SnackbarNotify from "../snackbar/Snackbar";
 import axios from "../../axios";
+import { red } from "@mui/material/colors";
 
 export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
   const schema = Yup.object().shape({
@@ -190,7 +191,10 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   gap: "1rem",
                 }}
               >
-                <Button variant="contained" onClick={handleAddUserCancel}>
+                <Button
+                  variant="contained"
+                  onClick={handleAddUserCancel}
+                >
                   Cancel
                 </Button>
                 <Button

@@ -15,7 +15,7 @@ import { Navigate } from "react-router-dom";
 import ErrorPageTemplate from "../../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 export default function Customers() {
-  const pageLimit = 9;
+  const pageLimit = 8;
   const { setCustomersData, setCustomerEditedImg, setCustomerEditedName } =
     superAdminActions;
   const dispatch = useDispatch();
@@ -47,14 +47,6 @@ export default function Customers() {
   const headers = {
     Authorization: "Bearer " + accessToken,
   };
-  if (userRole != "superAdmin") {
-    return (
-      <ErrorPageTemplate
-        header={"Unauthorised Error"}
-        code={HttpStatusCode.Unauthorized}
-      />
-    );
-  }
   const showSkeletonLoading = (count) => {
     const skeletons = [];
     for (let i = 0; i < count; i++) {
@@ -152,6 +144,14 @@ export default function Customers() {
     setIsLoading(true);
     fetchData();
   }, [page, searchQuery, Deleted]);
+  if (userRole != "superAdmin") {
+    return (
+      <ErrorPageTemplate
+        header={"Unauthorised Error"}
+        code={HttpStatusCode.Unauthorized}
+      />
+    );
+  }
 
   return (
     <Grid container spacing={3} pb={5}>
@@ -171,23 +171,6 @@ export default function Customers() {
             container
             spacing={0}
             direction="column"
-            alignItems="flex-start"
-          >
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ position: "absolute", top: 80, right: 20 }}
-                onClick={() => setOpenForm(!openForm)}
-              >
-                + Add Customer
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            spacing={0}
-            direction="column"
             alignItems="center"
             justifyContent="center"
             sx={{
@@ -197,13 +180,27 @@ export default function Customers() {
               textAlign: "center",
             }}
           >
-            <Grid item xs={3}>
+            <Grid
+              item
+              width="100%"
+              display="flex"
+              gap="2rem"
+              justifyContent="center"
+            >
               <Search
                 onSearch={(searchVal) => {
                   setSearchQuery(searchVal);
                   setPage(1);
                 }}
               />
+              <Button
+                variant="contained"
+                color="primary"
+                // sx={{ position: "absolute", top: 80, right: 20 }}
+                onClick={() => setOpenForm(!openForm)}
+              >
+                + Add Customer
+              </Button>
             </Grid>
             {/* {searchQuery && <Grid item xs={3}>
               <Typography variant="h6" color="textSecondary">

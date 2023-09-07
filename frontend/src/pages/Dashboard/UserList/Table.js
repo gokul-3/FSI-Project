@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,7 +11,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import { Box, FormControl } from "@mui/material";
+import { Box, FormControl, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -20,13 +20,14 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import { useSelector } from "react-redux";
 import MuiAlert from "@mui/material/Alert";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Action from "./Action";
 import { FormModal } from "../../../components/addUserForm/addUserForm";
 import axios from "../../../axios";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
+import { ArrowBackIos } from "@mui/icons-material";
 
 const oldcolumns = [
   { id: "id", label: "User ID", minWidth: 170 },
@@ -43,7 +44,7 @@ const UserTable = () => {
   // states used
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [name, setName] = useState("");
   const [roleFilter, setroleFilter] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -52,35 +53,24 @@ const UserTable = () => {
   const [actionDone, setActionDone] = useState(true);
   const [openForm, setOpenForm] = useState(false);
   const params = useParams();
-  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
-  let { customerId, userRole } = useSelector((state) => state.profile);
+  const { pathname } = useLocation();
+  let {
+    customerId,
+    userRole,
+    name: userName,
+  } = useSelector((state) => state.profile);
+  let { Customers } = useSelector((state) => state.superAdmin);
   if (!customerId) {
     customerId = params.customerId;
   }
+  // const getCustomerName = useCallback(, [customerId]);
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
-    return (
-      <ErrorPageTemplate
-        header={"Unauthorised Error"}
-        code={HttpStatusCode.Unauthorized}
-      />
-    );
-  } else if (
-    pathname.split("/")[1] === "operators" &&
-    userRole != "customerAdmin"
-  ) {
-    return (
-      <ErrorPageTemplate
-        header={"Unauthorised Error"}
-        code={HttpStatusCode.Unauthorized}
-      />
-    );
-  }
   const columns = oldcolumns.map((column) => {
     return userRole !== "supervisor"
       ? column
@@ -103,9 +93,9 @@ const UserTable = () => {
         params: queryParams,
         headers,
       });
-
       if (response.data.status === "success") {
         const responseData = response.data.users;
+        console.log(responseData);
         setData(responseData);
       } else {
         setData([]);
@@ -132,7 +122,24 @@ const UserTable = () => {
       clearTimeout(typingTimeout);
     };
   }, [roleFilter, name, customerId, actionType, actionDone]);
-
+  if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
+    return (
+      <ErrorPageTemplate
+        header={"Unauthorised Error"}
+        code={HttpStatusCode.Unauthorized}
+      />
+    );
+  } else if (
+    pathname.split("/")[1] === "operators" &&
+    userRole != "customerAdmin"
+  ) {
+    return (
+      <ErrorPageTemplate
+        header={"Unauthorised Error"}
+        code={HttpStatusCode.Unauthorized}
+      />
+    );
+  }
   //Handler functions
   const handleCloseAlert = () => {
     setActionMessage("");
@@ -159,16 +166,36 @@ const UserTable = () => {
 
   return (
     <>
-      <FormModal openModal={openForm} setOpenModal={setOpenForm} />
-
+      <FormModal openModal={openForm} setOpenModal={setOpenForm} firmName={data[0]?.customer.name}/>
       <Box p={3} className="responsive-table" position="relative">
-        <div
-          style={{
+        {userRole === "superAdmin" && (
+          <Box display="flex" mt={5}>
+            <Typography
+              sx={{ textAlign: { xs: "center", sm: "start" } }}
+              variant="h5"
+              fontWeight={500}
+              // margin="1rem"
+              // ml={2}
+            >
+              Customer:
+            </Typography>
+            <Typography
+              sx={{ textAlign: { xs: "center", sm: "start" } }}
+              ml={2}
+              variant="h5"
+            >
+              {data[0]?.customer.name}
+            </Typography>
+          </Box>
+        )}
+        <Box
+          sx={{
             display: "flex",
             alignItems: "center",
             justifyItems: "center",
             verticalAlign: "center",
-            margin: "2em",
+            // margin: "2em",
+            my: "2rem",
             // position: "relative",
           }}
         >
@@ -199,11 +226,28 @@ const UserTable = () => {
               <MenuItem value="user">User</MenuItem>
             </Select>
           </FormControl>
-          <Tooltip title="Clear Filter">
-            <IconButton onClick={handleClear}>
-              <ClearIcon />
-            </IconButton>
-          </Tooltip>
+          {name.length !== 0 && (
+            <Tooltip title="Clear Filter">
+              <IconButton onClick={handleClear}>
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Button
+            sx={{
+              position: "absolute",
+              top: 10,
+              left: 10,
+            }}
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIos fontSize="12px" /> Back
+          </Button>
+
           {userRole !== "supervisor" ? (
             <Button
               variant="contained"
@@ -216,8 +260,7 @@ const UserTable = () => {
               + Add User
             </Button>
           ) : null}
-        </div>
-        <br></br>
+        </Box>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table padding="10px" stickyHeader aria-label="sticky table">

@@ -119,7 +119,7 @@ const Navbar = ({ handleDrawerToggle, drawerWidth }) => {
           </MenuItem>
         </Menu>
       </Toolbar>
-        {/* <NavigationLoader open={state === "loading"}/> */}
+        <NavigationLoader open={state === "loading"}/>
     </AppBar>
   );
 };
