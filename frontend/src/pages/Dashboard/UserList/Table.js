@@ -28,7 +28,6 @@ import axios from "../../../axios";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 import { ArrowBackIos } from "@mui/icons-material";
-import BackdropLoader from "../../../Layouts/Root/BackdropLoader";
 
 const oldcolumns = [
   { id: "id", label: "User ID", minWidth: 170 },
@@ -39,7 +38,7 @@ const oldcolumns = [
   { id: "action", label: "Action", minWidth: 170 },
 ];
 
-const DEBOUNCE_DELAY = 500;
+const DEBOUNCE_DELAY = 1000;
 
 const UserTable = () => {
   // states used
@@ -48,11 +47,15 @@ const UserTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [name, setName] = useState("");
   const [roleFilter, setroleFilter] = useState("");
+  const [emailFilter, setEmailFilter] = useState("")
   const [isTyping, setIsTyping] = useState(false);
   const [actionType, setActionType] = useState("");
   const [actionMessage, setActionMessage] = useState("");
   const [actionDone, setActionDone] = useState(true);
   const [openForm, setOpenForm] = useState(false);
+  const [error, setError] = useState('');
+  const [count, setCount] = useState(0);
+
   const params = useParams();
   const navigate = useNavigate();
 
@@ -60,14 +63,12 @@ const UserTable = () => {
   let {
     customerId,
     userRole,
-    isLoggedIn,
     name: userName,
   } = useSelector((state) => state.profile);
   let { Customers } = useSelector((state) => state.superAdmin);
   if (!customerId) {
     customerId = params.customerId;
   }
-  // const getCustomerName = useCallback(, [customerId]);
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -85,6 +86,9 @@ const UserTable = () => {
         customer_id: customerId,
         name: name,
         role: roleFilter,
+        email: emailFilter,
+        page: page,
+        pageLimit: rowsPerPage
       };
 
       const accessToken = localStorage.getItem("accesstoken");
@@ -97,16 +101,24 @@ const UserTable = () => {
       });
       if (response.data.status === "success") {
         const responseData = response.data.users;
-        console.log(responseData);
-        setData(responseData);
-      } else {
+        setData(responseData.users);
+        setCount(responseData.totalUsers
+        )
+      }
+      else {
         setData([]);
+        setError(response.data.message)
       }
     } catch (error) {
-      console.log(error);
+      return (
+        <ErrorPageTemplate
+          header={"Page not found"}
+          code={HttpStatusCode.NotFound}
+        />
+      );
+
     }
   };
-
   //Effects
   useEffect(() => {
     let typingTimeout;
@@ -123,8 +135,9 @@ const UserTable = () => {
     return () => {
       clearTimeout(typingTimeout);
     };
-  }, [roleFilter, name, customerId, actionType, actionDone]);
- 
+  }, [roleFilter, name, emailFilter, customerId, actionType, actionDone, page, rowsPerPage]);
+
+
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
       <ErrorPageTemplate
@@ -143,6 +156,9 @@ const UserTable = () => {
       />
     );
   }
+
+
+
   //Handler functions
   const handleCloseAlert = () => {
     setActionMessage("");
@@ -159,21 +175,36 @@ const UserTable = () => {
     setName(selectedName);
     setIsTyping(true);
   };
+  const handleEmailChange = (event) => {
+    const selectedEmail = event.target.value;
+    setEmailFilter(selectedEmail);
+    setIsTyping(true);
+  };
+
   const handleRoleChange = (event) => {
     setroleFilter(event.target.value);
   };
   const handleClear = (event) => {
     setName("");
     setroleFilter("");
+    setEmailFilter("");
+    setIsTyping(true)
   };
+
+  if (error != '') {
+
+    return (
+      <ErrorPageTemplate
+        header={"Page Not Found"}
+        code={HttpStatusCode.NotFound}
+      />
+    );
+
+  }
 
   return (
     <>
-      <FormModal
-        openModal={openForm}
-        setOpenModal={setOpenForm}
-        firmName={data[0]?.customer.name}
-      />
+      <FormModal openModal={openForm} setOpenModal={setOpenForm} firmName={data[0]?.customer.name} />
       <Box p={3} className="responsive-table" position="relative">
         {userRole === "superAdmin" && (
           <Box display="flex" mt={5}>
@@ -181,8 +212,8 @@ const UserTable = () => {
               sx={{ textAlign: { xs: "center", sm: "start" } }}
               variant="h5"
               fontWeight={500}
-              // margin="1rem"
-              // ml={2}
+            // margin="1rem"
+            // ml={2}
             >
               Customer:
             </Typography>
@@ -214,6 +245,15 @@ const UserTable = () => {
             onChange={handleNameChange}
             sx={{ minWidth: 120, marginRight: 2 }}
           />
+          <TextField
+            id="email-filter"
+            value={emailFilter}
+            label="Search by Email"
+            variant="standard"
+            onChange={handleEmailChange}
+            sx={{ minWidth: 120, marginRight: 2 }}
+          />
+
           <FormControl
             variant="standard"
             sx={{ minWidth: 120, marginRight: 2 }}
@@ -233,7 +273,7 @@ const UserTable = () => {
               <MenuItem value="user">User</MenuItem>
             </Select>
           </FormControl>
-          {(name.length !== 0 || roleFilter.length !== 0) && (
+          {(name.length !== 0 || emailFilter.length !== 0) && (
             <Tooltip title="Clear Filter">
               <IconButton onClick={handleClear}>
                 <ClearIcon />
@@ -286,7 +326,6 @@ const UserTable = () => {
               </TableHead>
               <TableBody>
                 {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
                       {columns.map((column) => (
@@ -316,15 +355,15 @@ const UserTable = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 25, 100]}
+            rowsPerPageOptions={[5, 10, 15]}
             component="div"
-            count={data.length}
+            count={count}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <Box p={2}>{data.length} matches found</Box>
+          <Box p={2}>{count} matches found</Box>
         </Paper>
         <Stack spacing={2} sx={{ width: "100%" }}>
           <Snackbar
