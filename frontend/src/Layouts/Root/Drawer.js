@@ -84,15 +84,15 @@ const supervisorSideMenu = [
 //   { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor" },
 // ];
 
-// const operatorSideMenu = [
-//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/users" },
-// ];
+const operatorSideMenu = [
+  { itemName: "Dashboard", icon: <DashboardIcon />, link: "/" },
+];
 
 const sideMenu = {
   superAdmin: superAdminSideMenu,
   customerAdmin: customerAdminSideMenu,
   supervisor: supervisorSideMenu,
-  // operator: operatorSideMenu,
+  operator: operatorSideMenu,
 };
 
 const DrawerContent = () => {
