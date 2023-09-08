@@ -26,6 +26,7 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import RedirectToDashboard from "./pages/Auth/RedirectToDashboard";
 import UserTable from "./pages/Dashboard/UserList/Table";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import { HttpStatusCode } from "axios";
 const UNAUTHORISED_ERROR = 401;
 
 // const router = createBrowserRouter([
@@ -107,6 +108,7 @@ const router = createBrowserRouter([
   },
   { path: "/forgotpassword", element: <ForgotPassword /> },
   { path: "/resetpassword/:token", element: <ResetPassword /> },
+  { path : '*', element: <ErrorPageTemplate code={HttpStatusCode.NotFound} header={"Page not found"}/>}
 ]);
 
 const theme = createTheme({

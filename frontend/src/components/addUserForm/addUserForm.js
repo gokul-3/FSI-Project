@@ -27,7 +27,7 @@ import axios from "../../axios";
 
 export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
   const schema = Yup.object().shape({
-    name: Yup.string().trim().required("Admin name is required"),
+    name: Yup.string().trim().min(1,"Name must contain minimum of 1 character").max(30, "Name can't be more than 30 characters").required("Admin name is required"),
     email: Yup.string()
       .matches(
         /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})$/,
