@@ -11,7 +11,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { VisibilityOff, Visibility, Cookie } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import axios from "../../axios";
@@ -68,6 +68,10 @@ export default function Login() {
       }
     }
   };
+  const accessToken = localStorage.getItem('accesstoken')
+  if(accessToken){
+    return <Navigate to='/'/>
+  }
 
   return (
     <Grid

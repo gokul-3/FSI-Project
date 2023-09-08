@@ -83,13 +83,13 @@ const RootLayout = () => {
         if (error.request) {
           const statusCode = error.request.status;
           if (statusCode === HttpStatusCode.InternalServerError) {
-            <ErrorPageTemplate header="Error!!! Something went wrong" code={statusCode}/>
+            navigate("/internal-server-error");
           } else if (statusCode === HttpStatusCode.BadRequest) {
-            <ErrorPageTemplate header="Error!!! Something went wrong" code={statusCode}/>
+            navigate("/bad-request");
           } else if (statusCode === HttpStatusCode.NotFound) {
-            <ErrorPageTemplate header="Error!!! Page not found" code={statusCode}/>
+            navigate("/server-not-found"); 
           } else if (statusCode === HttpStatusCode.Unauthorized) {
-            <ErrorPageTemplate header="Error!!! Unauthorized" code={statusCode}/>
+            navigate("/login")
           } else {
             console.log(error);
           }

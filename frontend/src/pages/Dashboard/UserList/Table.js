@@ -47,13 +47,14 @@ const UserTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [name, setName] = useState("");
   const [roleFilter, setroleFilter] = useState("");
-  const [emailFilter, setEmailFilter] = useState("")
+  const [emailFilter, setEmailFilter] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [actionType, setActionType] = useState("");
   const [actionMessage, setActionMessage] = useState("");
+  const [customerName, setCustomerName] = useState("");
   const [actionDone, setActionDone] = useState(true);
   const [openForm, setOpenForm] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [count, setCount] = useState(0);
 
   const params = useParams();
@@ -88,26 +89,30 @@ const UserTable = () => {
         role: roleFilter,
         email: emailFilter,
         page: page,
-        pageLimit: rowsPerPage
+        pageLimit: rowsPerPage,
       };
 
       const accessToken = localStorage.getItem("accesstoken");
       const headers = {
         Authorization: "Bearer " + accessToken,
       };
-      axios.get(`/user`, {
-        params: queryParams,
-        headers,
-      }).then((response) => {
-        if (response.data.status === "success") {
-          const responseData = response.data.users;
-          setData(responseData.users);
-          setCount(responseData.totalUsers)
-        }
-      }).catch((err) => {
-        setData([]);
-        setError(err.data)
-      })
+      axios
+        .get(`/user`, {
+          params: queryParams,
+          headers,
+        })
+        .then((response) => {
+          if (response.data.status === "success") {
+            const responseData = response.data.users;
+            setCustomerName(responseData.customerName);
+            setData(responseData.users);
+            setCount(responseData.totalUsers);
+          }
+        })
+        .catch((err) => {
+          setData([]);
+          setError(err.data);
+        });
     } catch (error) {
       return (
         <ErrorPageTemplate
@@ -115,7 +120,6 @@ const UserTable = () => {
           code={HttpStatusCode.NotFound}
         />
       );
-
     }
   };
 
@@ -135,8 +139,16 @@ const UserTable = () => {
     return () => {
       clearTimeout(typingTimeout);
     };
-  }, [roleFilter, name, emailFilter, customerId, actionType, actionDone, page, rowsPerPage]);
-
+  }, [
+    roleFilter,
+    name,
+    emailFilter,
+    customerId,
+    actionType,
+    actionDone,
+    page,
+    rowsPerPage,
+  ]);
 
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
@@ -156,7 +168,6 @@ const UserTable = () => {
       />
     );
   }
-
 
   //Handler functions
   const handleCloseAlert = () => {
@@ -187,59 +198,56 @@ const UserTable = () => {
     setName("");
     setroleFilter("");
     setEmailFilter("");
-    setIsTyping(true)
+    setIsTyping(true);
   };
 
-  if (error != '') {
+  if (error != "") {
     return (
       <ErrorPageTemplate
         header={"Page Not Found"}
         code={HttpStatusCode.NotFound}
       />
     );
-
   }
 
   return (
     <>
-      <FormModal openModal={openForm} setOpenModal={setOpenForm} firmName={data[0]?.customer.name} />
+      <FormModal
+        openModal={openForm}
+        setOpenModal={setOpenForm}
+        firmName={data[0]?.customer.name}
+      />
       <Box p={3} className="responsive-table" position="relative">
-      
         {userRole === "superAdmin" && (
           <Box display="flex" justifyContent="space-between" mt={1}>
             <Button
-            sx={{
-              float:'left'
-            }}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <ArrowBackIos fontSize="12px" /> Back
-          </Button>
-          {userRole !== "supervisor" ? (
-            <Button
+              sx={{
+                float: "left",
+              }}
               variant="contained"
               color="primary"
-              sx={{float:'right'}}
               onClick={() => {
-                setOpenForm(true);
+                navigate(-1);
               }}
             >
-              Add User
+              <ArrowBackIos fontSize="12px" /> Back
             </Button>
-          ) : null}
+            {userRole !== "supervisor" ? (
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ float: "right" }}
+                onClick={() => {
+                  setOpenForm(true);
+                }}
+              >
+                Add User
+              </Button>
+            ) : null}
           </Box>
-          
-          
         )}
-        <Typography
-          sx={{ textAlign: "center" }}
-          variant="h4"
-        >
-          {data[0]?.customer.name}
+        <Typography sx={{ textAlign: "center" }} variant="h4">
+          {customerName}
         </Typography>
         <Box
           sx={{
@@ -290,12 +298,11 @@ const UserTable = () => {
           </FormControl>
           {(name.length !== 0 || emailFilter.length !== 0) && (
             <Tooltip title="Clear Filter">
-              <IconButton onClick={handleClear}  sx={{top:10}}>
-              < Typography >clear</Typography>
+              <IconButton onClick={handleClear} sx={{ top: 10 }}>
+                <Typography>clear</Typography>
               </IconButton>
             </Tooltip>
           )}
-          
         </Box>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
@@ -314,32 +321,31 @@ const UserTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data
-                  .map((row) => (
-                    <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
-                      {columns.map((column) => (
-                        <TableCell key={column.id} align="left">
-                          {column.id === "Status" ? (
-                            row["Active"] ? (
-                              "Active"
-                            ) : (
-                              "Inactive"
-                            )
-                          ) : column.id === "action" ? (
-                            <Action
-                              data={row}
-                              actionType={actionType}
-                              setActionType={setActionType}
-                              setActionMessage={setActionMessage}
-                              setActionDone={setActionDone}
-                            ></Action>
+                {data.map((row) => (
+                  <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                    {columns.map((column) => (
+                      <TableCell key={column.id} align="left">
+                        {column.id === "Status" ? (
+                          row["Active"] ? (
+                            "Active"
                           ) : (
-                            row[column.id]
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                            "Inactive"
+                          )
+                        ) : column.id === "action" ? (
+                          <Action
+                            data={row}
+                            actionType={actionType}
+                            setActionType={setActionType}
+                            setActionMessage={setActionMessage}
+                            setActionDone={setActionDone}
+                          ></Action>
+                        ) : (
+                          row[column.id]
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

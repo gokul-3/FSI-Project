@@ -26,6 +26,7 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import RedirectToDashboard from "./pages/Auth/RedirectToDashboard";
 import UserTable from "./pages/Dashboard/UserList/Table";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import { HttpStatusCode } from "axios";
 const UNAUTHORISED_ERROR = 401;
 
 // const router = createBrowserRouter([
@@ -105,6 +106,10 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
+  { path : '/internal-server-error', element: <ErrorPageTemplate code={HttpStatusCode.InternalServerError} header={"Internal server Error"}/>},
+  { path : '/server-not-found', element: <ErrorPageTemplate code={HttpStatusCode.NotFound} header={"Server Not Found"}/>},
+  { path : '/bad-request', element: <ErrorPageTemplate code={HttpStatusCode.BadRequest} header={"Bad Request Error"}/>},
+  { path : '*', element: <ErrorPageTemplate code={HttpStatusCode.NotFound} header={"Page not found"}/>},
   { path: "/forgotpassword", element: <ForgotPassword /> },
   { path: "/resetpassword/:token", element: <ResetPassword /> },
 ]);

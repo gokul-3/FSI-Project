@@ -1,7 +1,7 @@
 import React from "react";
 import ListCard from "../Cards/ListCard";
 import CustomerCountCard from "../Cards/CountCard";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
@@ -9,8 +9,6 @@ import { HttpStatusCode } from "axios";
 const CustomerAdminDashboard = () => {
   const { userRole, name } = useSelector((state) => state.profile);
   const customerAdminData = useSelector((state) => state.customerAdmin);
-  console.log(customerAdminData);
-  console.log("hello");
   if (userRole !== "customerAdmin")
     return (
       <ErrorPageTemplate
@@ -21,6 +19,13 @@ const CustomerAdminDashboard = () => {
 
   return (
     <>
+    <Typography
+        sx={{ textAlign: { xs: "center", sm: "start" } }}
+        variant="h6"
+        margin="1rem"
+      >
+        Hello, {name || "Customer"}
+      </Typography> 
       <Box
         display="flex"
         justifyContent="space-evenly"

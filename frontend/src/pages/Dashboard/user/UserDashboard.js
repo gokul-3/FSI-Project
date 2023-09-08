@@ -2,11 +2,20 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import UserTable from "../UserList/Table";
+import { Typography } from "@mui/material";
 
 const UserDashboard = () => {
-  const { userRole } = useSelector((state) => state.profile);
+  const { userRole, name } = useSelector((state) => state.profile);
   if (userRole !== "operator") return <Navigate to="/login" />;
-  return <>Hello user!!!</>;
+  return (
+    <Typography
+      variant="h4"
+      textAlign="center"
+      margin="1rem"
+    >
+      Hello, {name || "Operator"}
+    </Typography>
+  );
 };
 
 export default UserDashboard;
