@@ -287,7 +287,7 @@ const UserTable = () => {
           {(name.length !== 0 || emailFilter.length !== 0) && (
             <Tooltip title="Clear Filter">
               <IconButton onClick={handleClear}  sx={{top:10}}>
-              < Typography variant="">clear</Typography>
+              < Typography variant="p">clear</Typography>
               </IconButton>
             </Tooltip>
           )}
