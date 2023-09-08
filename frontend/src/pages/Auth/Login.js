@@ -68,7 +68,10 @@ export default function Login() {
       }
     }
   };
-
+  const isAccessTokenPresent = localStorage.getItem('accesstoken');
+  if (isAccessTokenPresent) {
+    return <Navigate to="/" />
+  }
   return (
     <Grid
       container

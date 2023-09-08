@@ -108,7 +108,11 @@ const router = createBrowserRouter([
   },
   { path: "/forgotpassword", element: <ForgotPassword /> },
   { path: "/resetpassword/:token", element: <ResetPassword /> },
+  { path : '/internal-server-error', element: <ErrorPageTemplate code={HttpStatusCode.InternalServerError} header={"Internal server Error"}/>},
+  { path : '/server-not-found', element: <ErrorPageTemplate code={HttpStatusCode.InternalServerError} header={"Server Not Found"}/>},
+  { path : '/bad-request', element: <ErrorPageTemplate code={HttpStatusCode.InternalServerError} header={"Bad Request Error"}/>},
   { path : '*', element: <ErrorPageTemplate code={HttpStatusCode.NotFound} header={"Page not found"}/>}
+
 ]);
 
 const theme = createTheme({
