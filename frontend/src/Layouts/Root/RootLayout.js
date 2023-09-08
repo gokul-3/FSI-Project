@@ -71,7 +71,7 @@ const RootLayout = () => {
           }, [expireTime - new Date()]);
         };
         changeToken();
-        const profileInfo = (await axios.get("/dashboard")).data;
+        const profileInfo = (await axios.get("/user/profile")).data;
         console.log(profileInfo);
         dispatch(
           profileActions.setProfileInfo({
@@ -93,6 +93,7 @@ const RootLayout = () => {
           } else if (statusCode === HttpStatusCode.NotFound) {
             navigate("/server-not-found");
           } else if (statusCode === HttpStatusCode.Unauthorized) {
+            dispatch(profileActions.logout())
             navigate("/login");
           } else {
             console.log(error);
