@@ -25,7 +25,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import axios from "../../axios";
 
-export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
+export const FormModal = ({ openModal, setOpenModal, firmName = "" ,onAddUser}) => {
   const schema = Yup.object().shape({
     name: Yup.string()
       .trim()
@@ -64,6 +64,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
       setIsLoading(false);
       setResponse(res.data?.message);
       setSnackbarOpen(true);
+      onAddUser();
       reset();
     } catch (error) {
       console.log(error);

@@ -55,6 +55,7 @@ const UserTable = () => {
   const [actionDone, setActionDone] = useState(true);
   const [openForm, setOpenForm] = useState(false);
   const [error, setError] = useState("");
+  const [addedUserRenderer, setAddedUserRenderer] = useState(false);
   const [count, setCount] = useState(0);
   const params = useParams();
   const navigate = useNavigate();
@@ -124,8 +125,10 @@ const UserTable = () => {
     }
   };
 
+  const addUserHandler = () => {
+    setAddedUserRenderer((prev) => !prev);
+  };
   //Effects
-
   useEffect(() => {
     let typingTimeout;
     setActionDone(true);
@@ -151,6 +154,7 @@ const UserTable = () => {
     actionDone,
     page,
     rowsPerPage,
+    addedUserRenderer,
   ]);
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
@@ -218,7 +222,8 @@ const UserTable = () => {
       <FormModal
         openModal={openForm}
         setOpenModal={setOpenForm}
-        firmName={data[0]?.customer.name}
+        firmName={customerName}
+        onAddUser={addUserHandler}
       />
 
       <Box p={3} className="responsive-table" position="relative">
@@ -239,18 +244,6 @@ const UserTable = () => {
           </Box>
         )}
 
-        {userRole !== "supervisor" ? (
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ float: "right" }}
-            onClick={() => {
-              setOpenForm(true);
-            }}
-          >
-            Add User
-          </Button>
-        ) : null}
         <Typography sx={{ textAlign: "center", mt: 3 }} variant="h4">
           {customerName}
         </Typography>
@@ -262,64 +255,78 @@ const UserTable = () => {
           }}
         >
           <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyItems: "center",
-              verticalAlign: "center",
-              my: "1rem",
-              mb: "1.5rem",
-            }}
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
           >
-            <TextField
-              id="standard-basic"
-              value={name}
-              label="Search by Name"
-              variant="standard"
-              onChange={handleNameChange}
-              sx={{ minWidth: 120, marginRight: 2 }}
-            />
-
-            <TextField
-              id="email-filter"
-              value={emailFilter}
-              label="Search by Email"
-              variant="standard"
-              onChange={handleEmailChange}
-              sx={{ minWidth: 120, marginRight: 2 }}
-            />
-
-            <FormControl
-              variant="standard"
-              sx={{ minWidth: 120, marginRight: 2 }}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyItems: "center",
+                verticalAlign: "center",
+                my: "1rem",
+                mb: "1.5rem",
+              }}
             >
-              <InputLabel id="demo-simple-select-standard-label">
-                Designation
-              </InputLabel>
+              <TextField
+                id="standard-basic"
+                value={name}
+                label="Search by Name"
+                variant="standard"
+                onChange={handleNameChange}
+                sx={{ minWidth: 120, marginRight: 2 }}
+              />
 
-              <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
-                value={roleFilter}
-                onChange={handleRoleChange}
+              <TextField
+                id="email-filter"
+                value={emailFilter}
+                label="Search by Email"
+                variant="standard"
+                onChange={handleEmailChange}
+                sx={{ minWidth: 120, marginRight: 2 }}
+              />
+
+              <FormControl
+                variant="standard"
+                sx={{ minWidth: 120, marginRight: 2 }}
               >
-                <MenuItem value="All Users">All Users</MenuItem>
+                <InputLabel id="demo-simple-select-standard-label">
+                  Designation
+                </InputLabel>
 
-                <MenuItem value="customerAdmin">Customer Admin</MenuItem>
+                <Select
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  value={roleFilter}
+                  onChange={handleRoleChange}
+                >
+                  <MenuItem value="All Users">All Users</MenuItem>
+                  <MenuItem value="customerAdmin">Customer Admin</MenuItem>
+                  <MenuItem value="supervisor">Supervisor</MenuItem>
+                  <MenuItem value="operator">Operator</MenuItem>
+                </Select>
+              </FormControl>
 
-                <MenuItem value="supervisor">Supervisor</MenuItem>
-
-                <MenuItem value="operator">Operator</MenuItem>
-              </Select>
-            </FormControl>
-
-            {(name.length !== 0 || emailFilter.length !== 0) && (
-              <Tooltip title="Clear Filter">
-                <IconButton onClick={handleClear} sx={{ top: 10 }}>
-                  <Typography>clear</Typography>
-                </IconButton>
-              </Tooltip>
-            )}
+              {(name.length !== 0 || emailFilter.length !== 0) && (
+                <Tooltip title="Clear Filter">
+                  <IconButton onClick={handleClear} sx={{ top: 10 }}>
+                    <Typography>clear</Typography>
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
+            {userRole !== "supervisor" ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setOpenForm(true);
+                }}
+              >
+                Add User
+              </Button>
+            ) : null}
           </Box>
 
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
