@@ -12,14 +12,16 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 
 const CustomerData = ({ customers }) => {
-const getLogoUrl = (icon) => {
- const blob = new Blob([new Uint8Array(icon?.data)], {
- type: "image/jpeg",
- });
- return URL.createObjectURL(blob);
-};
+  const getLogoUrl = (icon) => {
+    const blob = new Blob([new Uint8Array(icon?.data)], {
+      type: "image/jpeg",
+    });
+    return URL.createObjectURL(blob);
+  };
   const navigate = useNavigate();
-  return customers.length === 0
+  console.log(customers);
+  if (!Object.keys(customers).length) return <>loading...</>;
+  return customers?.length === 0
     ? "No Customers available"
     : customers.map((element, index) => (
         <Fragment key={index}>
@@ -31,7 +33,10 @@ const getLogoUrl = (icon) => {
             sx={{ cursor: "pointer" }}
           >
             <ListItemAvatar>
-            <Avatar alt={element.CustomerName} src={getLogoUrl(element.customerIcon)}/>
+              <Avatar
+                alt={element.CustomerName}
+                src={getLogoUrl(element.customerIcon)}
+              />
             </ListItemAvatar>
 
             <ListItemText

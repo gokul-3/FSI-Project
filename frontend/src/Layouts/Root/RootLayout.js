@@ -36,10 +36,6 @@ const RootLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn, userId } = useSelector((state) => state.profile);
-  const dashboardActions = {
-    superAdmin: superAdminActions.setSuperAdminDashboardData,
-    customerAdmin: customerAdminActions.setCustomerDashboardData,
-  };
 
   const isAccessTokenPresent = localStorage.getItem("accesstoken") !== null;
   useEffect(() => {
@@ -77,7 +73,15 @@ const RootLayout = () => {
         changeToken();
         const profileInfo = (await axios.get("/dashboard")).data;
         console.log(profileInfo);
-        setProfileInfo(profileInfo);
+        dispatch(
+          profileActions.setProfileInfo({
+            userRole: profileInfo.role,
+            name: profileInfo.name,
+            email: profileInfo.email,
+            userId: profileInfo.id,
+            customerId: profileInfo.customerId,
+          })
+        );
       } catch (error) {
         console.log(error);
         if (error.request) {
@@ -87,9 +91,9 @@ const RootLayout = () => {
           } else if (statusCode === HttpStatusCode.BadRequest) {
             navigate("/bad-request");
           } else if (statusCode === HttpStatusCode.NotFound) {
-            navigate("/server-not-found"); 
+            navigate("/server-not-found");
           } else if (statusCode === HttpStatusCode.Unauthorized) {
-            navigate("/login")
+            navigate("/login");
           } else {
             console.log(error);
           }
@@ -98,7 +102,7 @@ const RootLayout = () => {
     };
     if (isAccessTokenPresent) fetchProfileInfo();
     else navigate("/login");
-  }, [isAccessTokenPresent, isLoggedIn]);
+  }, [isAccessTokenPresent]);
   if (!isLoggedIn && isAccessTokenPresent) {
     return <BackdropLoader open={true} />;
   }

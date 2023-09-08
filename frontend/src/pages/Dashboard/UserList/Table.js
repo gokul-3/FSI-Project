@@ -28,7 +28,6 @@ import axios from "../../../axios";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 import { ArrowBackIos } from "@mui/icons-material";
-
 const oldcolumns = [
   { id: "id", label: "User ID", minWidth: 170 },
   { id: "name", label: "Name", minWidth: 170 },
@@ -42,6 +41,7 @@ const DEBOUNCE_DELAY = 1000;
 
 const UserTable = () => {
   // states used
+
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -56,7 +56,6 @@ const UserTable = () => {
   const [openForm, setOpenForm] = useState(false);
   const [error, setError] = useState("");
   const [count, setCount] = useState(0);
-
   const params = useParams();
   const navigate = useNavigate();
 
@@ -70,7 +69,6 @@ const UserTable = () => {
   if (!customerId) {
     customerId = params.customerId;
   }
-
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -80,7 +78,9 @@ const UserTable = () => {
       ? column
       : column.id !== "action" && column;
   });
+
   //Worker Function
+
   const fetchData = async () => {
     try {
       const queryParams = {
@@ -111,6 +111,7 @@ const UserTable = () => {
         })
         .catch((err) => {
           setData([]);
+
           setError(err.data);
         });
     } catch (error) {
@@ -124,6 +125,7 @@ const UserTable = () => {
   };
 
   //Effects
+
   useEffect(() => {
     let typingTimeout;
     setActionDone(true);
@@ -133,6 +135,7 @@ const UserTable = () => {
       clearTimeout(typingTimeout);
       typingTimeout = setTimeout(() => {
         setIsTyping(false);
+
         fetchData();
       }, DEBOUNCE_DELAY);
     }
@@ -149,7 +152,6 @@ const UserTable = () => {
     page,
     rowsPerPage,
   ]);
-
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
       <ErrorPageTemplate
@@ -170,6 +172,7 @@ const UserTable = () => {
   }
 
   //Handler functions
+
   const handleCloseAlert = () => {
     setActionMessage("");
   };
@@ -190,10 +193,10 @@ const UserTable = () => {
     setEmailFilter(selectedEmail);
     setIsTyping(true);
   };
-
   const handleRoleChange = (event) => {
     setroleFilter(event.target.value);
   };
+
   const handleClear = (event) => {
     setName("");
     setroleFilter("");
@@ -210,183 +213,194 @@ const UserTable = () => {
     );
   }
 
-  return (<>
-    <FormModal
-      openModal={openForm}
-      setOpenModal={setOpenForm}
-      firmName={data[0]?.customer.name}
-    />
-    <Box p={3} className="responsive-table" position="relative">
-      {userRole === "superAdmin" && (
-        <Box display="flex" justifyContent="space-between" mt={1}>
-          <Button
-            sx={{
-              float: "left",
-            }}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <ArrowBackIos fontSize="12px" /> Back
-          </Button>
-          {userRole !== "supervisor" ? (
+  return (
+    <>
+      <FormModal
+        openModal={openForm}
+        setOpenModal={setOpenForm}
+        firmName={data[0]?.customer.name}
+      />
+
+      <Box p={3} className="responsive-table" position="relative">
+        {userRole === "superAdmin" && (
+          <Box display="flex" justifyContent="space-between" mt={1}>
             <Button
+              sx={{
+                float: "left",
+              }}
               variant="contained"
               color="primary"
-              sx={{ float: "right" }}
               onClick={() => {
-                setOpenForm(true);
+                navigate(-1);
               }}
             >
-              Add User
+              <ArrowBackIos fontSize="12px" /> Back
             </Button>
-          ) : null}
-        </Box>
-      )}
-      <Typography sx={{ textAlign: "center" }} variant="h4">
-        {customerName}
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          verticalAlign: 'center',
-          justifyContent: "space-between",
-          mx: "2rem",
-          mb: '2rem'
-        }}
-      >
+          </Box>
+        )}
+
+        {userRole !== "supervisor" ? (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ float: "right" }}
+            onClick={() => {
+              setOpenForm(true);
+            }}
+          >
+            Add User
+          </Button>
+        ) : null}
+        <Typography sx={{ textAlign: "center", mt: 3 }} variant="h4">
+          {customerName}
+        </Typography>
+
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyItems: "center",
-            verticalAlign: "center",
-
+            mx: "2rem",
+            mb: "2rem",
           }}
         >
-          <TextField
-            id="standard-basic"
-            value={name}
-            label="Search by Name"
-            variant="standard"
-            onChange={handleNameChange}
-            sx={{ minWidth: 120, marginRight: 2 }}
-          />
-          <TextField
-            id="email-filter"
-            value={emailFilter}
-            label="Search by Email"
-            variant="standard"
-            onChange={handleEmailChange}
-            sx={{ minWidth: 120, marginRight: 2 }}
-          />
-
-          <FormControl
-            variant="standard"
-            sx={{ minWidth: 120, marginRight: 2 }}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyItems: "center",
+              verticalAlign: "center",
+              my: "1rem",
+              mb: "1.5rem",
+            }}
           >
-            <InputLabel id="demo-simple-select-standard-label">
-              Designation
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-standard-label"
-              id="demo-simple-select-standard"
-              value={roleFilter}
-              onChange={handleRoleChange}
+            <TextField
+              id="standard-basic"
+              value={name}
+              label="Search by Name"
+              variant="standard"
+              onChange={handleNameChange}
+              sx={{ minWidth: 120, marginRight: 2 }}
+            />
+
+            <TextField
+              id="email-filter"
+              value={emailFilter}
+              label="Search by Email"
+              variant="standard"
+              onChange={handleEmailChange}
+              sx={{ minWidth: 120, marginRight: 2 }}
+            />
+
+            <FormControl
+              variant="standard"
+              sx={{ minWidth: 120, marginRight: 2 }}
             >
-              <MenuItem value="All Users">All Users</MenuItem>
-              <MenuItem value="customerAdmin">Customer Admin</MenuItem>
-              <MenuItem value="supervisor">Supervisor</MenuItem>
-              <MenuItem value="operator">Operator</MenuItem>
-            </Select>
-          </FormControl>
-          {(name.length !== 0 || emailFilter.length !== 0) && (
-            <Tooltip title="Clear Filter">
-              <IconButton onClick={handleClear} sx={{ top: 10 }}>
-                <Typography>clear</Typography>
-              </IconButton>
-            </Tooltip>
-          )}
-        </Box>
-        <Paper sx={{ width: "100%", overflow: "hidden" }}>
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table padding="10px" stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align="left"
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      <b>{column.label}</b>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((row) => (
-                  <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Designation
+              </InputLabel>
+
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={roleFilter}
+                onChange={handleRoleChange}
+              >
+                <MenuItem value="All Users">All Users</MenuItem>
+
+                <MenuItem value="customerAdmin">Customer Admin</MenuItem>
+
+                <MenuItem value="supervisor">Supervisor</MenuItem>
+
+                <MenuItem value="operator">Operator</MenuItem>
+              </Select>
+            </FormControl>
+
+            {(name.length !== 0 || emailFilter.length !== 0) && (
+              <Tooltip title="Clear Filter">
+                <IconButton onClick={handleClear} sx={{ top: 10 }}>
+                  <Typography>clear</Typography>
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
+
+          <Paper sx={{ width: "100%", overflow: "hidden" }}>
+            <TableContainer sx={{ maxHeight: 440 }}>
+              <Table padding="10px" stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
                     {columns.map((column) => (
-                      <TableCell key={column.id} align="left">
-                        {column.id === "Status" ? (
-                          row["Active"] ? (
-                            "Active"
-                          ) : (
-                            "Inactive"
-                          )
-                        ) : column.id === "action" ? (
-                          <Action
-                            data={row}
-                            actionType={actionType}
-                            setActionType={setActionType}
-                            setActionMessage={setActionMessage}
-                            setActionDone={setActionDone}
-                          ></Action>
-                        ) : (
-                          row[column.id]
-                        )}
+                      <TableCell
+                        key={column.id}
+                        align="left"
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        <b>{column.label}</b>
                       </TableCell>
                     ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 15]}
-            component="div"
-            count={count}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-          <Box p={2}>{count} matches found</Box>
-        </Paper>
-        <Stack spacing={2} sx={{ width: "100%" }}>
-          <Snackbar
-            open={!!actionMessage}
-            autoHideDuration={3000}
-            onClose={handleCloseAlert}
-          >
-            <Alert
-              onClose={() => setActionMessage("")}
-              severity="success"
-              sx={{ width: "100%" }}
+                </TableHead>
+
+                <TableBody>
+                  {data.map((row) => (
+                    <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                      {columns.map((column) => (
+                        <TableCell key={column.id} align="left">
+                          {column.id === "Status" ? (
+                            row["Active"] ? (
+                              "Active"
+                            ) : (
+                              "Inactive"
+                            )
+                          ) : column.id === "action" ? (
+                            <Action
+                              data={row}
+                              actionType={actionType}
+                              setActionType={setActionType}
+                              setActionMessage={setActionMessage}
+                              setActionDone={setActionDone}
+                            ></Action>
+                          ) : (
+                            row[column.id]
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 15]}
+              component="div"
+              count={count}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+
+            <Box p={2}>{count} matches found</Box>
+          </Paper>
+
+          <Stack spacing={2} sx={{ width: "100%" }}>
+            <Snackbar
+              open={!!actionMessage}
+              autoHideDuration={3000}
+              onClose={handleCloseAlert}
             >
-              {actionMessage}
-            </Alert>
-          </Snackbar>
-        </Stack>
+              <Alert
+                onClose={() => setActionMessage("")}
+                severity="success"
+                sx={{ width: "100%" }}
+              >
+                {actionMessage}
+              </Alert>
+            </Snackbar>
+          </Stack>
+        </Box>
       </Box>
-    </Box>
-  </>);
-
-}
-
+    </>
+  );
+};
 
 export default UserTable;

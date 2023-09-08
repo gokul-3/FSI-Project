@@ -61,11 +61,13 @@ export default function Login() {
       setProfileInfo(profileInfo);
       navigate("/");
     } catch (err) {
-      console.log(err);
       if (err.response) {
         setSending(false);
-        setErrorMessage(err.response.data.message);
+         setErrorMessage(err.response.data.message);
+         return;
       }
+      setErrorMessage(err.message)
+
     }
   };
   const isAccessTokenPresent = localStorage.getItem('accesstoken');

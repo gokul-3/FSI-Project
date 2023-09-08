@@ -58,11 +58,7 @@ export default function ResetPassword() {
       };
       setSending(true);
       axios
-        .put(
-          `/auth/reset-password/${token}`,
-          {},
-          { headers }
-        )
+        .put(`/auth/reset-password/${token}`, {}, { headers })
         .then((res) => {
           setModel(
             {
@@ -75,14 +71,14 @@ export default function ResetPassword() {
         })
         .catch((err) => {
           setSending(false);
-          setModel({
-            open: true,
-            message: err.message,
-            navigate: "/login",
-          });
+          if (err.response)
+            setModel({
+              open: true,
+              message: err.response.data.message,
+              navigate: "/login",
+            });
         });
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   return (

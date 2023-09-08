@@ -13,24 +13,24 @@ export const setProfileInfo = (profileInfo) => {
       customerId: profileInfo.customerId,
     })
   );
-  const { dashboardData } = profileInfo;
+  // const { dashboardData } = profileInfo;
   console.log(profileInfo);
-  if (profileInfo.role === "superAdmin") {
-    store.dispatch(
-      superAdminActions.setSuperAdminDashboardData({
-        customerCount: dashboardData.customerCount,
-        activeStatus: dashboardData.activeStatus,
-        mostUsers: dashboardData.mostUsers,
-        leastUsers: dashboardData.leastUsers,
-      })
-    );
-  } else if (profileInfo.role === "customerAdmin") {
-    store.dispatch(
-      customerAdminActions.setCustomerDashboardData({
-        userCount: dashboardData.userCount,
-        activeUsers: dashboardData.activeUsers,
-        newUsers: dashboardData.newUsers,
-      })
-    );
-  }
+  // if (profileInfo.role === "superAdmin") {
+  //   store.dispatch(
+  //     superAdminActions.setSuperAdminDashboardData({
+  //       customerCount: dashboardData.customerCount,
+  //       activeStatus: dashboardData.activeStatus,
+  //       mostUsers: dashboardData.mostUsers,
+  //       leastUsers: dashboardData.leastUsers,
+  //     })
+  //   );
+  // } else if (profileInfo.role === "customerAdmin") {
+  //   store.dispatch(
+  //     customerAdminActions.setCustomerDashboardData({
+  //       userCount: dashboardData.userCount,
+  //       activeUsers: dashboardData.activeUsers,
+  //       newUsers: dashboardData.newUsers,
+  //     })
+  //   );
+  // }
 };

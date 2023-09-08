@@ -84,7 +84,7 @@ export default function ForgotPassword() {
               flexDirection: "column",
               alignItems: "center",
               mt: 10,
-              p:5,
+              p: 5,
               borderRadius: 5,
               background: "#fff",
               boxShadow:
