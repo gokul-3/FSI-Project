@@ -54,7 +54,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      setErrorText('');
+      setErrorText("");
       const res = await axios.post("/user", data);
       console.log(res);
       setIsLoading(false);
@@ -107,9 +107,13 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
             Send them a request
           </DialogContentText> */}
 
-          <form style={{padding: "10px 0"}} noValidate onSubmit={handleSubmit(onSubmit)}>
+          <form
+            style={{ padding: "10px 0" }}
+            noValidate
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Stack spacing={2}>
-            <TextField
+              <TextField
                 margin="normal"
                 fullWidth
                 label="Customer Name"
@@ -124,7 +128,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
               <TextField
                 margin="normal"
                 fullWidth
-                label="Admin Name"
+                label="Name"
                 type="text"
                 id="user_name"
                 {...register("name")}
@@ -140,7 +144,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                 {...register("email")}
                 error={!!errors.email}
                 helperText={errors.email?.message}
-              />       
+              />
               <FormControl>
                 <InputLabel id="addUser-designation-label">
                   Designation
@@ -152,9 +156,8 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   fullWidth
                   {...register("role")}
                   error={!!errors.role}
-                  readOnly={!(!!firmName)}
+                  readOnly={!!!firmName}
                   defaultValue={!!firmName ? "" : "customerAdmin"}
-              
                 >
                   <MenuItem value="customerAdmin">Customer Admin</MenuItem>
                   <MenuItem value="supervisor">Supervisor</MenuItem>
@@ -168,12 +171,10 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                   {errors.role?.message}
                 </FormHelperText>
               ) : null}
-              <Box display='center'>
+              <Box display="center">
                 {!!errorText ? (
                   <Typography sx={{ color: "red" }}>{errorText}</Typography>
-                ) : (
-                  null
-                )}
+                ) : null}
               </Box>
               <Box
                 sx={{
@@ -193,7 +194,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
                 >
                   {isLoading ? (
                     <CircularProgress color="inherit" size={30} />
-                  ) : ( 
+                  ) : (
                     "Send"
                   )}
                 </Button>
@@ -202,11 +203,19 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" }) => {
           </form>
         </DialogContent>
       </Dialog>
-      <Snackbar open={isSnackbarOpen} autoHideDuration={5000} onClose={handleAddUserCancel}>
-            <Alert onClose={handleAddUserCancel} severity='success' sx={{ width: '100%' }}>
-                {response}
-            </Alert>
-        </Snackbar>
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleAddUserCancel}
+      >
+        <Alert
+          onClose={handleAddUserCancel}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {response}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
