@@ -7,7 +7,7 @@ import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 
 const SuperAdminDashboard = () => {
-  const { userRole } = useSelector((state) => state.profile);
+  const { userRole, name } = useSelector((state) => state.profile);
   const superDashboardData = useSelector((state) => state.superAdmin);
   if (userRole !== "superAdmin")
     return (
@@ -23,7 +23,7 @@ const SuperAdminDashboard = () => {
         variant="h6"
         margin="1rem"
       >
-        Hello, Super Admin
+        Hello, {name || "Super Admin"}
       </Typography>
       <Box
         display="flex"

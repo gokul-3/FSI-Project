@@ -83,11 +83,11 @@ const RootLayout = () => {
         if (error.request) {
           const statusCode = error.request.status;
           if (statusCode === HttpStatusCode.InternalServerError) {
-
+            navigate("/internal-server-error");
           } else if (statusCode === HttpStatusCode.BadRequest) {
-
+            navigate("/bad-request");
           } else if (statusCode === HttpStatusCode.NotFound) {
-            navigate("/server-not-found")
+            navigate("/server-not-found"); 
           } else if (statusCode === HttpStatusCode.Unauthorized) {
             navigate("/login")
           } else {
