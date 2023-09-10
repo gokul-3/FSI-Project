@@ -1,9 +1,7 @@
 import { useState } from "react";
-
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
-
 import Dialog from "./Dialog";
 
 const Action = ({
@@ -11,7 +9,7 @@ const Action = ({
   actionType,
   setActionType,
   setActionMessage,
-  setActionDone,
+
 }) => {
   const [display, setDisplay] = useState(false);
 
@@ -33,7 +31,6 @@ const Action = ({
         actionType={actionType}
         setActionType={setActionType}
         setActionMessage={setActionMessage}
-        setActionDone={setActionDone}
         Dialog
       ></Dialog>
     </>

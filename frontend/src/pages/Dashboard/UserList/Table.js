@@ -20,15 +20,17 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import { useSelector } from "react-redux";
 import MuiAlert from "@mui/material/Alert";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate ,useParams} from "react-router-dom";
 import Action from "./Action";
 import { FormModal } from "../../../components/addUserForm/addUserForm";
 import axios from "../../../axios";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 import { ArrowBackIos } from "@mui/icons-material";
-const oldcolumns = [
+import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
+import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
+
+const initialColumns = [
   { id: "id", label: "User ID", minWidth: 170 },
   { id: "name", label: "Name", minWidth: 170 },
   { id: "email", label: "Email", minWidth: 170 },
@@ -37,22 +39,21 @@ const oldcolumns = [
   { id: "action", label: "Action", minWidth: 170 },
 ];
 
-const DEBOUNCE_DELAY = 1000;
+const DEBOUNCE_DELAY = 500;
 
 const UserTable = () => {
   // states used
 
   const [data, setData] = useState([]);
+  const [sort, setSort] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [name, setName] = useState("");
-  const [roleFilter, setroleFilter] = useState("");
-  const [emailFilter, setEmailFilter] = useState("");
+  const [nameOrmail, setNameOrMail] = useState("");
+  const [roleFilter, setroleFilter] = useState("All Users");
   const [isTyping, setIsTyping] = useState(false);
   const [actionType, setActionType] = useState("");
   const [actionMessage, setActionMessage] = useState("");
   const [customerName, setCustomerName] = useState("");
-  const [actionDone, setActionDone] = useState(true);
   const [openForm, setOpenForm] = useState(false);
   const [error, setError] = useState("");
   const [addedUserRenderer, setAddedUserRenderer] = useState(false);
@@ -64,9 +65,7 @@ const UserTable = () => {
   let {
     customerId,
     userRole,
-    // name: userName,
   } = useSelector((state) => state.profile);
-  // let { Customers } = useSelector((state) => state.superAdmin);
   if (!customerId) {
     customerId = params.customerId;
   }
@@ -74,64 +73,52 @@ const UserTable = () => {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  const columns = oldcolumns.map((column) => {
+  const columns = initialColumns.map((column) => {
     return userRole !== "supervisor"
       ? column
       : column.id !== "action" && column;
   });
-
-  //Worker Function
-
+//Worker Function
   const fetchData = async () => {
     try {
       const queryParams = {
         customer_id: customerId,
-        name: name,
+        nameOrmail: nameOrmail,
         role: roleFilter,
-        email: emailFilter,
         page: page,
         pageLimit: rowsPerPage,
+        sort:sort
       };
 
       const accessToken = localStorage.getItem("accesstoken");
       const headers = {
         Authorization: "Bearer " + accessToken,
       };
-      axios
+      const response = await axios
         .get(`/user`, {
           params: queryParams,
           headers,
-        })
-        .then((response) => {
-          if (response.data.status === "success") {
-            const responseData = response.data.users;
-            setCustomerName(responseData.customerName);
-            setData(responseData.users);
-            setCount(responseData.totalUsers);
-          }
-        })
-        .catch((err) => {
-          setData([]);
-
-          setError(err.data);
         });
-    } catch (error) {
-      return (
-        <ErrorPageTemplate
-          header={"Page not found"}
-          code={HttpStatusCode.NotFound}
-        />
-      );
+
+      if (response) {
+        if (response.data.status === "success") {
+
+          const responseData = response.data.data;
+          setCustomerName(responseData.customerName);
+          setData(responseData.users);
+          setCount(responseData.totalUsers);
+        }
+      } }
+       catch (error) {
+      setData([]);
+      setError(error.message);
     }
   };
-
   const addUserHandler = () => {
     setAddedUserRenderer((prev) => !prev);
   };
-  //Effects
   useEffect(() => {
     let typingTimeout;
-    setActionDone(true);
     if (!isTyping) {
       fetchData();
     } else {
@@ -147,14 +134,13 @@ const UserTable = () => {
     };
   }, [
     roleFilter,
-    name,
-    emailFilter,
+    nameOrmail,
     customerId,
     actionType,
-    actionDone,
     page,
     rowsPerPage,
     addedUserRenderer,
+    sort
   ]);
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
@@ -175,8 +161,6 @@ const UserTable = () => {
     );
   }
 
-  //Handler functions
-
   const handleCloseAlert = () => {
     setActionMessage("");
   };
@@ -187,27 +171,36 @@ const UserTable = () => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  const handleNameChange = (event) => {
-    const selectedName = event.target.value;
-    setName(selectedName);
-    setIsTyping(true);
-  };
-  const handleEmailChange = (event) => {
-    const selectedEmail = event.target.value;
-    setEmailFilter(selectedEmail);
-    setIsTyping(true);
+  const handleNameorEmailChange = (event) => {
+    const selectedNameorEmail = event.target.value;
+    setNameOrMail(selectedNameorEmail);
+    setIsTyping(true)
+
   };
   const handleRoleChange = (event) => {
     setroleFilter(event.target.value);
   };
 
   const handleClear = (event) => {
-    setName("");
-    setroleFilter("");
-    setEmailFilter("");
-    setIsTyping(true);
+    setNameOrMail("");
   };
-
+  const handleSort = (columnId) => {
+    if (sort.length === 0) {
+      if (columnId === 'name' || columnId === "id") { setSort([columnId, 'asc']) }
+      else {
+        setSort([columnId, 'desc'])
+      }
+    }
+    else if ((sort[1] === "asc" && columnId !== "Status") || (sort[1] === "desc" && columnId === "Status")) {
+      if (columnId === 'name' || columnId === "id") {
+        setSort([columnId, 'desc'])
+      }
+      else {
+        setSort([columnId, 'asc']) }
+    }
+    else {
+      setSort([])
+    }}
   if (error != "") {
     return (
       <ErrorPageTemplate
@@ -216,7 +209,6 @@ const UserTable = () => {
       />
     );
   }
-
   return (
     <>
       <FormModal
@@ -239,11 +231,10 @@ const UserTable = () => {
                 navigate(-1);
               }}
             >
-              <ArrowBackIos fontSize="12px" /> Back
+          <ArrowBackIos fontSize="12px" /> Back
             </Button>
           </Box>
         )}
-
         <Typography sx={{ textAlign: "center", mt: 3 }} variant="h4">
           {customerName}
         </Typography>
@@ -269,52 +260,47 @@ const UserTable = () => {
                 mb: "1.5rem",
               }}
             >
-              <TextField
-                id="standard-basic"
-                value={name}
-                label="Search by Name"
-                variant="standard"
-                onChange={handleNameChange}
-                sx={{ minWidth: 120, marginRight: 2 }}
-              />
+          <TextField
+        placeholder="Search by Name or Email..."
+        onChange={handleNameorEmailChange}
+        variant="standard"
+        defaultValue={nameOrmail}
+        value={nameOrmail}
+        InputProps={{
+          endAdornment: (
+            <IconButton
+              sx={{ visibility: nameOrmail ? 'visible' : 'hidden' }}
+              onClick={handleClear}
+            >
+              <ClearIcon />
+            </IconButton>
+          ),
+        }}
+        sx={{
+          m: 2,
+          marginTop: '25px',
+          '& .Mui-focused .MuiIconButton-root': { color: 'primary.main' },
+          
+        }}
+      />
 
-              <TextField
-                id="email-filter"
-                value={emailFilter}
-                label="Search by Email"
-                variant="standard"
-                onChange={handleEmailChange}
-                sx={{ minWidth: 120, marginRight: 2 }}
-              />
-
-              <FormControl
-                variant="standard"
-                sx={{ minWidth: 120, marginRight: 2 }}
-              >
-                <InputLabel id="demo-simple-select-standard-label">
-                  Designation
-                </InputLabel>
-
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={roleFilter}
-                  onChange={handleRoleChange}
-                >
-                  <MenuItem value="All Users">All Users</MenuItem>
-                  <MenuItem value="customerAdmin">Customer Admin</MenuItem>
-                  <MenuItem value="supervisor">Supervisor</MenuItem>
-                  <MenuItem value="operator">Operator</MenuItem>
-                </Select>
-              </FormControl>
-
-              {(name.length !== 0 || emailFilter.length !== 0) && (
-                <Tooltip title="Clear Filter">
-                  <IconButton onClick={handleClear} sx={{ top: 10 }}>
-                    <Typography>clear</Typography>
-                  </IconButton>
-                </Tooltip>
-              )}
+      <FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
+        <InputLabel id="demo-simple-select-standard-label">
+          Designation
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-standard-label"
+          id="demo-simple-select-standard"
+          value={roleFilter}
+          onChange={handleRoleChange}
+          defaultValue="All Users"
+        >
+          <MenuItem value="All Users">All Users</MenuItem>
+          <MenuItem value="customerAdmin">Customer Admin</MenuItem>
+          <MenuItem value="supervisor">Supervisor</MenuItem>
+          <MenuItem value="operator">Operator</MenuItem>
+        </Select>
+      </FormControl>
             </Box>
             {userRole !== "supervisor" ? (
               <Button
@@ -330,84 +316,96 @@ const UserTable = () => {
           </Box>
 
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
-            <TableContainer sx={{ maxHeight: 440 }}>
-              <Table padding="10px" stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table padding="10px" stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align="left"
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {column.id === 'id' || column.id === 'name' || column.id === 'Status' ? (
+                          <>
+                            <b>{column.label}</b>
+                            {sort.length === 0 ? (
+                              <ArrowUpwardOutlinedIcon style={{ height: "16px" }} onClick={() => handleSort(column.id)} />
+                            ) : (
+                              (sort[1] === "asc" && sort[0] === column.id) ? (
+                                <ArrowDownwardOutlinedIcon style={{ color: 'grey', height: "16px" }} onClick={() => handleSort(column.id)} />
+                              ) : (
+                                <ArrowUpwardOutlinedIcon style={{ color: 'grey', height: "16px" }} onClick={() => handleSort(column.id)} />
+                              )
+                            )}
+                          </>
+                        ) : (
+                          <b>{column.label}</b>
+                        )}
+                      </div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
                     {columns.map((column) => (
-                      <TableCell
-                        key={column.id}
-                        align="left"
-                        style={{ minWidth: column.minWidth }}
-                      >
-                        <b>{column.label}</b>
+                      <TableCell key={column.id} align="left">
+                        {column.id === "Status" ? (
+                          row["Status"] ? (
+                            "Active"
+                          ) : (
+                            "Inactive"
+                          )
+                        ) : column.id === "action" ? (
+                          <Action
+                            data={row}
+                            actionType={actionType}
+                            setActionType={setActionType}
+                            setActionMessage={setActionMessage}
+
+                          ></Action>
+                        ) : (
+                          row[column.id]
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {data.map((row) => (
-                    <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
-                      {columns.map((column) => (
-                        <TableCell key={column.id} align="left">
-                          {column.id === "Status" ? (
-                            row["Active"] ? (
-                              "Active"
-                            ) : (
-                              "Inactive"
-                            )
-                          ) : column.id === "action" ? (
-                            <Action
-                              data={row}
-                              actionType={actionType}
-                              setActionType={setActionType}
-                              setActionMessage={setActionMessage}
-                              setActionDone={setActionDone}
-                            ></Action>
-                          ) : (
-                            row[column.id]
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 15]}
-              component="div"
-              count={count}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-
-            <Box p={2}>{count} matches found</Box>
-          </Paper>
-
-          <Stack spacing={2} sx={{ width: "100%" }}>
-            <Snackbar
-              open={!!actionMessage}
-              autoHideDuration={3000}
-              onClose={handleCloseAlert}
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 15]}
+            component="div"
+            count={count}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+          <Box p={2}>{count} matches found</Box>
+        </Paper>
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Snackbar
+            open={!!actionMessage}
+            autoHideDuration={3000}
+            onClose={handleCloseAlert}
+          >
+            <Alert
+              onClose={() => setActionMessage("")}
+              severity="success"
+              sx={{ width: "100%" }}
             >
-              <Alert
-                onClose={() => setActionMessage("")}
-                severity="success"
-                sx={{ width: "100%" }}
-              >
-                {actionMessage}
-              </Alert>
-            </Snackbar>
-          </Stack>
-        </Box>
+              {actionMessage}
+            </Alert>
+          </Snackbar>
+        </Stack>
       </Box>
-    </>
-  );
-};
+    </Box>
+  </>);
 
+}
 export default UserTable;

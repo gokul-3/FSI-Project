@@ -11,8 +11,7 @@ import Select from "@mui/material/Select";
 import { Box, FormControl } from "@mui/material";
 import axios from "../../../axios";
 
-const deletePromptText = ` Deleting the user will result in the loss of all account data, 
-  including profile information, settings, and created or saved content. `;
+const deletePromptText = `Are you sure you want to delete this user account?`;
 export default function AlertDialog({
   open,
   setOpen,
@@ -20,13 +19,13 @@ export default function AlertDialog({
   actionType,
   setActionType,
   setActionMessage,
-  setActionDone,
 }) {
   const [roleFilter, setRoleFilter] = useState(data.role);
   const [error, setError] = useState("");
 
   const handleUserChange = (event) => {
     const selectedRole = event.target.value;
+    console.log(selectedRole)
     setRoleFilter(selectedRole);
   };
   const handleAction = async () => {
@@ -41,12 +40,10 @@ export default function AlertDialog({
           setOpen(false);
           setActionType("");
           setActionMessage(user.data.message);
-          setActionDone(false);
         } else {
           setError(user.data.message);
         }
       } catch (error) {
-        // console.error('Error deleting user:', error);
         setError("An error occurred while deleting the user.");
       }
     }
@@ -62,12 +59,10 @@ export default function AlertDialog({
           setOpen(false);
           setActionType("");
           setActionMessage(user.data.message);
-          setActionDone(false);
         } else {
           setError(user.data.message);
         }
       } catch (error) {
-        // console.error('Error editing user:', error);
         setError("An error occurred while editing the user.");
       }
     }
@@ -75,7 +70,6 @@ export default function AlertDialog({
   const handleClose = () => {
     setOpen(false);
     setActionType("");
-    setActionDone(false);
   };
 
   return (
@@ -89,8 +83,8 @@ export default function AlertDialog({
         <Box p={1} minWidth={300}>
           <DialogTitle id="alert-dialog-title">
             {`${
-              actionType === "delete" ? "Are you sure want to delete" : "Edit"
-            } user ${data.name}`}
+              actionType === "delete" ? " Delete Confirmation for " : "Edit Dialog for  "
+            }${data.name}`}
           </DialogTitle>
           <DialogContent>
             <DialogContentText
@@ -128,7 +122,7 @@ export default function AlertDialog({
               Cancel
             </Button>
             <Button variant="contained" onClick={handleAction} autoFocus>
-              {actionType === "delete" ? "Delete" : "Edit"}
+              {actionType === "delete" ? "Delete" : "Change"}
             </Button>
           </DialogActions>
         </Box>
