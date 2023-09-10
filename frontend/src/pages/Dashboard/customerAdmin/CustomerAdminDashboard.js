@@ -94,7 +94,7 @@ const CustomerAdminDashboard = () => {
             count: customerAdminData.userCount,
           }}
           recentlyActive={{
-            header: "Recently Active (7 days)",
+            header: "Active last 7 days",
             count: customerAdminData.activeUsers,
           }}
         />

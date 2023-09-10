@@ -4,9 +4,11 @@ import { Box, Card, CardContent, Paper, Typography } from "@mui/material";
 const NumberBox = (props) => {
   return (
     <Box
-      sx={{ width: { xs: 300, sm: 220 } }}
+      sx={{
+        width: { xs: 300, sm: 220 },
+        background: "linear-gradient(to top, white, #d5e5ff)",
+      }}
       height={150}
-      bgcolor="#fff"
       display="flex"
       flexDirection="column"
       justifyContent="center"
@@ -28,13 +30,18 @@ const NumberBox = (props) => {
   );
 };
 export default function CountCard(props) {
+  console.log(props.totalCustomers.header);
+  const gradientColor =
+    (props.totalCustomers.header.split(" ")[1]=='Customers')
+      ? "linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)"
+      : "linear-gradient(to bottom, #3871cb, #000)";
   return (
     <Card
       sx={{
         width: { xs: "400px", sm: "450px", lg: "60%" },
         margin: "auto",
         borderRadius: "10px",
-        bgcolor: "#3871cb",
+        background: gradientColor,
       }}
       variant="elevation"
       elevation={6}
@@ -59,7 +66,7 @@ export default function CountCard(props) {
           }}
         >
           <NumberBox {...props.totalCustomers} />
-          <NumberBox {...props.recentlyActive } />
+          <NumberBox {...props.recentlyActive} />
         </CardContent>
       </CardContent>
     </Card>

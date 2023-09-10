@@ -11,15 +11,14 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
+const getLogoUrl = (icon) => {
+  const blob = new Blob([new Uint8Array(icon?.data)], {
+    type: "image/jpeg",
+  });
+  return URL.createObjectURL(blob);
+};
 const CustomerData = ({ customers }) => {
-  const getLogoUrl = (icon) => {
-    const blob = new Blob([new Uint8Array(icon?.data)], {
-      type: "image/jpeg",
-    });
-    return URL.createObjectURL(blob);
-  };
   const navigate = useNavigate();
-  console.log(customers);
   if (!Object.keys(customers).length) return <>loading...</>;
   return customers?.length === 0
     ? "No Customers available"
@@ -44,7 +43,6 @@ const CustomerData = ({ customers }) => {
                 <Typography
                   fontSize="16px"
                   fontWeight={400}
-                  color="black"
                   display="inline-block"
                 >
                   {element.CustomerName}
@@ -72,15 +70,19 @@ export default function BasicCard(props) {
   const customerData = props.customerData;
   return (
     <Card
-      sx={{ width: { xs: 400, sm: 500, lg: 550 }, borderRadius: "10px" }}
+      sx={{
+        width: { xs: 400, sm: 500, lg: 550 },
+        borderRadius: "10px",
+        background: "linear-gradient(to bottom, #f5f5f5, #fff)",
+      }}
       variant="elevation"
       elevation={6}
     >
       <CardContent>
-        <Typography variant="h5" sx={{ textAlign: "center", margin: "1rem 0" }}>
+        <Typography variant="h5" sx={{ textAlign: "center", margin: "1rem 0", }}>
           {props.title}
         </Typography>
-        <CustomerData customers={customerData} />
+        <CustomerData customers={customerData}/>
       </CardContent>
     </Card>
   );

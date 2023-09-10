@@ -90,7 +90,7 @@ const SuperAdminDashboard = () => {
             count: superDashboardData.customerCount,
           }}
           recentlyActive={{
-            header: `Activity last 7 days`,
+            header: `Active last 7 days`,
             count: superDashboardData.activeCustomers,
           }}
         />
