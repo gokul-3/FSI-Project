@@ -69,7 +69,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" ,onAddUser}) 
     } catch (error) {
       console.log(error);
       setIsLoading(false);
-      setErrorText(error.response.data.message);
+      setErrorText(error.response?.data.message);
     }
   };
 
