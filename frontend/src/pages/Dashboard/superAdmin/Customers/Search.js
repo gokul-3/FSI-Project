@@ -46,7 +46,7 @@ export default function Search({ onSearch }) {
   };
 
   const handleSearch = () => {
-    onSearch(searchInput);
+    onSearch(searchInput.trim());
   };
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
