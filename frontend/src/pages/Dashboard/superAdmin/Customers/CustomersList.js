@@ -107,7 +107,6 @@ export default function Customers() {
       );
       setDialogOpen(false);
       setDeleteIndex(null);
-      console.log(resp);
       setModalInfo({ title: "Success", content: resp.data.message });
       if (totalRecords % 2 != 0) {
         updateQueryParam("page", queryParams.page - 1);

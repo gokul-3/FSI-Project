@@ -65,14 +65,12 @@ export const FormModal = ({
       setIsLoading(true);
       setErrorText("");
       const res = await axios.post("/user", data);
-      console.log(res);
       setIsLoading(false);
       setResponse(res.data?.message);
       setSnackbarOpen(true);
       onAddUser();
       reset();
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
       setErrorText(error.response?.data.message);
     }

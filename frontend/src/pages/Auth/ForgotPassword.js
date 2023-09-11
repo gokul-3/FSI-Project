@@ -45,7 +45,6 @@ export default function ForgotPassword() {
       .post("/auth/send-reset-email", {}, { headers })
       .then((res) => {
         setErrorMessage("");
-        console.log(res.data.message);
         setModel(
           {
             open: true,
@@ -106,7 +105,6 @@ export default function ForgotPassword() {
             <form onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
-                // sx={{margin:'0 10px 0 10px'}}
                 fullWidth
                 label="Email"
                 autoComplete="off"

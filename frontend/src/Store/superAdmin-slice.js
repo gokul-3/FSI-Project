@@ -31,11 +31,5 @@ const superAdminSlice = createSlice({
   },
 });
 
-// export const {
-//   setCustomerEditedImg,
-//   setCustomerEditedName,
-//   setCustomersData,
-//   setSuperAdminDashboardData,
-// } = superAdminSlice.actions;
 export const superAdminActions = superAdminSlice.actions;
 export default superAdminSlice.reducer;

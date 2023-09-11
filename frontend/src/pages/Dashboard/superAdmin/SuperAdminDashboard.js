@@ -18,7 +18,6 @@ const SuperAdminDashboard = () => {
   useEffect(() => {
     const fetchSuperAdminDashBoardData = async () => {
       const dashboardData = (await axios.get("dashboard/superAdmin")).data;
-      console.log(dashboardData);
       dispatch(
         superAdminActions.setSuperAdminDashboardData({
           customerCount: dashboardData.customerCount,
@@ -31,7 +30,6 @@ const SuperAdminDashboard = () => {
     try {
       if (isAccessTokenPresent) fetchSuperAdminDashBoardData();
     } catch (error) {
-      console.log(error);
       if (error.request) {
         const statusCode = error.request.status;
         if (statusCode === HttpStatusCode.InternalServerError) {
@@ -52,7 +50,6 @@ const SuperAdminDashboard = () => {
         } else if (statusCode === HttpStatusCode.Unauthorized) {
           navigate("/login");
         } else {
-          console.log(error);
         }
       }
     }

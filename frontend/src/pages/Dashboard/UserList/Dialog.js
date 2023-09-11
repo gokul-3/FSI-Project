@@ -25,7 +25,6 @@ export default function AlertDialog({
 
   const handleUserChange = (event) => {
     const selectedRole = event.target.value;
-    console.log(selectedRole)
     setRoleFilter(selectedRole);
   };
   const handleAction = async () => {

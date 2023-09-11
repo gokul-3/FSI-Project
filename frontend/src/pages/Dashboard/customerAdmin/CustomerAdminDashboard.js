@@ -31,7 +31,6 @@ const CustomerAdminDashboard = () => {
     try {
       if (customerId) fetchCustomerAdminDashBoardData();
     } catch (error) {
-      console.log(error);
       if (error.request) {
         const statusCode = error.request.status;
         if (statusCode === HttpStatusCode.InternalServerError) {

@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import {
-  Navigate,
   Outlet,
-  json,
-  redirect,
-  useLoaderData,
   useNavigate,
 } from "react-router-dom";
 
@@ -16,17 +12,11 @@ import { MobileDrawer, PermanentDrawer } from "./Drawer";
 import axios from "../../axios";
 import { useDispatch, useSelector } from "react-redux";
 import { profileActions } from "../../Store/profile-slice";
-import store from "../../Store";
 import { HttpStatusCode } from "axios";
-import { superAdminActions } from "../../Store/superAdmin-slice";
-import { customerAdminActions } from "../../Store/customerAdmin-slice";
-import { setProfileInfo } from "../../Store/profileSetter";
 import moment from "moment";
 import BackdropLoader from "./BackdropLoader";
-import ErrorPageTemplate from "../ErrorPages/ErrorPageTemplate";
 
 const drawerWidth = 240;
-const profileRoute = "auth/getUserData";
 
 const RootLayout = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -39,14 +29,12 @@ const RootLayout = () => {
 
   const isAccessTokenPresent = localStorage.getItem("accesstoken") !== null;
   useEffect(() => {
-    console.log("rendered");
     const fetchProfileInfo = async () => {
       try {
         const changeToken = async () => {
           const expireTime = new Date(localStorage.getItem("expirydate"));
           setTimeout(async () => {
             const refreshToken = localStorage.getItem("refreshtoken");
-            console.log(refreshToken);
             if (!refreshToken) {
               localStorage.clear();
               await axios.post("auth/logout", { id: userId });
@@ -72,7 +60,6 @@ const RootLayout = () => {
         };
         changeToken();
         const profileInfo = (await axios.get("/user/profile")).data;
-        console.log(profileInfo);
         dispatch(
           profileActions.setProfileInfo({
             userRole: profileInfo.role,

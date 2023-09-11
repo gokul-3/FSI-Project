@@ -18,14 +18,10 @@ const listDesign = {
 const itemPerPage = 5;
 const paginationStyles = {
   "& .MuiPaginationItem-page": {
-    // color: "white",
   },
   "& .Mui-selected": {
-    // backgroundColor: "white",
-    // color: "black",
   },
   "& .MuiPaginationItem-icon": {
-    // color: "white",
   },
 };
 
@@ -100,7 +96,6 @@ const ListCard = (props) => {
         width: { xs: 400, sm: 450, lg: "60%" },
         borderRadius: "6px",
         margin: "auto", 
-        // background:"linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)"
       }}
       variant="elevation"
       elevation={6}

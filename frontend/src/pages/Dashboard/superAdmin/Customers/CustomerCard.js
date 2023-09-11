@@ -59,14 +59,12 @@ export default function CustomerCard({
         </CardActionArea>
         <CardActions sx={{ display: "flex", justifyContent: "end", px: 1 }}>
           <Button
-            // variant="contained"
             size="small"
             onClick={() => showEdit(index)}
           >
             Edit
           </Button>
           <Button
-            // variant="contained"
             sx={{ color: red[700] }}
             size="small"
             onClick={() => showDeleteConfirmation(index)}

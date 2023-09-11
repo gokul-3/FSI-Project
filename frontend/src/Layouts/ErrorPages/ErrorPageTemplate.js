@@ -8,7 +8,6 @@ const ErrorPageTemplate = ({ header, code }) => {
     <Box p={2} height="100vh">
       <Box
         width="50%"
-        // height="50%"
         borderRadius="20px"
         mx="auto"
         display="flex"

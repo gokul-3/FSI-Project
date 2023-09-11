@@ -15,7 +15,6 @@ import { Box, FormControl, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
-import Tooltip from "@mui/material/Tooltip";
 import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import { useSelector } from "react-redux";
@@ -42,7 +41,6 @@ const initialColumns = [
 const DEBOUNCE_DELAY = 500;
 
 const UserTable = () => {
-  // states used
 
   const [data, setData] = useState([]);
   const [sort, setSort] = useState([]);
@@ -75,7 +73,6 @@ const UserTable = () => {
       ? column
       : column.id !== "action" && column;
   });
-  //Worker Function
   const fetchData = async () => {
     try {
       const queryParams = {

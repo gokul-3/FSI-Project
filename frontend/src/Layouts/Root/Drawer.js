@@ -71,18 +71,6 @@ const customerAdminSideMenu = [
 const supervisorSideMenu = [
   { itemName: "Users", icon: <CustomersIcon />, link: "/" },
 ];
-// const superAdminSideMenu = [
-//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/superAdmin" },
-//   { itemName: "Customers", icon: <CustomersIcon />, link: "/superAdmin/customers" },
-// ];
-// const customerAdminSideMenu = [
-//   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/customerAdmin" },
-//   { itemName: "Users", icon: <CustomersIcon />, link: "/customerAdmin/users" },
-// ];
-// const supervisorSideMenu = [
-//   // { itemName: "Dashboard", icon: <DashboardIcon />, link: "/supervisor" },
-//   { itemName: "Users", icon: <CustomersIcon />, link: "/supervisor" },
-// ];
 
 const operatorSideMenu = [
   { itemName: "Dashboard", icon: <DashboardIcon />, link: "/" },
