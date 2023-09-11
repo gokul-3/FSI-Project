@@ -1,8 +1,21 @@
 import React from "react";
-import { Box, Card, CardContent, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Paper,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 
 const NumberBox = (props) => {
-  return (
+  return props.count === null ? (
+    <Skeleton
+      variant="rounded"
+      sx={{ width: { xs: 300, sm: 220 } }}
+      height={150}
+    />
+  ) : (
     <Box
       sx={{ width: { xs: 300, sm: 220 } }}
       height={150}
@@ -59,7 +72,7 @@ export default function CountCard(props) {
           }}
         >
           <NumberBox {...props.totalCustomers} />
-          <NumberBox {...props.recentlyActive } />
+          <NumberBox {...props.recentlyActive} />
         </CardContent>
       </CardContent>
     </Card>

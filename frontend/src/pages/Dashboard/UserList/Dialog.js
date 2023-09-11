@@ -89,8 +89,8 @@ export default function AlertDialog({
         <Box p={1} minWidth={300}>
           <DialogTitle id="alert-dialog-title">
             {`${
-              actionType === "delete" ? "Are you sure want to delete" : "Edit"
-            } user ${data.name}`}
+              actionType === "delete" ? "Are you sure want to delete" : "Edit -"
+            } ${data.name}`}
           </DialogTitle>
           <DialogContent>
             <DialogContentText
@@ -124,10 +124,10 @@ export default function AlertDialog({
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" onClick={handleClose}>
+            <Button onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleAction} autoFocus>
+            <Button onClick={handleAction} autoFocus>
               {actionType === "delete" ? "Delete" : "Edit"}
             </Button>
           </DialogActions>

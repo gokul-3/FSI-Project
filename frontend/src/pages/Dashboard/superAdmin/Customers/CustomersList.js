@@ -52,6 +52,10 @@ export default function Customers() {
   const [createCustomer, setCreateCustomer] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const [sortValue, setSortValue] = useState("created_at-desc");
+  const [addedUserRenderer, setAddedUserRenderer] = useState(false);
+  const addUserHandler = () => {
+    setAddedUserRenderer((prev) => !prev);
+  };
   const accessToken = localStorage.getItem("accesstoken");
   const headers = {
     Authorization: "Bearer " + accessToken,
@@ -152,7 +156,7 @@ export default function Customers() {
   useEffect(() => {
     setIsLoading(true);
     fetchData();
-  }, [page, searchQuery, Deleted, sortValue]);
+  }, [page, searchQuery, Deleted, sortValue, addedUserRenderer]);
   if (userRole != "superAdmin") {
     return (
       <ErrorPageTemplate
@@ -176,7 +180,7 @@ export default function Customers() {
         </Grid>
       ) : (
         <>
-          <Button
+          {/* <Button
             sx={{
               position: "relative",
               top: "2.5rem",
@@ -189,7 +193,7 @@ export default function Customers() {
             }}
           >
             <ArrowBackIos fontSize="12px" /> Back
-          </Button>
+          </Button> */}
           <Grid
             container
             spacing={0}
@@ -306,7 +310,11 @@ export default function Customers() {
               setIsDeletedMsgOpen(false);
             }}
           />
-          <FormModal openModal={openForm} setOpenModal={setOpenForm} />
+          <FormModal
+            openModal={openForm}
+            setOpenModal={setOpenForm}
+            onAddUser={addUserHandler}
+          />
         </>
       )}
     </Grid>

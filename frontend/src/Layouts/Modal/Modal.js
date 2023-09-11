@@ -24,7 +24,7 @@ const ShowInfoModal = ({
         </DialogContent>
         <DialogActions>
           <Button variant="contained" onClick={onCloseModal}>
-            Cancel
+            OK
           </Button>
         </DialogActions>
       </Box>

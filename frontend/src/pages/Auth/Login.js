@@ -10,9 +10,10 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  CircularProgress,
 } from "@mui/material";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { VisibilityOff, Visibility, Cookie } from "@mui/icons-material";
+import { VisibilityOff, Visibility, Cookie, Code } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import axios from "../../axios";
 import { setProfileInfo } from "../../Store/profileSetter";
@@ -63,16 +64,15 @@ export default function Login() {
     } catch (err) {
       if (err.response) {
         setSending(false);
-         setErrorMessage(err.response.data.message);
-         return;
+        setErrorMessage(err.response.data.message);
+        return;
       }
-      setErrorMessage(err.message)
-
+      setErrorMessage(err.message);
     }
   };
-  const isAccessTokenPresent = localStorage.getItem('accesstoken');
+  const isAccessTokenPresent = localStorage.getItem("accesstoken");
   if (isAccessTokenPresent) {
-    return <Navigate to="/" />
+    return <Navigate to="/" />;
   }
   return (
     <Grid
@@ -83,7 +83,7 @@ export default function Login() {
       display="flex"
       justifyContent="center"
       alignContent={"center"}
-      minHeight={'60vh'}
+      minHeight={"60vh"}
     >
       <Grid
         item
@@ -105,7 +105,7 @@ export default function Login() {
           }}
         >
           <Typography component="h1" variant="h6" pb={4} color={"#38a1cb"}>
-            FSI PROJECTS
+            FSI
           </Typography>
           <Typography component="h1" variant="h5">
             Sign in
@@ -156,6 +156,7 @@ export default function Login() {
                 <Checkbox
                   style={{ opacity: 0.75 }}
                   checked={rememberStatus}
+                  disabled={sending}
                   onClick={() => setrememberStatus(!rememberStatus)}
                 />
               }
@@ -176,7 +177,11 @@ export default function Login() {
                   "linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))",
               }}
             >
-              {sending ? "Please wait..." : "Sign in"}
+              {sending ? (
+                <CircularProgress sx={{ color: "#fff" }} size={25} />
+              ) : (
+                "Sign in"
+              )}
             </Button>
             <Grid container>
               <Grid item xs textAlign="center">

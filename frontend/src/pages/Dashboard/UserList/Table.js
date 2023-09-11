@@ -104,7 +104,7 @@ const UserTable = () => {
         })
         .then((response) => {
           if (response.data.status === "success") {
-            const responseData = response.data.users;
+            const responseData = response.data.data;
             setCustomerName(responseData.customerName);
             setData(responseData.users);
             setCount(responseData.totalUsers);
@@ -112,7 +112,7 @@ const UserTable = () => {
         })
         .catch((err) => {
           setData([]);
-
+          console.log(err);
           setError(err.data);
         });
     } catch (error) {
@@ -311,8 +311,11 @@ const UserTable = () => {
               {(name.length !== 0 || emailFilter.length !== 0) && (
                 <Tooltip title="Clear Filter">
                   <IconButton onClick={handleClear} sx={{ top: 10 }}>
-                    <Typography>clear</Typography>
+                    <ClearIcon />
                   </IconButton>
+                  {/* <Button onClick={handleClear} sx={{ top: 10 }}>
+                      Clear
+                  </Button> */}
                 </Tooltip>
               )}
             </Box>

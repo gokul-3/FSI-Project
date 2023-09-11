@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams } from "react-router-dom";
 import MessageModel from "./MessageModel";
 import axios from "../../axios";
+import { CircularProgress } from "@mui/material";
 
 const defaultTheme = createTheme();
 
@@ -159,7 +160,11 @@ export default function ResetPassword() {
                     "linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))",
                 }}
               >
-                {sending ? "Please wait" : "Reset"}
+                {sending ? (
+                  <CircularProgress sx={{ color: "#fff" }} size={25} />
+                ) : (
+                  "Reset"
+                )}
               </Button>
             </form>
           </Box>
