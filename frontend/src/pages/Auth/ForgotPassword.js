@@ -128,7 +128,7 @@ export default function ForgotPassword() {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  width: 1,
+                  minWidth: "8rem",
                   height: "3rem",
                   background:
                     "linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))",
