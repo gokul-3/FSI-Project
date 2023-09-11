@@ -101,7 +101,7 @@ export default function EditDialog({ open, handleClose, handleEditCustomer }) {
             {fileError && <div style={{ color: "red" }}>{fileError}</div>}
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" onClick={handleClose}>
+            <Button  onClick={handleClose}>
               Cancel
             </Button>
             <Button

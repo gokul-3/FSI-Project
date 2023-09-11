@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import MessageModel from "./MessageModel";
 import axios from "../../axios";
+import { CircularProgress } from "@mui/material";
 
 const defaultTheme = createTheme();
 
@@ -133,7 +134,7 @@ export default function ForgotPassword() {
                     "linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))",
                 }}
               >
-                {sending ? "Sending..." : "Send email"}
+                {sending ? <CircularProgress sx={{ color: "#fff" }} size={25} />: "Send email"}
               </Button>
             </form>
             <Typography color="red" textAlign="center">

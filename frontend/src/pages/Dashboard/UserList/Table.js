@@ -20,15 +20,15 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import { useSelector } from "react-redux";
 import MuiAlert from "@mui/material/Alert";
-import { useLocation, useNavigate ,useParams} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Action from "./Action";
 import { FormModal } from "../../../components/addUserForm/addUserForm";
 import axios from "../../../axios";
 import ErrorPageTemplate from "../../../Layouts/ErrorPages/ErrorPageTemplate";
 import { HttpStatusCode } from "axios";
 import { ArrowBackIos } from "@mui/icons-material";
-import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
-import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
+import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
+import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined";
 
 const initialColumns = [
   { id: "id", label: "User ID", minWidth: 170 },
@@ -62,10 +62,7 @@ const UserTable = () => {
   const navigate = useNavigate();
 
   const { pathname } = useLocation();
-  let {
-    customerId,
-    userRole,
-  } = useSelector((state) => state.profile);
+  let { customerId, userRole } = useSelector((state) => state.profile);
   if (!customerId) {
     customerId = params.customerId;
   }
@@ -78,7 +75,7 @@ const UserTable = () => {
       ? column
       : column.id !== "action" && column;
   });
-//Worker Function
+  //Worker Function
   const fetchData = async () => {
     try {
       const queryParams = {
@@ -87,29 +84,27 @@ const UserTable = () => {
         role: roleFilter,
         page: page,
         pageLimit: rowsPerPage,
-        sort:sort
+        sort: sort,
       };
 
       const accessToken = localStorage.getItem("accesstoken");
       const headers = {
         Authorization: "Bearer " + accessToken,
       };
-      const response = await axios
-        .get(`/user`, {
-          params: queryParams,
-          headers,
-        });
+      const response = await axios.get(`/user`, {
+        params: queryParams,
+        headers,
+      });
 
       if (response) {
         if (response.data.status === "success") {
-
           const responseData = response.data.data;
           setCustomerName(responseData.customerName);
           setData(responseData.users);
           setCount(responseData.totalUsers);
         }
-      } }
-       catch (error) {
+      }
+    } catch (error) {
       setData([]);
       setError(error.message);
     }
@@ -140,7 +135,7 @@ const UserTable = () => {
     page,
     rowsPerPage,
     addedUserRenderer,
-    sort
+    sort,
   ]);
   if (pathname.split("/")[1] === "customers" && userRole != "superAdmin") {
     return (
@@ -174,8 +169,7 @@ const UserTable = () => {
   const handleNameorEmailChange = (event) => {
     const selectedNameorEmail = event.target.value;
     setNameOrMail(selectedNameorEmail);
-    setIsTyping(true)
-
+    setIsTyping(true);
   };
   const handleRoleChange = (event) => {
     setroleFilter(event.target.value);
@@ -186,21 +180,24 @@ const UserTable = () => {
   };
   const handleSort = (columnId) => {
     if (sort.length === 0) {
-      if (columnId === 'name' || columnId === "id") { setSort([columnId, 'asc']) }
-      else {
-        setSort([columnId, 'desc'])
+      if (columnId === "name" || columnId === "id") {
+        setSort([columnId, "asc"]);
+      } else {
+        setSort([columnId, "desc"]);
       }
-    }
-    else if ((sort[1] === "asc" && columnId !== "Status") || (sort[1] === "desc" && columnId === "Status")) {
-      if (columnId === 'name' || columnId === "id") {
-        setSort([columnId, 'desc'])
+    } else if (
+      (sort[1] === "asc" && columnId !== "Status") ||
+      (sort[1] === "desc" && columnId === "Status")
+    ) {
+      if (columnId === "name" || columnId === "id") {
+        setSort([columnId, "desc"]);
+      } else {
+        setSort([columnId, "asc"]);
       }
-      else {
-        setSort([columnId, 'asc']) }
+    } else {
+      setSort([]);
     }
-    else {
-      setSort([])
-    }}
+  };
   if (error != "") {
     return (
       <ErrorPageTemplate
@@ -231,7 +228,7 @@ const UserTable = () => {
                 navigate(-1);
               }}
             >
-          <ArrowBackIos fontSize="12px" /> Back
+              <ArrowBackIos fontSize="12px" /> Back
             </Button>
           </Box>
         )}
@@ -260,47 +257,51 @@ const UserTable = () => {
                 mb: "1.5rem",
               }}
             >
-          <TextField
-        placeholder="Search by Name or Email..."
-        onChange={handleNameorEmailChange}
-        variant="standard"
-        defaultValue={nameOrmail}
-        value={nameOrmail}
-        InputProps={{
-          endAdornment: (
-            <IconButton
-              sx={{ visibility: nameOrmail ? 'visible' : 'hidden' }}
-              onClick={handleClear}
-            >
-              <ClearIcon />
-            </IconButton>
-          ),
-        }}
-        sx={{
-          m: 2,
-          marginTop: '25px',
-          '& .Mui-focused .MuiIconButton-root': { color: 'primary.main' },
-          
-        }}
-      />
+              <TextField
+                placeholder="Search by Name or Email..."
+                onChange={handleNameorEmailChange}
+                variant="standard"
+                defaultValue={nameOrmail}
+                value={nameOrmail}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      sx={{ visibility: nameOrmail ? "visible" : "hidden" }}
+                      onClick={handleClear}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  ),
+                }}
+                sx={{
+                  m: 2,
+                  marginTop: "25px",
+                  "& .Mui-focused .MuiIconButton-root": {
+                    color: "primary.main",
+                  },
+                }}
+              />
 
-      <FormControl variant="standard" sx={{ minWidth: 120, marginRight: 2 }}>
-        <InputLabel id="demo-simple-select-standard-label">
-          Designation
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={roleFilter}
-          onChange={handleRoleChange}
-          defaultValue="All Users"
-        >
-          <MenuItem value="All Users">All Users</MenuItem>
-          <MenuItem value="customerAdmin">Customer Admin</MenuItem>
-          <MenuItem value="supervisor">Supervisor</MenuItem>
-          <MenuItem value="operator">Operator</MenuItem>
-        </Select>
-      </FormControl>
+              <FormControl
+                variant="standard"
+                sx={{ minWidth: 120, marginRight: 2 }}
+              >
+                <InputLabel id="demo-simple-select-standard-label">
+                  Designation
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  value={roleFilter}
+                  onChange={handleRoleChange}
+                  defaultValue="All Users"
+                >
+                  <MenuItem value="All Users">All Users</MenuItem>
+                  <MenuItem value="customerAdmin">Customer Admin</MenuItem>
+                  <MenuItem value="supervisor">Supervisor</MenuItem>
+                  <MenuItem value="operator">Operator</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
             {userRole !== "supervisor" ? (
               <Button
@@ -316,96 +317,104 @@ const UserTable = () => {
           </Box>
 
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table padding="10px" stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align="left"
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        {column.id === 'id' || column.id === 'name' || column.id === 'Status' ? (
-                          <>
-                            <b>{column.label}</b>
-                            {sort.length === 0 ? (
-                              <ArrowUpwardOutlinedIcon style={{ height: "16px" }} onClick={() => handleSort(column.id)} />
-                            ) : (
-                              (sort[1] === "asc" && sort[0] === column.id) ? (
-                                <ArrowDownwardOutlinedIcon style={{ color: 'grey', height: "16px" }} onClick={() => handleSort(column.id)} />
-                              ) : (
-                                <ArrowUpwardOutlinedIcon style={{ color: 'grey', height: "16px" }} onClick={() => handleSort(column.id)} />
-                              )
-                            )}
-                          </>
-                        ) : (
-                          <b>{column.label}</b>
-                        )}
-                      </div>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((row) => (
-                  <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+            <TableContainer sx={{ maxHeight: 440 }}>
+              <Table padding="10px" stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
                     {columns.map((column) => (
-                      <TableCell key={column.id} align="left">
-                        {column.id === "Status" ? (
-                          row["Status"] ? (
-                            "Active"
+                      <TableCell
+                        key={column.id}
+                        align="left"
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          {column.id === "id" ||
+                          column.id === "name" ||
+                          column.id === "Status" ? (
+                            <>
+                              <b>{column.label}</b>
+                              {sort.length === 0 ? (
+                                <ArrowUpwardOutlinedIcon
+                                  style={{ height: "16px" }}
+                                  onClick={() => handleSort(column.id)}
+                                />
+                              ) : sort[1] === "asc" && sort[0] === column.id ? (
+                                <ArrowDownwardOutlinedIcon
+                                  style={{ color: "grey", height: "16px" }}
+                                  onClick={() => handleSort(column.id)}
+                                />
+                              ) : (
+                                <ArrowUpwardOutlinedIcon
+                                  style={{ color: "grey", height: "16px" }}
+                                  onClick={() => handleSort(column.id)}
+                                />
+                              )}
+                            </>
                           ) : (
-                            "Inactive"
-                          )
-                        ) : column.id === "action" ? (
-                          <Action
-                            data={row}
-                            actionType={actionType}
-                            setActionType={setActionType}
-                            setActionMessage={setActionMessage}
-
-                          ></Action>
-                        ) : (
-                          row[column.id]
-                        )}
+                            <b>{column.label}</b>
+                          )}
+                        </div>
                       </TableCell>
                     ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 15]}
-            component="div"
-            count={count}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-          <Box p={2}>{count} matches found</Box>
-        </Paper>
-        <Stack spacing={2} sx={{ width: "100%" }}>
-          <Snackbar
-            open={!!actionMessage}
-            autoHideDuration={3000}
-            onClose={handleCloseAlert}
-          >
-            <Alert
-              onClose={() => setActionMessage("")}
-              severity="success"
-              sx={{ width: "100%" }}
+                </TableHead>
+                <TableBody>
+                  {data.map((row) => (
+                    <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                      {columns.map((column) => (
+                        <TableCell key={column.id} align="left">
+                          {column.id === "Status" ? (
+                            row["Status"] ? (
+                              "Active"
+                            ) : (
+                              "Inactive"
+                            )
+                          ) : column.id === "action" ? (
+                            <Action
+                              data={row}
+                              actionType={actionType}
+                              setActionType={setActionType}
+                              setActionMessage={setActionMessage}
+                            ></Action>
+                          ) : (
+                            row[column.id]
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 15]}
+              component="div"
+              count={count}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <Box p={2}>{count} matches found</Box>
+          </Paper>
+          <Stack spacing={2} sx={{ width: "100%" }}>
+            <Snackbar
+              open={!!actionMessage}
+              autoHideDuration={3000}
+              onClose={handleCloseAlert}
             >
-              {actionMessage}
-            </Alert>
-          </Snackbar>
-        </Stack>
+              <Alert
+                onClose={() => setActionMessage("")}
+                severity="success"
+                sx={{ width: "100%" }}
+              >
+                {actionMessage}
+              </Alert>
+            </Snackbar>
+          </Stack>
+        </Box>
       </Box>
-    </Box>
-  </>);
-
-}
+    </>
+  );
+};
 export default UserTable;

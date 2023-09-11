@@ -17,25 +17,25 @@ const listDesign = {
 };
 const itemPerPage = 5;
 const paginationStyles = {
-  '& .MuiPaginationItem-page': {
-    color: 'white', 
+  "& .MuiPaginationItem-page": {
+    // color: "white",
   },
-  '& .Mui-selected': {
-    backgroundColor: 'white', 
-    color: 'black',
+  "& .Mui-selected": {
+    // backgroundColor: "white",
+    // color: "black",
   },
-  '& .MuiPaginationItem-icon': {
-    color: 'white', }
-}
+  "& .MuiPaginationItem-icon": {
+    // color: "white",
+  },
+};
 
 const UserData = ({ users }) => {
   return users.length === 0
     ? "No Users available"
     : users.map((element, index) => {
-      
         if (index >= itemPerPage) return <></>;
-        const alternateColor = index % 2 == 0 ? "#f5f5f540" : "#ffffff60";
-        const endBorder = (index === users.length-1)? "5px" : "0px";
+        const alternateColor = index % 2 == 1 ? "#f5f5f5" : "#f9f9f9";
+        const endBorder = index === users.length - 1 ? "5px" : "0px";
         return (
           <Fragment>
             <ListItem
@@ -99,10 +99,8 @@ const ListCard = (props) => {
       sx={{
         width: { xs: 400, sm: 450, lg: "60%" },
         borderRadius: "6px",
-        margin: "auto",
-        backgroundColor: "#f5f5f5",
-        color: "white",
-        background: "linear-gradient(to top, #3871cb, #000)",
+        margin: "auto", 
+        // background:"linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)"
       }}
       variant="elevation"
       elevation={6}
@@ -131,7 +129,14 @@ const ListCard = (props) => {
             },
           }}
         >
-          <ListItem key={"title"} sx={{ backgroundColor: "#ffffff60",borderTopLeftRadius:'5px',borderTopRightRadius:'5px' }}>
+          <ListItem
+            key={"title"}
+            sx={{
+              backgroundColor: "#f3f3f3",
+              borderTopLeftRadius: "5px",
+              borderTopRightRadius: "5px",
+            }}
+          >
             <ListItemText
               primary={
                 <Typography fontSize="1rem" fontWeight={500}>
@@ -157,14 +162,16 @@ const ListCard = (props) => {
               sx={listDesign}
             />
           </ListItem>
-          <UserData users={userNames.slice(startIndex,endIndex)} />
+          <UserData users={userNames.slice(startIndex, endIndex)} />
         </List>
       </CardContent>
       <CardContent
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
-        <Pagination count={pageCount || 1} onChange={handlePageChange}
-        sx={paginationStyles}
+        <Pagination
+          count={pageCount || 1}
+          onChange={handlePageChange}
+          sx={paginationStyles}
         />
       </CardContent>
     </Card>

@@ -26,7 +26,7 @@ function ConfirmationDialog({ open, onClose, onConfirm, message }) {
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={onConfirm} color="primary" autoFocus>
+        <Button variant="contained" onClick={onConfirm} color="primary" autoFocus>
           Confirm
         </Button>
       </DialogActions>

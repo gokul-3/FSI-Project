@@ -25,7 +25,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import axios from "../../axios";
 
-export const FormModal = ({ openModal, setOpenModal, firmName = "" ,onAddUser}) => {
+export const FormModal = ({
+  openModal,
+  setOpenModal,
+  firmName = "",
+  onAddUser,
+}) => {
   const schema = Yup.object().shape({
     name: Yup.string()
       .trim()
@@ -106,7 +111,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" ,onAddUser}) 
   return (
     <>
       <Dialog open={openModal} fullWidth>
-        <DialogTitle>Add User</DialogTitle>
+        <DialogTitle>Add {!!firmName ? "User" : "Customer"}</DialogTitle>
         <DialogContent>
           {/* <DialogContentText sx={{ mb: "1em" }}>
             Send them a request
@@ -133,7 +138,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" ,onAddUser}) 
               <TextField
                 margin="normal"
                 fullWidth
-                label="Name"
+                label={!!firmName ? "User Name" : "Admin Name"}
                 type="text"
                 id="user_name"
                 {...register("name")}
@@ -189,9 +194,7 @@ export const FormModal = ({ openModal, setOpenModal, firmName = "" ,onAddUser}) 
                   gap: "1rem",
                 }}
               >
-                <Button variant="contained" onClick={handleAddUserCancel}>
-                  Cancel
-                </Button>
+                <Button onClick={handleAddUserCancel}>Cancel</Button>
                 <Button
                   variant="contained"
                   disabled={disableSubmit()}

@@ -1,8 +1,21 @@
 import React from "react";
-import { Box, Card, CardContent, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Paper,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 
 const NumberBox = (props) => {
-  return (
+  return props.count === null ? (
+    <Skeleton
+      variant="rounded"
+      sx={{ width: { xs: 300, sm: 220 } }}
+      height={150}
+    />
+  ) : (
     <Box
       sx={{
         width: { xs: 300, sm: 220 },
@@ -32,9 +45,10 @@ const NumberBox = (props) => {
 export default function CountCard(props) {
   console.log(props.totalCustomers.header);
   const gradientColor =
-    (props.totalCustomers.header.split(" ")[1]=='Customers')
-      ? "linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)"
-      : "linear-gradient(to bottom, #3871cb, #000)";
+    // (props.totalCustomers.header.split(" ")[1]=='Customers')
+    //   ? 
+      "linear-gradient(to top, #48c6ef 0%, #6f86d6 100%)"
+      // : "linear-gradient(to bottom, #3871cb, #000)";
   return (
     <Card
       sx={{

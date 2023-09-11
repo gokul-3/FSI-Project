@@ -58,6 +58,11 @@ export default function Customers() {
   const userRole = useSelector((state) => state.profile.userRole);
   const pageLength = Math.ceil(totalRecords / pageLimit);
   const [openForm, setOpenForm] = useState(false);
+  const [sortValue, setSortValue] = useState("created_at-desc");
+  const [addedUserRenderer, setAddedUserRenderer] = useState(false);
+  const addUserHandler = () => {
+    setAddedUserRenderer((prev) => !prev);
+  };
   const accessToken = localStorage.getItem("accesstoken");
   const headers = {
     Authorization: "Bearer " + accessToken,
@@ -122,10 +127,7 @@ export default function Customers() {
         (queryParams.search && `search=${queryParams.search}&`) +
         (queryParams.sort && `sort=${queryParams.sort}`);
 
-      const response = await axios.get(
-        reqUrl,
-        { headers }
-      );
+      const response = await axios.get(reqUrl, { headers });
       setIsLoading(false);
       dispatch(setCustomersData(response.data));
     } catch (error) {
@@ -158,7 +160,7 @@ export default function Customers() {
   useEffect(() => {
     setIsLoading(true);
     fetchData();
-  }, [queryParams, updated]);
+  }, [queryParams, updated, addedUserRenderer]);
   if (userRole != "superAdmin") {
     return (
       <ErrorPageTemplate
@@ -299,7 +301,11 @@ export default function Customers() {
             setModalInfo(false);
           }}
         />
-        <FormModal openModal={openForm} setOpenModal={setOpenForm} />
+        <FormModal
+          onAddUser={addUserHandler}
+          openModal={openForm}
+          setOpenModal={setOpenForm}
+        />
       </>
     </Grid>
   );
